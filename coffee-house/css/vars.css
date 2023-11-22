@@ -1,0 +1,12 @@
+:root {
+    --txt-dark-color: #403F3D;
+    --txt-light-color: #E1D4C9;
+    --txt-accent-color: #B0907A;
+
+    --bg-body-color: #E1D4C9;
+    --bg-container-color: #665F55;
+    --bg-backdrop-color: #403F3D;
+
+    --brdr-light-color: #C1B6AD;
+    --brdr-dark-color: #665F55;
+}
