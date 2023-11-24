@@ -13,5 +13,6 @@
 
 :root {
     font-family: Inter, sans-serif;
-    font-feature-settings: 'liga' 1, 'calt' 1; /* fix for Chrome */
+    font-feature-settings: 'liga' 1, 'calt' 1;
+    /*font-feature-settings: 'clig' off, 'liga' off;*/
 }

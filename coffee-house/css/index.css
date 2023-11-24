@@ -60,6 +60,7 @@
 
 .main {
     max-width: 1360px;
+    width: 100%;
     margin-left: auto;
     margin-right: auto;
     padding: 20px 40px 40px 40px;
@@ -227,4 +228,52 @@
 
 .slider__wrapper__bottom {
     justify-content: center;
+}
+
+.about {
+    width: 100%;
+}
+
+.about__header {
+    width: 1363px;
+    color: var(--txt-dark-color);
+    font-size: 60px;
+    font-weight: 600;
+    line-height: 125%;
+    margin: 100px auto 40px auto;
+    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    -webkit-text-stroke: 1px #000000; /* Толщина и цвет обводки */
+    text-stroke: 1px #000000; /* Толщина и цвет обводки (стандартное свойство) */
+}
+
+.fotos-wrapper img {
+    max-width: 660px;
+    width: 100%;
+    object-fit: cover;
+    vertical-align: top;
+    border-radius: 20px;
+}
+
+.fotos-wrapper img:nth-child(1) {
+    height: 590px;
+    margin-bottom: 40px;
+    margin-right: 34px;
+}
+
+.fotos-wrapper img:nth-child(2) {
+    height: 430px;
+}
+
+.fotos-wrapper img:nth-child(3) {
+    height: 430px;
+    margin-right: 34px;
+}
+
+.fotos-wrapper img:nth-child(4) {
+    height: 590px;
+    margin-top: -160px;
+}
+
+.fotos-wrapper {
+
 }
