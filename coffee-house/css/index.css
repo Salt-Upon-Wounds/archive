@@ -484,3 +484,141 @@ html {
     border-bottom: 2px solid transparent;
     transition: ease-in-out 1s;
 }
+
+/*menu page section*/
+
+.menu__button {
+    height: 46px;
+    border-radius: 100px;
+    border: 1px solid var(--brdr-light-color);
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    transition: background-color ease-in-out 1s;
+    margin-left: 8px;
+}
+
+.menu__button img {
+    width: 16px;
+    height: 24px;
+}
+
+.btn__circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--brdr-light-color);
+    margin-left: 8px;
+    transition: background-color ease-in-out 1s;
+}
+
+.btn__text {
+    color: var(--txt-dark-color);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 150%;
+    margin-right: 16px;
+    transition: color ease-in-out 1s;
+}
+
+.menu__button:hover,
+.menu__button.active {
+    background-color: var(--bg-container-color);
+    transition: background-color ease-in-out 1s;
+}
+
+.menu__button:hover .btn__text,
+.menu__button.active .btn__text {
+    color: var(--txt-light-color);
+    transition: color ease-in-out 1s;
+}
+
+.menu__button:hover .btn__circle,
+.menu__button.active .btn__circle {
+    background-color: var(--bg-body-color);
+    transition: background-color ease-in-out 1s;
+}
+
+.menu__wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    margin-top: 20px;
+    margin-bottom: 100px;
+    align-items: center;
+}
+
+.menu__header {
+    margin: 0;
+    color: var(--txt-dark-color);
+    text-align: center;
+    font-size: 60px;
+    font-weight: 600;
+    line-height: 125%; 
+    max-width: 800px;
+}
+
+.menu__list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 39px;
+}
+
+.menu__card {
+    max-width: 308px;
+    border-radius: 40px;
+    border: 1px solid var(--brdr-light-color);
+    height: 506px;
+    display: flex;
+    flex-direction: column;
+}
+
+.card__img__wrap {
+    max-width: 308px;
+    max-height: 308px;
+    border: 1px solid var(--brdr-light-color);
+    overflow: hidden;
+    border-radius: 40px;
+}
+
+.card__img {
+    border-radius: 40px;
+    max-width: 100%;
+    transform: scale(1.1);
+    transition: transform 1s;
+}
+
+.menu__card:hover .card__img {
+    transform: scale(1.0);
+    transition: transform 1s;
+}
+
+.card__desc {
+    flex-grow: 1;
+    margin: 0 20px 0 20px;
+    color: var(--txt-dark-color);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 150%;
+}
+
+.card__title {
+    margin: 20px 20px 12px 20px;
+    color: var(--txt-dark-color);
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 125%;
+}
+
+.card__price {
+    margin: 12px 20px 20px 20px;
+    color: var(--txt-dark-color);
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 125%;
+}
