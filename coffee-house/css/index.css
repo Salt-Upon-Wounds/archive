@@ -52,6 +52,10 @@ html {
     transition: ease-in-out 1s;
 }
 
+.header__menu.active {
+    border-bottom: 2px solid var(--txt-dark-color);
+}
+
 .header__menu span {
     height: 24px;
     display: flex;
@@ -269,6 +273,7 @@ html {
     object-position: center center;
     border-radius: 20px;
     transform: scale(1.2);
+    transition: transform ease-in-out 1s;
 }
 .fotos-wrapper span {
     display: inline-block;
@@ -276,7 +281,7 @@ html {
     width: 100%;
     vertical-align: top;
     border-radius: 20px;
-    transition: ease-in-out 1s;
+    transition: transform ease-in-out 1s;
     overflow: hidden;
 }
 
