@@ -13,7 +13,9 @@
   <body class="body">
     <main class="main">
         <header class="header">
-          <img class="header__logo" src="./resources/logo.svg" alt="logo">
+          <a class="logo__wrapper" href="/">
+            <img class="logo" src="./resources/logo.svg" alt="logo">
+          </a>
           <ul class="header__list">
             <li class="list__item">
               <a class="item__link" href="#coffee">Favorite coffee</a>
@@ -28,13 +30,13 @@
               <a class="item__link" href="#contacts">Contact us</a>
             </li>
           </ul>
-          <a class="header__menu" href=""><span>Menu</span><img src="./resources/coffee-cup.svg" alt="cup"></a>
+          <a class="header__menu" href="/menu"><span>Menu</span><img src="./resources/coffee-cup.svg" alt="cup"></a>
         </header>
         <section class="start-page">
           <div class="enjoy">
             <h1 class="enjoy__heading"><span class="accent">Enjoy</span> premium coffee at our charming cafe</h1>
             <p class="enjoy__text">With its inviting atmosphere and delicious coffee options, the Coffee House Resource is a popular destination for coffee lovers and those seeking a warm and inviting space to enjoy their favorite beverage.</p>
-            <a class="enjoy__btn"><span>Menu</span><img class="enjoy__btn__cup" src="./resources/coffee-cup.svg" alt="cup"></a>
+            <a class="enjoy__btn" href="/menu"><span>Menu</span><img class="enjoy__btn__cup" src="./resources/coffee-cup.svg" alt="cup"></a>
           </div>
           <div id="coffee" class="coffee">
             <h2 class="coffee__header">Choose your <span class="accent">favorite</span> coffee</h2>
@@ -61,10 +63,10 @@
           <div id="about" class="about">
             <h2 class="about__header">Resource is <span class="accent">the perfect and cozy place</span> where you can enjoy a variety of hot beverages, relax, catch up with friends, or get some work done.</h2>
             <div class="fotos-wrapper">
-              <img src="./resources/about-1.jpg" alt="about-1">
-              <img src="./resources/about-3.jpg" alt="about-2">
-              <img src="./resources/about-2.jpg" alt="about-3">
-              <img src="./resources/about-4.jpg" alt="about-4">
+              <span><img src="./resources/about-1.jpg" alt="about-1"></span>
+              <span><img src="./resources/about-3.jpg" alt="about-2"></span>
+              <span><img src="./resources/about-2.jpg" alt="about-3"></span>
+              <span><img src="./resources/about-4.jpg" alt="about-4"></span>
             </div>
           </div>
           <div id="app" class="app">
@@ -72,14 +74,14 @@
               <h2 class="app__header"><span class="accent">Download</span> our apps to start ordering</h2>
               <p class="app__text">Download the Resource app today and experience the comfort of ordering your favorite coffee from wherever you are</p>
               <div class="app__buttons__wrapper">
-                <a class="app-button">
+                <a class="app__button">
                   <img src="./resources/apple.svg" alt="apple">
                   <span>
                     <div class="btn-text">Available on the</div>
                     <div class="btn-text">App Store</div>
                   </span>
                 </a>
-                <a class="app-button">
+                <a class="app__button">
                   <img src="./resources/google.svg" alt="google">
                   <span>
                     <div class="btn-text">Available on</div>
@@ -91,7 +93,39 @@
             <img src="./resources/mobile-screens.png" alt="app">
           </div>
         </section>
-        <footer id="contacts"></footer>
+        <footer id="contacts" class="footer">
+          <div class="footer__media">
+            <h3 class="media__header">Sip, Savor, Smile. <span class="accent">It’s coffee time!</span></h3>
+            <div class="media__wrapper">
+              <a class="media__link">
+                <img class="media__btn" src="./resources/twitter.svg" alt="X">
+              </a>
+              <a class="media__link">
+                <img class="media__btn" src="./resources/instagram.svg" alt="insta">
+              </a>
+              <a class="media__link">
+                <img class="media__btn" src="./resources/facebook.svg" alt="fb">
+              </a>
+            </div>
+          </div>
+          <div class="footer__contacts">
+            <h3 class="contacts__header">Contact us</h3>
+            <div class="contacts__wrapper">
+              <a class="contacts__link" target="_blank" href="https://maps.app.goo.gl/Ug7xvJYz1KixHUYR8">
+                <img class="link__img" src="./resources/location.svg" alt="pin">
+                <span class="link__text">8558 Green Rd.,  LA</span>
+              </a>
+              <a class="contacts__link" href="tel:+1603-555-0123">
+                <img class="link__img" src="./resources/phone.svg" alt="pin">
+                <span class="link__text">+1 (603) 555-0123</span>
+              </a>
+              <span class="contacts__time">
+                <img class="link__img" src="./resources/clock.svg" alt="pin">
+                <span class="link__text">Mon-Sat: 9:00 AM – 23:00 PM</span>
+              </span>
+            </div>
+          </div>
+        </footer>
     </main>
 	<script src="./scripts/index.js"></script>
   </body>
