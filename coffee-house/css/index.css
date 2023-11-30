@@ -51,13 +51,7 @@ html {
     font-weight: 600;
     line-height: 150%;
     border-bottom: 2px solid transparent;
-    transition: ease-in-out 1s;
-}
-
-.item__link:hover,
-.header__menu:hover {
-    border-bottom: 2px solid var(--txt-dark-color);
-    transition: ease-in-out 1s;
+    transition: border-bottom ease-in-out 1s;
 }
 
 .header__menu.active {
@@ -81,8 +75,7 @@ html {
 .enjoy {
     margin-top: 20px;
     padding: 100px;
-    background: url("../resources/coffee.jpg"), lightgray 50% / cover no-repeat;
-    background-size: 100% 100%;
+    background: url("../resources/coffee.jpg") no-repeat center center;
     height: 444px;
     border-radius: 40px;
 
@@ -142,18 +135,6 @@ html {
     transition: ease-in-out 0.75s;
 }
 
-.enjoy__btn:hover {
-    cursor: pointer;
-}
-
-.enjoy__btn:hover .enjoy__btn__cup {
-    transition: ease-in-out 0.75s;
-    margin-left: 8px;
-    width: 20px;
-    height: 20px;
-    visibility: visible;
-}
-
 .slider__pads {
     display: block;
     width: 40px;
@@ -188,15 +169,6 @@ html {
     cursor: pointer;
     margin-top: 160px;
     transition: background-color ease-in-out 0.75s;
-}
-
-.slider__arrow:hover {
-    background-color: var(--bg-container-color);
-    transition: background-color ease-in-out 0.75s;
-}
-
-.slider__arrow:hover img {
-    filter: invert(100%);
 }
 
 .slider__frame {
@@ -285,11 +257,6 @@ html {
     overflow: hidden;
 }
 
-.fotos-wrapper span:hover img {
-    transition: ease-in-out 1s;
-    transform: scale(1);
-}
-
 .fotos-wrapper span:nth-child(1) {
     height: 590px;
     margin-bottom: 40px;
@@ -368,16 +335,6 @@ html {
     transition: background-color ease-in-out 0.75s;
 }
 
-.app__button:hover {
-    background-color: var(--bg-container-color);
-    transition: background-color ease-in-out 0.75s;
-}
-
-.app__button:hover .btn-text,
-.app__button:hover img {
-    filter: brightness(0) saturate(100%) invert(96%) sepia(8%) saturate(758%) hue-rotate(317deg) brightness(94%) contrast(87%);
-}
-
 .app__button img {
     width: 36px;
     height: 36px;
@@ -444,15 +401,6 @@ html {
     transition: background-color ease-in-out 0.75s;
 }
 
-.media__link:hover {
-    background-color: var(--bg-body-color);
-    transition: background-color ease-in-out 0.75s;
-}
-
-.media__link:hover img {
-    filter: invert(100%);
-}
-
 .contacts__wrapper {
     display: flex;
     flex-direction: column;
@@ -485,12 +433,6 @@ html {
     justify-content: start;
     gap: 8px;
     text-decoration: none;
-}
-
-.contacts__link:nth-child(1):hover,
-.contacts__link:nth-child(2):hover {
-    border-bottom: 2px solid var(--txt-light-color);
-    transition: ease-in-out 1s;
 }
 
 .contacts__link:nth-child(1),
@@ -537,24 +479,6 @@ html {
     line-height: 150%;
     margin-right: 16px;
     transition: color ease-in-out 1s;
-}
-
-.menu__button:hover,
-.menu__button.active {
-    background-color: var(--bg-container-color);
-    transition: background-color ease-in-out 1s;
-}
-
-.menu__button:hover .btn__text,
-.menu__button.active .btn__text {
-    color: var(--txt-light-color);
-    transition: color ease-in-out 1s;
-}
-
-.menu__button:hover .btn__circle,
-.menu__button.active .btn__circle {
-    background-color: var(--bg-body-color);
-    transition: background-color ease-in-out 1s;
 }
 
 .menu__wrapper {
@@ -607,11 +531,6 @@ html {
     transition: transform 1s;
 }
 
-.menu__card:hover .card__img {
-    transform: scale(1.0);
-    transition: transform 1s;
-}
-
 .card__desc {
     flex-grow: 1;
     margin: 0 20px 0 20px;
@@ -637,8 +556,118 @@ html {
     line-height: 125%;
 }
 
-@media screen and (max-width: 1439px) {
+.burger-menu {
+    display: none;
+}
 
+@media (hover: none) {
+    .enjoy__btn .enjoy__btn__cup {
+        margin-left: 8px;
+        width: 20px;
+        height: 20px;
+        visibility: visible;
+    }
+
+    .menu__button.active {
+        background-color: var(--bg-container-color);
+        transition: background-color ease-in-out 1s;
+    }
+    
+    .menu__button.active .btn__text {
+        color: var(--txt-light-color);
+        transition: color ease-in-out 1s;
+    }
+    
+    .menu__button.active .btn__circle {
+        background-color: var(--bg-body-color);
+        transition: background-color ease-in-out 1s;
+    }
+}
+
+@media (hover: hover) {
+    .item__link:hover,
+    .header__menu:hover {
+        border-bottom: 2px solid var(--txt-dark-color);
+        transition: border-bottom ease-in-out 1s;
+    }
+
+    .enjoy__btn:hover {
+        cursor: pointer;
+    }
+    
+    .enjoy__btn:hover .enjoy__btn__cup {
+        transition: ease-in-out 0.75s;
+        margin-left: 8px;
+        width: 20px;
+        height: 20px;
+        visibility: visible;
+    }
+
+    .slider__arrow:hover {
+        background-color: var(--bg-container-color);
+        transition: background-color ease-in-out 0.75s;
+    }
+    
+    .slider__arrow:hover img {
+        filter: invert(100%);
+    }
+    
+    .fotos-wrapper span:hover img {
+        transition: ease-in-out 1s;
+        transform: scale(1);
+    }
+    
+    .app__button:hover {
+        cursor: pointer;
+        background-color: var(--bg-container-color);
+        transition: background-color ease-in-out 0.75s;
+    }
+
+    .app__button:hover .btn-text,
+    .app__button:hover img {
+        filter: brightness(0) saturate(100%) invert(96%) sepia(8%) saturate(758%) hue-rotate(317deg) brightness(94%) contrast(87%);
+    }
+    
+    .media__link:hover {
+        background-color: var(--bg-body-color);
+        transition: background-color ease-in-out 0.75s;
+    }
+
+    .media__link:hover img {
+        filter: invert(100%);
+    }
+
+    .contacts__link:nth-child(1):hover,
+    .contacts__link:nth-child(2):hover {
+        border-bottom: 2px solid var(--txt-light-color);
+        transition: ease-in-out 1s;
+    }
+
+    .menu__button:hover,
+    .menu__button.active {
+        background-color: var(--bg-container-color);
+        transition: background-color ease-in-out 1s;
+    }
+    
+    .menu__button:hover .btn__text,
+    .menu__button.active .btn__text {
+        color: var(--txt-light-color);
+        transition: color ease-in-out 1s;
+    }
+    
+    .menu__button:hover .btn__circle,
+    .menu__button.active .btn__circle {
+        background-color: var(--bg-body-color);
+        transition: background-color ease-in-out 1s;
+    }
+
+    .menu__card:hover .card__img {
+        transform: scale(1.0);
+        transition: transform 1s;
+    }
+}
+
+@media screen and (max-width: 1439px) {
     .main {
         padding-left: 40px;
         padding-right: 40px;
@@ -650,12 +679,70 @@ html {
         display: block;
     }
     .fotos-wrapper span:nth-child(4) {
-        margin: 0 auto 100px auto;
+        margin: 0 auto 0 auto;
         display: block;
     }
 
     .fotos-wrapper span:nth-child(2),
     .fotos-wrapper span:nth-child(3) {
         display: none;
+    }
+
+    .enjoy {
+        padding: 100px 60px 100px 60px;
+    }
+
+    .fotos-wrapper span {
+        max-width: 100%;
+    }
+
+    .app__buttons {
+        max-width: 708px;
+    }
+
+    .app__header {
+        margin-top: 0;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .header__list,
+    .header__menu {
+        display: none;
+    }
+    
+    .burger-menu {
+        display: flex;
+        border: 1px solid var(--brdr-dark-color);
+        background-color: transparent;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        border-radius: 100px;
+        width: 44px;
+        height: 44px;
+        gap: 8px;
+    }
+
+    .burger-menu span {
+        width: 16px;
+        border: 1px solid var(--brdr-dark-color);
+    }
+
+    .burger-menu.active span {
+        /*animation*/
+    }
+
+    .footer {
+        flex-direction: column;
+        min-height: 736px;
+        align-items: flex-start;
+        justify-content: center;
+    }
+
+    .footer__media,
+    .footer__contacts {
+        flex: 0;
+        margin-left: 57px;
     }
 }
