@@ -172,8 +172,10 @@ html {
 }
 
 .slider__frame {
-    width: 480px;
-    height: 480px;
+    max-width: 480px;
+    max-height: 480px;
+    width: 100%;
+    height: 100%;
 }
 
 .slider__frame img {
@@ -743,6 +745,76 @@ html {
     .footer__media,
     .footer__contacts {
         flex: 0;
-        margin-left: 57px;
+        padding: 0 57px;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .main {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .enjoy__heading {
+        font-size: 42px;
+        line-height: 115%;
+    }
+
+    .app__img {
+        width: 100%;
+    }
+
+    .enjoy {
+        padding: 60px 16px 50px 16px;
+    }
+
+    .coffee__header {
+        font-size: 32px;
+        font-weight: 600;
+        line-height: 125%;
+    }
+
+    .slider__arrow {
+        display: none;
+    }
+
+    .slider__frame {
+        max-width: 348px;
+        max-height: 348px;
+    }
+
+    .about__header {
+        font-size: 32px;
+        font-weight: 600;
+        line-height: 125%;
+    }
+
+    .app__header {
+        font-size: 32px;
+    font-weight: 600;
+    line-height: 125%;
+    }
+
+    .app__buttons__wrapper {
+        flex-wrap: wrap;
+    }
+
+    .app {
+        gap: 37px;
+    }
+
+    .media__header {
+        font-size: 32px;
+        font-weight: 600;
+        line-height: 125%;
+    }
+
+    .footer {
+        min-height: 526px;
+        gap: 40px;
+    }
+
+    .footer__media, .footer__contacts {
+        padding: 0 16px;
     }
 }
