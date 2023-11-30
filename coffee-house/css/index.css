@@ -506,6 +506,7 @@ html {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 39px;
 }
 
@@ -559,6 +560,10 @@ html {
 }
 
 .burger-menu {
+    display: none;
+}
+
+.menu__refresh-btn {
     display: none;
 }
 
@@ -747,6 +752,26 @@ html {
         flex: 0;
         padding: 0 57px;
     }
+
+    .menu__list .menu__card:nth-child(n+5) {
+        display: none;
+    }
+
+    .menu__refresh-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: transparent;
+        border-radius: 100px;
+        border: 1px solid var(--brdr-dark-color);
+        width: 60px;
+        height: 60px;
+    }
+
+    .menu__refresh-btn img {
+        width: 24px;
+        height: 24px;
+    }
 }
 
 @media screen and (max-width: 767px) {
@@ -791,8 +816,8 @@ html {
 
     .app__header {
         font-size: 32px;
-    font-weight: 600;
-    line-height: 125%;
+        font-weight: 600;
+        line-height: 125%;
     }
 
     .app__buttons__wrapper {
@@ -816,5 +841,19 @@ html {
 
     .footer__media, .footer__contacts {
         padding: 0 16px;
+    }
+
+    .menu__button {
+        margin-left: 0;
+    }
+
+    .menu__header {
+        font-size: 32px;
+        font-weight: 600;
+        line-height: 125%;
+    }
+
+    .menu__list {
+        gap: 37px;
     }
 }
