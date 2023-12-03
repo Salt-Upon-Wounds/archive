@@ -30,6 +30,7 @@ html {
 .logo {
     width: 100px;
     height: 60px;
+    z-index: 888;
 }
 
 .header__list {
@@ -567,6 +568,188 @@ html {
     display: none;
 }
 
+/*-----------------------------------------------------------*/
+
+.menu {
+    max-width: 100vw;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    background-color: var(--bg-body-color);
+    right: -100%;
+    top: 0;
+    transition: right 1s;
+
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+.menu .nav__list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+    gap: 60px;
+}
+
+.nav__list .item__link {
+    font-size: 32px;
+    line-height: 125%;
+}
+
+.nav__list img {
+    width: 40px;
+    height: 40px;
+}
+
+.nav__list .nav__elem:last-child {
+    margin-top: 40px;
+}
+
+.menu.active {
+    right: 0;
+}
+
+.burger-menu.active {
+    transform: rotate(45deg);
+}
+
+.burger-menu.active span:nth-child(1){
+    transform: rotate(90deg) translate(5px, 0px);
+}
+
+.burger-menu.active span:nth-child(2){
+    transform: translate(0px, -5px);
+}
+
+.burger-menu,
+.burger-menu span {
+    transition: transform ease-in-out 0.5s;
+}
+
+/*-----------------------------------------------------------*/
+
+.back {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(41, 41, 41, 0.6);
+
+    z-index: 998;
+}
+.modal {
+    position: fixed;
+    max-width: 952px;
+    width: 100%;
+    display: none;
+    flex-wrap: wrap;
+
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    z-index: 999;
+}
+.modal.active {
+    display: flex;
+}
+.back.active {
+    display: block;
+}
+.modal .modal__wrapper {
+    background-color: var(--color-light-s);
+    max-width: 351px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 50px 20px 0px;
+    border-bottom-right-radius: 9px;
+    border-top-right-radius: 9px;
+}
+.modal__btn {
+    margin-left: auto;
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--color-primary);
+    border-radius: 100px;
+    cursor: pointer;
+    background-color: transparent;
+}
+.modal__btn:hover {
+    background-color: var(--color-primary-light);
+    border-color: var(--color-primary-light);
+}
+.modal .break {
+    display: block;
+    width: 100%;
+    height: 0;
+}
+.modal .img-wrapper{
+    background-color: var(--color-light-s);
+    border-bottom-left-radius: 9px;
+    border-top-left-radius: 9px;
+}
+.modal .img{
+    height: 500px;
+    width: 500px;
+}
+.modal .title {
+    font-family: var(--main-font);
+    font-weight: 400;
+    font-size: 35px;
+    line-height: 130%;
+    letter-spacing: 0.06em;
+    color: #000000;
+    margin: 0 0 10px;
+}
+.modal .subtitle {
+    font-family: var(--main-font);
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 115%;
+    letter-spacing: 0.06em;
+    color: #000000;
+    margin: 0 0 20px;
+}
+.modal .desc {
+    font-family: var(--main-font);
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 110%;
+    letter-spacing: 0.06em;
+    color: #000000;
+    margin: 0 0 20px;
+}
+.modal li {
+    font-family: var(--main-font);
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 110%;
+    letter-spacing: 0.06em;
+    color: #000000;
+    margin: 0 0 5px;
+}
+.modal li::before {
+    color: var(--color-primary);
+    content: "\2022";  /* Add content: \2022 is the CSS Code/unicode for a bullet */
+    font-weight: bold; /* If you want it to be bold */
+    display: inline-block; /* Needed to add space between the bullet and the text */
+    width: 1em; /* Also needed for space (tweak if needed) */
+    margin-left: -1em; /* Also needed for space (tweak if needed) */
+}
+.modal .modal__list {
+    padding-left: 10px;
+    list-style: none;
+}
+
 @media (hover: none) {
     .enjoy__btn .enjoy__btn__cup {
         margin-left: 8px;
@@ -713,6 +896,15 @@ html {
 }
 
 @media screen and (max-width: 768px) {
+    .menu {
+        display: flex;
+    }
+
+    .body.block {
+        height: 100%;
+        overflow-y: hidden;
+    } 
+
     .header__list,
     .header__menu {
         display: none;
@@ -729,6 +921,7 @@ html {
         width: 44px;
         height: 44px;
         gap: 8px;
+        z-index: 888;
     }
 
     .burger-menu span {
