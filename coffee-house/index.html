@@ -12,25 +12,6 @@
     <script type="module" src="./scripts/index.js"></script>
   </head>
   <body class="body">
-    <div class="back"></div>
-    <div class="modal">
-        <button class="modal__btn"><img src="./resources/arrow-left.svg" alt="X"></button>
-        <div class="break"></div>
-        <div class="img-wrapper">
-            <img class="img" src="./resources/coffee-1.jpg" alt="pet">
-        </div>
-        <div class="modal__wrapper">
-            <h3 class="title">Dorra de la Explora</h3>
-            <h4 class="subtitle">dog - god</h4>
-            <p class="desc">qwertyuiop[ asdfghjkl;' zxcvbnm,. sdfghjkl rtyuio fghjkluytfvbh cfghbghjhygfrtyhgfgh vghgffgbnjhgfdertg vfghvfrthgfdfghvfghhjhnjkk qwertyuiop[ asdfghjkl;' zxcvbnm,. sdfghjkl qwertyuiop[ asdfghjkl;' zxcvbnm,. sdfghjkl qwertyuiop[ asdfghjkl;' zxcvbnm,. sdfghjkl</p>
-            <ul class="modal__list">
-                <li class="age">23</li>
-                <li class="inoculations">asd</li>
-                <li class="diseases">asd, sdf, erfdvwe, asdqf, dsaf, wfaffrvvrvrvrvrvrrr vrvrvrrrrrrrrrrrrrrrrr rrrrrrrrrrrrrrrrrrrrrrrrr rrrrrrrrrrrrrrrrrrrr</li>
-                <li class="parasites">asd, asd</li>
-            </ul>
-        </div>
-    </div>
     <main class="main">
         <header class="header">
           <a class="logo__wrapper" href="./index.html">
@@ -86,19 +67,29 @@
           </div>
           <div id="coffee" class="coffee">
             <h2 class="coffee__header">Choose your <span class="accent">favorite</span> coffee</h2>
-            <div class="slider__wrapper">
-              <div class="slider__wrapper__upper">
-                <a class="slider__arrow"><img src="./resources/arrow-left.svg" alt="left"></a>
+            <div class="slider">
+              <a class="slider__arrow left"><img src="./resources/arrow-left.svg" alt="left"></a>
+              <div class="slider__wrapper">
                 <div class="slider__frame">
-                  <img src="./resources/coffee-slider-1.png" alt="frame">
+                  <img class="slider__img" src="./resources/coffee-slider-1.png" alt="frame">
+                  <p class="slider__header">S’mores Frappuccino</p>
+                  <p class="slider__info">This new drink takes an espresso and mixes it with brown sugar and cinnamon before being topped with oat milk.</p>
+                  <p class="slider__price">$5.50</p>
                 </div>
-                <a class="slider__arrow"><img src="./resources/arrow-right.svg" alt="right"></a>
+                <div class="slider__frame">
+                  <img class="slider__img" src="./resources/coffee-slider-2.png" alt="frame">
+                  <p class="slider__header">Caramel Macchiato</p>
+                  <p class="slider__info">Fragrant and unique classic espresso with rich caramel-peanut syrup, with cream under whipped thick foam.</p>
+                  <p class="slider__price">$5.00</p>
+                </div>
+                <div class="slider__frame">
+                  <img class="slider__img" src="./resources/coffee-slider-3.png" alt="frame">
+                  <p class="slider__header">Ice coffee</p>
+                  <p class="slider__info">A popular summer drink that tones and invigorates. Prepared from coffee, milk and ice.</p>
+                  <p class="slider__price">$4.50</p>
+                </div>
               </div>
-              <div class="slider__wrapper__text">
-                <p class="slider__wrapper__header">S’mores Frappuccino</p>
-                <p class="slider__wrapper__info">This new drink takes an espresso and mixes it with brown sugar and cinnamon before being topped with oat milk.</p>
-                <p class="slider__wrapper__price">$5.50</p>
-              </div>
+              <a class="slider__arrow right"><img src="./resources/arrow-right.svg" alt="right"></a>
               <div class="slider__wrapper__bottom">
                 <span class="slider__pads active"></span>
                 <span class="slider__pads"></span>

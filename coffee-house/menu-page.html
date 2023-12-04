@@ -12,6 +12,56 @@
     <script type="module" src="./scripts/index.js"></script>
   </head>
   <body class="body">
+    <div class="back"></div>
+    <div class="modal">
+        <div class="img__wrapper">
+          <img class="img" src="./resources/coffee-1.jpg" alt="pet">
+        </div>
+        <div class="modal__wrapper">
+          <h4 class="modal__title">Irish coffee</h4>
+          <p class="modal__desc">coffee coffee coffee coffee coffee v coffee coffeecoffeecoffee coffeecoffee coffeecoffee</p>
+          <p class="modal__low-title">Size</p>
+          <div class="modal__btn-wrapper size">
+            <button class="modal__btn">
+              <span class="circle">S</span>
+              <span class="text">200ml</span>
+            </button>
+            <button class="modal__btn">
+              <span class="circle">M</span>
+              <span class="text">300ml</span>
+            </button>
+            <button class="modal__btn">
+              <span class="circle">L</span>
+              <span class="text">400ml</span>
+            </button>
+          </div>
+          <p class="modal__low-title">Addictives</p>
+          <div class="modal__btn-wrapper additives">
+            <button class="modal__btn">
+              <span class="circle">1</span>
+              <span class="text">sugar</span>
+            </button>
+            <button class="modal__btn">
+              <span class="circle">2</span>
+              <span class="text">sugar</span>
+            </button>
+            <button class="modal__btn">
+              <span class="circle">3</span>
+              <span class="text">sugar</span>
+            </button>
+          </div>
+          <div class="modal__total">
+            <span>Total</span>
+            <span class="modal__total-sum">$7.12</span>
+          </div>
+          <div class="modal__line"></div>
+          <div class="modal__attention">
+            <img src="./resources/info-empty.svg" alt="!">
+            <span>The cost is not final. Download our mobile app to see the final price and place your order. Earn loyalty points and enjoy your favorite coffee with up to 20% discount.</span>
+          </div>
+          <button class="modal__close">Close</button>
+      </div>
+    </div>
     <main class="main">
         <header class="header">
           <a class="logo__wrapper" href="./index.html">
@@ -36,6 +86,28 @@
             <span></span>
             <span></span>
           </button>
+          <div class="menu">
+            <ul class="nav__list">
+                <li class="nav__elem">
+                    <a class="item__link" href="#coffee">Favorite coffee</a>
+                </li>
+                <li class="nav__elem">
+                    <a class="item__link" href="#about">About</a>
+                </li>
+                <li class="nav__elem">
+                    <a class="item__link" href="#app">Mobile app</a>
+                </li>
+                <li class="nav__elem">
+                    <a class="item__link" href="#contacts">Contact us</a>
+                </li>
+                <li class="nav__elem">
+                  <a class="item__link" href="./menu-page.html">
+                    <span>Menu</span>
+                    <img src="./resources/coffee-cup.svg" alt="cup">
+                  </a>
+              </li>
+            </ul>
+        </div>
         </header>
         <div class="menu__wrapper">
             <h1 class="menu__header">Behind each of our cups hides an <span class="accent">amazing surprise</span></h1>
