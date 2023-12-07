@@ -149,11 +149,14 @@ html {
     width: 40px;
     height: 4px;
     border-radius: 100px;
-    background: var(--brdr-light-color);
+    background: linear-gradient(to left, var(--brdr-light-color) 50%, var(--brdr-dark-color) 50%) right;
+    background-size: 200%;
+    transition: .5s ease-out;
 }
 
 .slider__pads.active {
-    background: var(--brdr-dark-color);
+    background-position: left;
+    transition: 5s ease-out;
 }
 
 .slider__arrow {
