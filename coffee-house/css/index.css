@@ -71,12 +71,21 @@ html {
 
 .start-page {
     height: 100%;
+    position: relative;
+}
+
+.enjoy-video {
+    object-fit: cover;
+    position: absolute;
+    border-radius: 40px;
+    height: 644px;
+    z-index: -1;
 }
 
 .enjoy {
     margin-top: 20px;
     padding: 100px;
-    background: url("../resources/coffee.jpg") no-repeat center center;
+    /* background: url("../resources/coffee.jpg") no-repeat center center; */
     background-size: cover;
     height: 444px;
     border-radius: 40px;
@@ -942,6 +951,10 @@ html {
 
     .app__img {
         width: 100%;
+    }
+
+    .enjoy-video {
+        height: 554px;
     }
 
     .enjoy {
