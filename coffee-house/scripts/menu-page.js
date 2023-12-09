@@ -83,6 +83,10 @@ dessert.forEach((x, i) => {
     });
 });
 
+let size = document.querySelectorAll('.modal__btn-wrapper.size .modal__btn');
+let additives = document.querySelectorAll('.modal__btn-wrapper.additives .modal__btn');
+let total = document.querySelector('.modal__total-sum');
+
 [...document.querySelectorAll('.menu__card')].forEach( x => {
     x.addEventListener('click', e => {
         back.classList.toggle('active');
@@ -92,6 +96,48 @@ dessert.forEach((x, i) => {
         document.querySelector('.modal .img__wrapper .img').src = `./resources/${e.target.closest('.menu__card').dataset.type}-${+e.target.closest('.menu__card').dataset.id + 1}.jpg`;
         document.querySelector('.modal .modal__title').innerHTML = arr[e.target.closest('.menu__card').dataset.id].name;
         document.querySelector('.modal .modal__desc').innerHTML = arr[e.target.closest('.menu__card').dataset.id].description;
+        [...document.querySelectorAll('.modal__btn-wrapper .modal__btn')].forEach( x => {
+            x.classList.remove('active');
+        });
+        document.querySelector('.modal__btn-wrapper.size .modal__btn').classList.add('active');
+        for (let i = 0; i < 3; i++) {
+            size[i].querySelector('.text').innerHTML =  arr[e.target.closest('.menu__card').dataset.id].sizes[i].size;
+            size[i].dataset.price = arr[e.target.closest('.menu__card').dataset.id].sizes[i]['add-price'];
+            additives[i].querySelector('.text').innerHTML =  arr[e.target.closest('.menu__card').dataset.id].additives[i].name;
+            additives[i].dataset.price = arr[e.target.closest('.menu__card').dataset.id].additives[i]['add-price'];
+        }
+        total.innerHTML = `$${arr[e.target.closest('.menu__card').dataset.id].price}`;
+        total.dataset.price = `${arr[e.target.closest('.menu__card').dataset.id].price}`;
+    });
+});
+
+size.forEach(x => {
+    x.addEventListener('click', e => {
+        size.forEach(y => {
+            y.classList.remove('active');
+        });
+        e.target.closest('button').classList.add('active');
+        let adds = 0;
+        [...document.querySelectorAll('.modal__btn-wrapper.additives .modal__btn.active')].forEach(y => {
+            adds += +y.dataset.price;
+        });
+        console.log(adds);
+        total.innerHTML = `$${(+total.dataset.price + +e.target.closest('button').dataset.price + adds).toFixed(2)}`;
+    });
+});
+
+additives.forEach(x => {
+    x.addEventListener('click', e => {
+        e.target.closest('button').classList.toggle('active');
+        let adds = 0;
+        [...document.querySelectorAll('.modal__btn-wrapper.additives .modal__btn.active')].forEach(y => {
+            adds += +y.dataset.price;
+        });
+        [...document.querySelectorAll('.modal__btn-wrapper.size .modal__btn.active')].forEach(y => {
+            adds += +y.dataset.price;
+        });
+        console.log(adds);
+        total.innerHTML = `$${(+total.dataset.price + adds).toFixed(2)}`;
     });
 });
 
@@ -105,6 +151,13 @@ dessert.forEach((x, i) => {
     x.addEventListener('click', e => {
         
     });
+});
+
+document.querySelector('.modal__close').addEventListener('click', (e) => {
+    back.classList.remove('active');
+    body.classList.remove('block');
+    body.classList.remove('block-all');
+    modal.classList.remove('active');
 });
 
 document.querySelector('.menu__refresh-btn').addEventListener('click', e => {

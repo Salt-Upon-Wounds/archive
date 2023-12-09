@@ -5,15 +5,15 @@ export default [
       "price": "7.00",
       "category": "coffee",
       "sizes": {
-        "s": {
+        "0": {
           "size": "200 ml",
           "add-price": "0.00"
         },
-        "m": {
+        "1": {
           "size": "300 ml",
           "add-price": "0.50"
         },
-        "l": {
+        "2": {
           "size": "400 ml",
           "add-price": "1.00"
         }
@@ -40,15 +40,15 @@ export default [
       "price": "7.00",
       "category": "coffee",
       "sizes": {
-        "s": {
+        "0": {
           "size": "200 ml",
           "add-price": "0.00"
         },
-        "m": {
+        "1": {
           "size": "300 ml",
           "add-price": "0.50"
         },
-        "l": {
+        "2": {
           "size": "400 ml",
           "add-price": "1.00"
         }
@@ -75,15 +75,15 @@ export default [
       "price": "5.50",
       "category": "coffee",
       "sizes": {
-        "s": {
+        "0": {
           "size": "200 ml",
           "add-price": "0.00"
         },
-        "m": {
+        "1": {
           "size": "300 ml",
           "add-price": "0.50"
         },
-        "l": {
+        "2": {
           "size": "400 ml",
           "add-price": "1.00"
         }
@@ -110,15 +110,15 @@ export default [
       "price": "5.00",
       "category": "coffee",
       "sizes": {
-        "s": {
+        "0": {
           "size": "200 ml",
           "add-price": "0.00"
         },
-        "m": {
+        "1": {
           "size": "300 ml",
           "add-price": "0.50"
         },
-        "l": {
+        "2": {
           "size": "400 ml",
           "add-price": "1.00"
         }
@@ -145,15 +145,15 @@ export default [
       "price": "4.50",
       "category": "coffee",
       "sizes": {
-        "s": {
+        "0": {
           "size": "200 ml",
           "add-price": "0.00"
         },
-        "m": {
+        "1": {
           "size": "300 ml",
           "add-price": "0.50"
         },
-        "l": {
+        "2": {
           "size": "400 ml",
           "add-price": "1.00"
         }
@@ -180,15 +180,15 @@ export default [
       "price": "5.50",
       "category": "coffee",
       "sizes": {
-        "s": {
+        "0": {
           "size": "200 ml",
           "add-price": "0.00"
         },
-        "m": {
+        "1": {
           "size": "300 ml",
           "add-price": "0.50"
         },
-        "l": {
+        "2": {
           "size": "400 ml",
           "add-price": "1.00"
         }
@@ -215,15 +215,15 @@ export default [
       "price": "5.50",
       "category": "coffee",
       "sizes": {
-        "s": {
+        "0": {
           "size": "200 ml",
           "add-price": "0.00"
         },
-        "m": {
+        "1": {
           "size": "300 ml",
           "add-price": "0.50"
         },
-        "l": {
+        "2": {
           "size": "400 ml",
           "add-price": "1.00"
         }
@@ -250,15 +250,15 @@ export default [
       "price": "6.50",
       "category": "coffee",
       "sizes": {
-        "s": {
+        "0": {
           "size": "200 ml",
           "add-price": "0.00"
         },
-        "m": {
+        "1": {
           "size": "300 ml",
           "add-price": "0.50"
         },
-        "l": {
+        "2": {
           "size": "400 ml",
           "add-price": "1.00"
         }
@@ -285,15 +285,15 @@ export default [
       "price": "4.50",
       "category": "tea",
       "sizes": {
-        "s": {
+        "0": {
           "size": "200 ml",
           "add-price": "0.00"
         },
-        "m": {
+        "1": {
           "size": "300 ml",
           "add-price": "0.50"
         },
-        "l": {
+        "2": {
           "size": "400 ml",
           "add-price": "1.00"
         }
@@ -320,15 +320,15 @@ export default [
       "price": "5.00",
       "category": "tea",
       "sizes": {
-        "s": {
+        "0": {
           "size": "200 ml",
           "add-price": "0.00"
         },
-        "m": {
+        "1": {
           "size": "300 ml",
           "add-price": "0.50"
         },
-        "l": {
+        "2": {
           "size": "400 ml",
           "add-price": "1.00"
         }
@@ -355,15 +355,15 @@ export default [
       "price": "5.00",
       "category": "tea",
       "sizes": {
-        "s": {
+        "0": {
           "size": "200 ml",
           "add-price": "0.00"
         },
-        "m": {
+        "1": {
           "size": "300 ml",
           "add-price": "0.50"
         },
-        "l": {
+        "2": {
           "size": "400 ml",
           "add-price": "1.00"
         }
@@ -390,15 +390,15 @@ export default [
       "price": "5.50",
       "category": "tea",
       "sizes": {
-        "s": {
+        "0": {
           "size": "200 ml",
           "add-price": "0.00"
         },
-        "m": {
+        "1": {
           "size": "300 ml",
           "add-price": "0.50"
         },
-        "l": {
+        "2": {
           "size": "400 ml",
           "add-price": "1.00"
         }
@@ -425,15 +425,15 @@ export default [
       "price": "3.50",
       "category": "dessert",
       "sizes": {
-        "s": {
+        "0": {
           "size": "50 g",
           "add-price": "0.00"
         },
-        "m": {
+        "1": {
           "size": "100 g",
           "add-price": "0.50"
         },
-        "l": {
+        "2": {
           "size": "200 g",
           "add-price": "1.00"
         }
@@ -460,15 +460,15 @@ export default [
       "price": "4.00",
       "category": "dessert",
       "sizes": {
-        "s": {
+        "0": {
           "size": "50 g",
           "add-price": "0.00"
         },
-        "m": {
+        "1": {
           "size": "100 g",
           "add-price": "0.50"
         },
-        "l": {
+        "2": {
           "size": "200 g",
           "add-price": "1.00"
         }
@@ -495,15 +495,15 @@ export default [
       "price": "4.50",
       "category": "dessert",
       "sizes": {
-        "s": {
+        "0": {
           "size": "50 g",
           "add-price": "0.00"
         },
-        "m": {
+        "1": {
           "size": "100 g",
           "add-price": "0.50"
         },
-        "l": {
+        "2": {
           "size": "200 g",
           "add-price": "1.00"
         }
@@ -530,15 +530,15 @@ export default [
       "price": "4.00",
       "category": "dessert",
       "sizes": {
-        "s": {
+        "0": {
           "size": "50 g",
           "add-price": "0.00"
         },
-        "m": {
+        "1": {
           "size": "100 g",
           "add-price": "0.50"
         },
-        "l": {
+        "2": {
           "size": "200 g",
           "add-price": "1.00"
         }
@@ -565,15 +565,15 @@ export default [
       "price": "4.50",
       "category": "dessert",
       "sizes": {
-        "s": {
+        "0": {
           "size": "50 g",
           "add-price": "0.00"
         },
-        "m": {
+        "1": {
           "size": "100 g",
           "add-price": "0.50"
         },
-        "l": {
+        "2": {
           "size": "200 g",
           "add-price": "1.00"
         }
@@ -600,15 +600,15 @@ export default [
       "price": "4.50",
       "category": "dessert",
       "sizes": {
-        "s": {
+        "0": {
           "size": "50 g",
           "add-price": "0.00"
         },
-        "m": {
+        "1": {
           "size": "100 g",
           "add-price": "0.50"
         },
-        "l": {
+        "2": {
           "size": "200 g",
           "add-price": "1.00"
         }
@@ -635,15 +635,15 @@ export default [
       "price": "5.50",
       "category": "dessert",
       "sizes": {
-        "s": {
+        "0": {
           "size": "50 g",
           "add-price": "0.00"
         },
-        "m": {
+        "1": {
           "size": "100 g",
           "add-price": "0.50"
         },
-        "l": {
+        "2": {
           "size": "200 g",
           "add-price": "1.00"
         }
@@ -670,15 +670,15 @@ export default [
       "price": "6.50",
       "category": "dessert",
       "sizes": {
-        "s": {
+        "0": {
           "size": "50 g",
           "add-price": "0.00"
         },
-        "m": {
+        "1": {
           "size": "100 g",
           "add-price": "0.50"
         },
-        "l": {
+        "2": {
           "size": "200 g",
           "add-price": "1.00"
         }
