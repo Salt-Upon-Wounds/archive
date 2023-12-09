@@ -15,6 +15,11 @@ html {
     width: 100%;
 }
 
+.body.block-all {
+    height: 100%;
+    overflow-y: hidden;
+} 
+
 .main {
     margin-left: auto;
     margin-right: auto;
@@ -494,6 +499,7 @@ html {
 /*menu page section*/
 
 .menu__button {
+    cursor: pointer;
     height: 46px;
     border-radius: 100px;
     border: 1px solid var(--brdr-light-color);
@@ -559,11 +565,12 @@ html {
 }
 
 .menu__card {
+    cursor: pointer;
     max-width: 308px;
     border-radius: 40px;
     border: 1px solid var(--brdr-light-color);
     height: 506px;
-    display: flex;
+    display: none;
     flex-direction: column;
 }
 
@@ -615,8 +622,6 @@ html {
 .menu__refresh-btn {
     display: none;
 }
-
-/*-----------------------------------------------------------*/
 
 .menu {
     max-width: 100vw;
@@ -678,8 +683,6 @@ html {
     transition: transform ease-in-out 0.5s;
 }
 
-/*-----------------------------------------------------------*/
-
 .back {
     display: none;
     position: fixed;
@@ -725,6 +728,9 @@ html {
     border-top-right-radius: 9px;
 }
 
+.menu__card.active {
+    display: flex;
+}
 
 @media (hover: none) {
     .enjoy__btn .enjoy__btn__cup {
@@ -905,10 +911,6 @@ html {
         border: 1px solid var(--brdr-dark-color);
     }
 
-    .burger-menu.active span {
-        /*animation*/
-    }
-
     .footer {
         flex-direction: column;
         min-height: 736px;
@@ -922,12 +924,12 @@ html {
         padding: 0 57px;
     }
 
-    .menu__list .menu__card:nth-child(n+5) {
+    .menu__list.hide .menu__card:nth-child(n+5) {
         display: none;
     }
 
     .menu__refresh-btn {
-        display: flex;
+        display: none;
         align-items: center;
         justify-content: center;
         background-color: transparent;
@@ -935,6 +937,10 @@ html {
         border: 1px solid var(--brdr-dark-color);
         width: 60px;
         height: 60px;
+    }
+
+    .menu__refresh-btn.active {
+        display: flex;
     }
 
     .menu__refresh-btn img {
