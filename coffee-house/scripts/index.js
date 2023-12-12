@@ -90,12 +90,15 @@ document.querySelector('.slider').addEventListener('touchend', e => {
     }
 });
 
+let state = false;
 document.querySelector('.slider__wrapper').addEventListener('mouseover', e => {
     pauseTimer();
+    state = true;
 });
 
 document.querySelector('.slider__wrapper').addEventListener('mouseout', e => {
     resumeTimer();
+    state = false;
 });
 
 document.addEventListener('keydown', e => {
@@ -104,4 +107,5 @@ document.addEventListener('keydown', e => {
     } else if (e.key === 'ArrowRight') {
         toRight();
     }
+    if (state) pauseTimer();
 });
