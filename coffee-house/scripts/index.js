@@ -97,4 +97,11 @@ document.querySelector('.slider__wrapper').addEventListener('mouseover', e => {
 document.querySelector('.slider__wrapper').addEventListener('mouseout', e => {
     resumeTimer();
 });
-  
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft') {
+        toLeft();
+    } else if (e.key === 'ArrowRight') {
+        toRight();
+    }
+});
