@@ -53,7 +53,7 @@ line = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 line.setAttribute('cx', 140);
 line.setAttribute('cy', 70);
 line.setAttribute('r', 20);
-svg.classList.add('figure-part');
+line.classList.add('figure-part');
 svg.append(line);
 
 line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -61,7 +61,7 @@ line.setAttribute('x1', 140);
 line.setAttribute('y1', 90);
 line.setAttribute('x2', 140);
 line.setAttribute('y2', 150);
-svg.classList.add('figure-part');
+line.classList.add('figure-part');
 svg.append(line);
 
 line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -69,7 +69,7 @@ line.setAttribute('x1', 140);
 line.setAttribute('y1', 120);
 line.setAttribute('x2', 160);
 line.setAttribute('y2', 100);
-svg.classList.add('figure-part');
+line.classList.add('figure-part');
 svg.append(line);
 
 line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -77,7 +77,7 @@ line.setAttribute('x1', 140);
 line.setAttribute('y1', 120);
 line.setAttribute('x2', 120);
 line.setAttribute('y2', 100);
-svg.classList.add('figure-part');
+line.classList.add('figure-part');
 svg.append(line);
 
 line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -85,7 +85,7 @@ line.setAttribute('x1', 140);
 line.setAttribute('y1', 150);
 line.setAttribute('x2', 120);
 line.setAttribute('y2', 180);
-svg.classList.add('figure-part');
+line.classList.add('figure-part');
 svg.append(line);
 
 line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -93,7 +93,7 @@ line.setAttribute('x1', 140);
 line.setAttribute('y1', 150);
 line.setAttribute('x2', 160);
 line.setAttribute('y2', 180);
-svg.classList.add('figure-part');
+line.classList.add('figure-part');
 svg.append(line);
 
 const word = arr[Math.floor(Math.random() * arr.length)];
