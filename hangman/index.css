@@ -111,6 +111,7 @@ span, p {
 }
 .modal .modal-text {
   text-align: center;
+  word-wrap: break-word;
 }
 .modal .modal-btn {
   cursor: pointer;

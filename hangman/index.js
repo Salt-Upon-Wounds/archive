@@ -38,7 +38,7 @@ function init(word) {
     }
 
     if (guessesCounter === 6) {
-      modal.querySelector('.modal-text').innerHTML = 'Поражение!';
+      modal.querySelector('.modal-text').innerHTML = `Поражение!<br>${word[0]}`;
     }
 
     if (successCounter === word[0].length || guessesCounter === 6) {
