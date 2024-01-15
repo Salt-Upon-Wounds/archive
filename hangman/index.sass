@@ -17,11 +17,15 @@ body
   display: flex
   justify-content: space-around
   align-items: center
+  @media (max-width: 756px) 
+    flex-direction: column
 
 .keyboard__row
   display: flex
   justify-content: center
   gap: 5px
+  @media (max-width: 400px) 
+    gap: 2px
 
 .keyboard
   display: flex
@@ -29,7 +33,8 @@ body
   gap: 5px
 
 .btn
-  width: 40px
+  max-width: 40px
+  width: 100%
   height: 40px
   background-color: rgb(256, 100, 100)
   font-weight: bold
@@ -40,6 +45,8 @@ body
   align-items: center
   &:hover
     background-color: rgb(200, 100, 100)
+  @media (max-width: 400px) 
+    font-size: larg
 
 .btn.pressed 
   background-color: rgb(100, 100, 100)
