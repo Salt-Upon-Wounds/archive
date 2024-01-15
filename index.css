@@ -36,7 +36,7 @@ body {
 .btn {
   width: 40px;
   height: 40px;
-  background-color: rgb(255, 100, 100);
+  background-color: #ff6464;
   font-weight: bold;
   font-size: larger;
   cursor: pointer;
@@ -44,12 +44,13 @@ body {
   justify-content: center;
   align-items: center;
 }
+
 .btn:hover {
-  background-color: rgb(200, 100, 100);
+  background-color: #c86464;
 }
 
 .btn.pressed {
-  background-color: rgb(100, 100, 100);
+  background-color: #646464;
   cursor: auto;
 }
 
@@ -67,4 +68,39 @@ span, p {
 .counter {
   max-width: 600px;
   text-align: center;
-}/*# sourceMappingURL=index.css.map */
+}
+
+.background {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.background.hide {
+  display: none;
+}
+
+.modal {
+  position: absolute;
+  max-width: 300px;
+  width: 100%;
+  border: 3px solid #323264;
+  background: lightgray;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+}
+
+.modal.hide {
+  display: none;
+}
+
+.modal .modal-text {
+  text-align: center;
+}
+
+.modal .modal-btn {
+  cursor: pointer;
+}

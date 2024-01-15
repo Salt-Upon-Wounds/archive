@@ -15,24 +15,45 @@ const wordArr = word[0].split('');
 const letters = document.querySelectorAll('.letter');
 const buttons = document.querySelectorAll('.btn');
 const guesses = document.querySelector('.guesses');
+const modal = document.querySelector('.modal');
+const back = document.querySelector('.background');
 let guessesCounter = 0;
+let successCounter = 0;
 
 function wordChecker(letter) {
   if (wordArr.includes(letter.toLowerCase())) {
     for (let j = 0; j < wordArr.length; j += 1) {
-      if (wordArr[j] === letter.toLowerCase())
+      if (wordArr[j] === letter.toLowerCase()) {
         letters[j].innerHTML = letter.toLowerCase();
+        successCounter += 1;
+      }
     }
   } else {
     parts[guessesCounter].classList.toggle('figure-part');
     guessesCounter += 1;
     guesses.innerHTML = `${guessesCounter} / 6`;
   }
+
+  if (successCounter === word[0].length) {
+    modal.querySelector('.modal-text').innerHTML = 'Победа!';
+  }
+
+  if (guessesCounter === 6) {
+    modal.querySelector('.modal-text').innerHTML = 'Поражение!';
+  }
+
+  if (successCounter === word[0].length || guessesCounter === 6) {
+    modal.classList.toggle('hide');
+    back.classList.toggle('hide');
+  }
 }
 
-document.addEventListener('keydown', function (event) {
+function keyDownHandler(event) {
   console.log(event.code);
-  if (keyboard.includes(event.key.toLowerCase())) {
+  if (
+    keyboard.includes(event.key.toLowerCase()) &&
+    !(successCounter === word[0].length || guessesCounter === 6)
+  ) {
     for (let i = 0; i < buttons.length; i += 1) {
       if (buttons[i].innerHTML === event.key.toLowerCase()) {
         if (!buttons[i].classList.contains('pressed')) {
@@ -45,7 +66,9 @@ document.addEventListener('keydown', function (event) {
       }
     }
   }
-});
+}
+
+document.addEventListener('keydown', keyDownHandler);
 
 for (let i = 0; i < buttons.length; i += 1) {
   buttons[i].addEventListener('click', (e) => {

@@ -146,11 +146,21 @@ for (; i - 12 - 11 < 9; i += 1) {
 }
 keys.append(keysRow);
 
-panel.append(wordDiv);
-panel.append(hint);
-panel.append(counter);
-panel.append(keys);
-body.prepend(panel);
-body.prepend(svg);
+const back = document.createElement('div');
+back.className = 'background hide';
+const modal = document.createElement('div');
+modal.className = 'modal hide';
+const modalText = document.createElement('p');
+modalText.className = 'modal-text';
+const modalBtn = document.createElement('button');
+modalBtn.className = 'modal-btn';
+modalBtn.innerHTML = 'Перезагрузить';
+modalBtn.addEventListener('click', () => {
+  window.location.reload();
+});
+modal.append(modalText, modalBtn);
+
+panel.append(wordDiv, hint, counter, keys);
+body.prepend(back, modal, svg, panel);
 
 export default word;
