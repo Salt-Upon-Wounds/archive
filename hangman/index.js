@@ -34,7 +34,7 @@ function init(word) {
     }
 
     if (successCounter === word[0].length) {
-      modal.querySelector('.modal-text').innerHTML = 'Победа!';
+      modal.querySelector('.modal-text').innerHTML = `Победа!<br>${word[0]}`;
     }
 
     if (guessesCounter === 6) {
