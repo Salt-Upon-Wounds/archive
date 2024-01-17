@@ -97,7 +97,11 @@ function create() {
   line.classList.add('figure-part');
   svg.append(line);
 
-  const word = arr[Math.floor(Math.random() * arr.length)];
+  let word = '';
+  do {
+    word = arr[Math.floor(Math.random() * arr.length)];
+  } while (word[0] === localStorage.getItem('word'));
+  localStorage.setItem('word', word[0]);
 
   const panel = document.createElement('div');
   panel.className = 'playground';
