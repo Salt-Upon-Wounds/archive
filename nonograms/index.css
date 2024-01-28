@@ -4,12 +4,82 @@ body {
   margin-left: auto;
   margin-right: auto;
   display: flex;
+  flex-direction: column;
   justify-content: space-around;
   align-items: center;
 }
-
 @media (max-width: 756px) {
   body {
     flex-direction: column;
   }
 }
+
+.frame-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  margin-left: -100px;
+}
+.frame-wrapper button {
+  width: 20px;
+  height: 20px;
+  border: 1px solid black;
+}
+.frame-wrapper .top {
+  margin-bottom: 3px;
+  display: flex;
+  justify-content: flex-end;
+}
+.frame-wrapper .top .row {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 3px;
+}
+.frame-wrapper .left {
+  margin-right: 3px;
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+}
+.frame-wrapper .left .row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 3px;
+}
+.frame-wrapper .square {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  max-width: 100px;
+}
+.frame-wrapper .new-line {
+  flex-basis: 100%;
+}
+
+.hide-btn {
+  position: absolute;
+  left: 98%;
+  top: 1%;
+  cursor: pointer;
+}
+
+.side-list-wrapper {
+  position: fixed;
+  right: 0%;
+  transition: right 1s;
+}
+.side-list-wrapper.active {
+  transition: right 1s;
+}
+.side-list-wrapper .side-list {
+  padding: 20px;
+}
+.side-list-wrapper .side-list .list-item {
+  list-style: none;
+  margin: 3px;
+  border: 1px solid black;
+  padding: 3px;
+  cursor: pointer;
+}/*# sourceMappingURL=index.css.map */
