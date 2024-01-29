@@ -4,7 +4,15 @@ import games from './games.js';
 const buttonSize = 20;
 
 function checker(picture) {
+  const field = document.querySelectorAll('.square button');
+  let win = true;
 
+  field.forEach((el) => {
+    if (el.dataset.secret === '1') {
+      if (!el.classList.contains('black')) win = false;
+    }
+  });
+  if (win) console.log('WIN');
 }
 
 function createFrame(picture) {
@@ -66,20 +74,23 @@ function createFrame(picture) {
     btn.dataset.secret = picture.square[i];
     square.append(btn);
     btn.addEventListener('mouseup', (e) => {
-      if (e.currentTarget.classList.contains('black') && e.button !== 2)
+      if (e.currentTarget.classList.contains('black') && e.button !== 2) {
+        checker(picture);
         e.currentTarget.classList.remove('black');
-      else if (e.currentTarget.classList.contains('cross') && e.button === 2)
+      } else if (e.currentTarget.classList.contains('cross') && e.button === 2)
         e.currentTarget.classList.remove('cross');
       else {
         e.currentTarget.classList.remove('cross', 'black');
         if (e.button === 2) e.currentTarget.classList.add('cross');
-        else e.currentTarget.classList.add('black');
+        else {
+          e.currentTarget.classList.add('black');
+          checker(picture);
+        }
       }
     });
     btn.addEventListener('contextmenu', (e) => {
       e.preventDefault();
     });
-    checker(picture);
   }
   const nl = document.createElement('div');
   nl.className = 'new-line';
