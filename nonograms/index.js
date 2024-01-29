@@ -1,6 +1,8 @@
 /* eslint-disable import/extensions */
 import games from './games.js';
 
+const buttonSize = 20;
+
 function createFrame(picture) {
   const frame = document.querySelector('.frame-wrapper');
   while (frame.firstChild) {
@@ -12,9 +14,19 @@ function createFrame(picture) {
   left.className = 'left';
   const square = document.createElement('div');
   square.className = 'square';
+
+  frame.style.maxWidth = `${
+    buttonSize * Math.sqrt(picture.square.length) +
+    buttonSize *
+      [...picture.left].sort((a, b) => b.length - a.length)[0].length +
+    (picture.left.length - 1) * 3
+  }px`;
+  square.style.maxWidth = `${buttonSize * Math.sqrt(picture.square.length)}px`;
+
   for (let i = 0; i < picture.top.length; i += 1) {
     const tmp = document.createElement('div');
     tmp.className = 'row';
+    tmp.style.width = `${buttonSize}px`;
     for (let j = 0; j < picture.top[i].length; j += 1) {
       const btn = document.createElement('button');
       btn.innerHTML = picture.top[i][j];
@@ -25,6 +37,7 @@ function createFrame(picture) {
   for (let i = 0; i < picture.left.length; i += 1) {
     const tmp = document.createElement('div');
     tmp.className = 'row';
+    tmp.style.height = `${buttonSize}px`;
     for (let j = 0; j < picture.left[i].length; j += 1) {
       const btn = document.createElement('button');
       btn.innerHTML = picture.left[i][j];
@@ -73,7 +86,7 @@ function create() {
   body.append(tmp);
   tmp = document.createElement('div');
   tmp.className = 'btns-wrapper';
-  let p = document.createElement('p');
+  const p = document.createElement('p');
   p.className = 'timer';
   p.innerHTML = '0s';
   tmp.append(p);

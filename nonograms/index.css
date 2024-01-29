@@ -19,7 +19,6 @@ body {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  margin-left: -100px;
 }
 
 .frame-wrapper button {
@@ -27,6 +26,9 @@ body {
   height: 20px;
   border: 1px solid black;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .frame-wrapper .top {
@@ -42,6 +44,10 @@ body {
   gap: 3px;
 }
 
+.frame-wrapper .top button {
+  background: transparent;
+}
+
 .frame-wrapper .left {
   margin-right: 3px;
   display: flex;
@@ -55,12 +61,15 @@ body {
   gap: 3px;
 }
 
+.frame-wrapper .left button {
+  background: transparent;
+}
+
 .frame-wrapper .square {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  max-width: 100px;
 }
 
 .frame-wrapper .new-line {
@@ -69,9 +78,10 @@ body {
 
 .hide-btn {
   position: absolute;
-  left: 98%;
+  left: 95%;
   top: 1%;
   cursor: pointer;
+  z-index: 999;
 }
 
 .hide-btn.active {
@@ -79,8 +89,11 @@ body {
 }
 
 .side-list-wrapper {
+  height: 80vh;
+  overflow-y: scroll;
   position: fixed;
   right: -50%;
+  top: 10%;
   transition: right 0.5s;
 }
 

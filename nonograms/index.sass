@@ -19,6 +19,9 @@ body
     height: 20px
     border: 1px solid black
     cursor: pointer
+    display: flex
+    justify-content: center
+    align-items: center
 
   .top
     margin-bottom: 3px
@@ -29,6 +32,8 @@ body
       flex-direction: column
       justify-content: flex-end
       gap: 3px
+    button
+      background: transparent
 
   .left
     margin-right: 3px
@@ -39,30 +44,33 @@ body
       display: flex
       justify-content: flex-end
       gap: 3px
+    button
+      background: transparent
 
   .square
     display: flex
     flex-wrap: wrap
     justify-content: center
     align-items: center
-    max-width: 100px
-
-  margin-left: -100px
 
   .new-line
     flex-basis: 100%
 
 .hide-btn
   position: absolute
-  left: 98%
+  left: 95%
   top: 1%
   cursor: pointer
+  z-index: 999
   &.active
     transform: rotate(180deg)
 
 .side-list-wrapper
+  height: 80vh
+  overflow-y: scroll
   position: fixed
   right: -50%
+  top: 10%
   transition: right 0.5s
   &.active
     right: 0%
