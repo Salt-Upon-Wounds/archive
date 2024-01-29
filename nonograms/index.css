@@ -19,6 +19,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
+  background-color: lightgrey;
 }
 
 .frame-wrapper button {
@@ -29,6 +30,16 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: transparent;
+}
+
+.frame-wrapper button.cross {
+  background: url("./cross.svg");
+  background-size: contain;
+}
+
+.frame-wrapper button.black {
+  background-color: black;
 }
 
 .frame-wrapper .top {
@@ -44,10 +55,6 @@ body {
   gap: 3px;
 }
 
-.frame-wrapper .top button {
-  background: transparent;
-}
-
 .frame-wrapper .left {
   margin-right: 3px;
   display: flex;
@@ -59,10 +66,6 @@ body {
   display: flex;
   justify-content: flex-end;
   gap: 3px;
-}
-
-.frame-wrapper .left button {
-  background: transparent;
 }
 
 .frame-wrapper .square {

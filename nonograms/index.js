@@ -3,6 +3,10 @@ import games from './games.js';
 
 const buttonSize = 20;
 
+function checker(picture) {
+
+}
+
 function createFrame(picture) {
   const frame = document.querySelector('.frame-wrapper');
   while (frame.firstChild) {
@@ -27,6 +31,10 @@ function createFrame(picture) {
     tmp.style.width = `${buttonSize}px`;
     for (let j = 0; j < picture.top[i].length; j += 1) {
       const btn = document.createElement('button');
+      btn.addEventListener('click', (e) => {
+        e.currentTarget.classList.toggle('cross');
+      });
+      btn.style.borderColor = 'transparent';
       btn.innerHTML = picture.top[i][j];
       tmp.append(btn);
     }
@@ -38,6 +46,10 @@ function createFrame(picture) {
     tmp.style.height = `${buttonSize}px`;
     for (let j = 0; j < picture.left[i].length; j += 1) {
       const btn = document.createElement('button');
+      btn.addEventListener('click', (e) => {
+        e.currentTarget.classList.toggle('cross');
+      });
+      btn.style.borderColor = 'transparent';
       btn.innerHTML = picture.left[i][j];
       tmp.append(btn);
     }
@@ -47,6 +59,21 @@ function createFrame(picture) {
     const btn = document.createElement('button');
     btn.dataset.secret = picture.square[i];
     square.append(btn);
+    btn.addEventListener('mouseup', (e) => {
+      if (e.currentTarget.classList.contains('black') && e.button !== 2)
+        e.currentTarget.classList.remove('black');
+      else if (e.currentTarget.classList.contains('cross') && e.button === 2)
+        e.currentTarget.classList.remove('cross');
+      else {
+        e.currentTarget.classList.remove('cross', 'black');
+        if (e.button === 2) e.currentTarget.classList.add('cross');
+        else e.currentTarget.classList.add('black');
+      }
+    });
+    btn.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+    });
+    checker(picture);
   }
   const nl = document.createElement('div');
   nl.className = 'new-line';
