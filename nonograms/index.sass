@@ -18,6 +18,7 @@ body
     width: 20px
     height: 20px
     border: 1px solid black
+    cursor: pointer
 
   .top
     margin-bottom: 3px
@@ -56,14 +57,16 @@ body
   left: 98%
   top: 1%
   cursor: pointer
+  &.active
+    transform: rotate(180deg)
 
 .side-list-wrapper
   position: fixed
-  //right: -100%
-  right: 0%
-  transition: right 1s
+  right: -50%
+  transition: right 0.5s
   &.active
-    transition: right 1s
+    right: 0%
+    transition: right 0.5s
   .side-list
     padding: 20px
     .list-item
