@@ -31,8 +31,11 @@ function createFrame(picture) {
     tmp.style.width = `${buttonSize}px`;
     for (let j = 0; j < picture.top[i].length; j += 1) {
       const btn = document.createElement('button');
-      btn.addEventListener('click', (e) => {
+      btn.addEventListener('mouseup', (e) => {
         e.currentTarget.classList.toggle('cross');
+      });
+      btn.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
       });
       btn.style.borderColor = 'transparent';
       btn.innerHTML = picture.top[i][j];
@@ -46,8 +49,11 @@ function createFrame(picture) {
     tmp.style.height = `${buttonSize}px`;
     for (let j = 0; j < picture.left[i].length; j += 1) {
       const btn = document.createElement('button');
-      btn.addEventListener('click', (e) => {
+      btn.addEventListener('mouseup', (e) => {
         e.currentTarget.classList.toggle('cross');
+      });
+      btn.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
       });
       btn.style.borderColor = 'transparent';
       btn.innerHTML = picture.left[i][j];
