@@ -13,6 +13,8 @@ function checker() {
   field.forEach((el) => {
     if (el.dataset.secret === '1') {
       if (!el.classList.contains('black')) win = false;
+    } else {
+      if (el.classList.contains('black')) win = false;
     }
   });
   if (win) {
