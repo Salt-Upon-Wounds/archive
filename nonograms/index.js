@@ -1,9 +1,12 @@
+/* eslint-disable no-loop-func */
 /* eslint-disable import/extensions */
 import games from './games.js';
 
 const buttonSize = 20;
+let counter = 0;
+let intevalId = null;
 
-function checker(picture) {
+function checker() {
   const field = document.querySelectorAll('.square button');
   let win = true;
 
@@ -12,7 +15,15 @@ function checker(picture) {
       if (!el.classList.contains('black')) win = false;
     }
   });
-  if (win) document.querySelector('.modal').classList.add('active');
+  if (win) {
+    clearInterval(intevalId);
+    const modal = document.querySelector('.modal');
+    modal.querySelector('.message').innerHTML =
+      `Отлично! Вы решили нонограмму за ${counter} с`;
+    modal.classList.add('active');
+    counter = 0;
+    intevalId = null;
+  }
 }
 
 function createFrame(picture) {
@@ -74,6 +85,12 @@ function createFrame(picture) {
     btn.dataset.secret = picture.square[i];
     square.append(btn);
     btn.addEventListener('mouseup', (e) => {
+      if (intevalId === null) {
+        intevalId = setInterval(() => {
+          counter += 1;
+          document.querySelector('.timer').innerHTML = `${counter} s`;
+        }, 1000);
+      }
       if (e.currentTarget.classList.contains('black') && e.button !== 2) {
         checker(picture);
         e.currentTarget.classList.remove('black');
@@ -222,7 +239,7 @@ function create() {
   tmp.className = 'btns-wrapper';
   const p = document.createElement('p');
   p.className = 'timer';
-  p.innerHTML = '0s';
+  p.innerHTML = '0 s';
   tmp.append(p);
   let btn = document.createElement('button');
   btn.className = 'reset';
@@ -258,3 +275,4 @@ createFrame(games[0]);
 
 const body = document.querySelector('body');
 const frame = document.querySelector('.frame-wrapper');
+const timer = document.querySelector('.timer');
