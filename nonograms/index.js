@@ -12,7 +12,7 @@ function checker(picture) {
       if (!el.classList.contains('black')) win = false;
     }
   });
-  if (win) console.log('WIN');
+  if (win) document.querySelector('.modal').classList.add('active');
 }
 
 function createFrame(picture) {
@@ -139,7 +139,24 @@ function createFrame(picture) {
 
 function create() {
   const body = document.querySelector('body');
-  let tmp = document.createElement('button');
+  const modal = document.createElement('div');
+  modal.className = 'modal';
+  const window = document.createElement('div');
+  window.className = 'window';
+  let tmp = document.createElement('p');
+  tmp.innerHTML = 'Не забудь поменять текст тут';
+  tmp.className = 'message';
+  window.append(tmp);
+  tmp = document.createElement('button');
+  tmp.addEventListener('mouseup', () => {
+    document.querySelector('.modal').classList.remove('active');
+  });
+  tmp.innerHTML = 'OK';
+  tmp.className = 'btn';
+  window.append(tmp);
+  modal.append(window);
+  body.prepend(modal);
+  tmp = document.createElement('button');
   tmp.className = 'hide-btn';
   tmp.innerHTML = '<-';
   tmp.addEventListener('click', () => {
