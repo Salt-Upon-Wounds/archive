@@ -166,20 +166,55 @@ function create() {
   body.append(tmp);
   const div = document.createElement('div');
   div.className = 'side-list-wrapper';
+  function createList(arr, size) {
+    const list = document.querySelector('.side-list');
+    while (list.firstChild) {
+      list.removeChild(list.firstChild);
+    }
+    if (size) arr = arr.filter((game) => game.top.length === size);
+    for (let i = 0; i < arr.length; i += 1) {
+      const li = document.createElement('li');
+      li.className = 'list-item';
+      li.innerHTML = arr[i].name;
+      li.dataset.id = i;
+      list.append(li);
+      li.addEventListener('click', (e) => {
+        createFrame(arr[e.currentTarget.dataset.id]);
+      });
+    }
+  }
+  const buttons = document.createElement('div');
+  buttons.className = 'buttons-wrappper';
+  tmp = document.createElement('button');
+  tmp.innerHTML = 'все';
+  tmp.addEventListener('mouseup', () => {
+    createList(games);
+  });
+  buttons.append(tmp);
+  tmp = document.createElement('button');
+  tmp.innerHTML = '5x5';
+  tmp.addEventListener('mouseup', () => {
+    createList(games, 5);
+  });
+  buttons.append(tmp);
+  tmp = document.createElement('button');
+  tmp.innerHTML = '10x10';
+  tmp.addEventListener('mouseup', () => {
+    createList(games, 10);
+  });
+  buttons.append(tmp);
+  tmp = document.createElement('button');
+  tmp.innerHTML = '15x15';
+  tmp.addEventListener('mouseup', () => {
+    createList(games, 15);
+  });
+  buttons.append(tmp);
+  div.appendChild(buttons);
   tmp = document.createElement('ul');
   tmp.className = 'side-list';
-  for (let i = 0; i < games.length; i += 1) {
-    const li = document.createElement('li');
-    li.className = 'list-item';
-    li.innerHTML = games[i].name;
-    li.dataset.id = i;
-    tmp.append(li);
-    li.addEventListener('click', (e) => {
-      createFrame(games[e.currentTarget.dataset.id]);
-    });
-  }
   div.append(tmp);
   body.append(div);
+  createList(games);
   tmp = document.createElement('div');
   tmp.className = 'frame-wrapper';
   body.append(tmp);

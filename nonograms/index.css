@@ -93,11 +93,16 @@ body {
 
 .side-list-wrapper {
   height: 80vh;
-  overflow-y: scroll;
   position: fixed;
   right: -50%;
   top: 10%;
   transition: right 0.5s;
+  max-width: 200px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .side-list-wrapper.active {
@@ -105,8 +110,17 @@ body {
   transition: right 0.5s;
 }
 
+.side-list-wrapper .buttons-wrappper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
 .side-list-wrapper .side-list {
-  padding: 20px;
+  padding: 0px;
+  overflow-y: scroll;
+  width: 100%;
 }
 
 .side-list-wrapper .side-list .list-item {
@@ -115,6 +129,9 @@ body {
   border: 1px solid black;
   padding: 3px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .modal {
