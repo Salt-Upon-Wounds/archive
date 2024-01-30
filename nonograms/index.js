@@ -94,8 +94,8 @@ function createFrame(picture) {
         }, 1000);
       }
       if (e.currentTarget.classList.contains('black') && e.button !== 2) {
-        checker(picture);
         e.currentTarget.classList.remove('black');
+        checker(picture);
       } else if (e.currentTarget.classList.contains('cross') && e.button === 2)
         e.currentTarget.classList.remove('cross');
       else {
