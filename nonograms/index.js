@@ -276,11 +276,23 @@ function create() {
     document.querySelector('.block').classList.remove('active');
     document.querySelectorAll('.frame-wrapper button').forEach((el) => {
       el.classList.remove('black', 'cross');
-      clearInterval(intevalId);
-      counter = 0;
-      intevalId = null;
-      document.querySelector('.timer').innerHTML = `${counter} s`;
     });
+    clearInterval(intevalId);
+    counter = 0;
+    intevalId = null;
+    document.querySelector('.timer').innerHTML = `${counter} s`;
+  });
+  tmp.append(btn);
+  btn = document.createElement('button');
+  btn.className = 'random';
+  btn.innerHTML = 'random game';
+  btn.addEventListener('mouseup', () => {
+    document.querySelector('.block').classList.remove('active');
+    clearInterval(intevalId);
+    counter = 0;
+    intevalId = null;
+    document.querySelector('.timer').innerHTML = `${counter} s`;
+    createFrame(games[Math.floor(Math.random() * games.length)]);
   });
   tmp.append(btn);
   btn = document.createElement('button');
