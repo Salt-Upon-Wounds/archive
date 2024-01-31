@@ -6,7 +6,7 @@ const buttonSize = 20;
 let counter = 0;
 let intevalId = null;
 
-function checker() {
+function checker(picture) {
   const field = document.querySelectorAll('.square button');
   let win = true;
 
@@ -22,6 +22,11 @@ function checker() {
       `Отлично! Вы решили нонограмму за ${counter} с`;
     modal.classList.add('active');
     document.querySelector('.block').classList.add('active');
+    let arr = JSON.parse(localStorage.getItem('arr'));
+    if (!arr) arr = [];
+    arr.push({ name: picture.name, time: counter });
+    if (arr.length > 5) arr = arr.slice(-5);
+    localStorage.setItem('arr', JSON.stringify(arr));
     counter = 0;
     intevalId = null;
   }

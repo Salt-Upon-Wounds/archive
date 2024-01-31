@@ -179,3 +179,7 @@ body {
 .block.active {
   display: block;
 }
+
+.btns-wrapper button {
+  cursor: pointer;
+}
