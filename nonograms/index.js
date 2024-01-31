@@ -45,6 +45,7 @@ function checker(picture) {
     counter = 0;
     intevalId = null;
     updateScore();
+    new Audio('./sounds/win.wav').play();
   }
 }
 
@@ -74,6 +75,11 @@ function createFrame(picture) {
       const btn = document.createElement('button');
       btn.addEventListener('mouseup', (e) => {
         e.currentTarget.classList.toggle('cross');
+        if (e.currentTarget.classList.contains('cross')) {
+          new Audio('./sounds/cross.wav').play();
+        } else {
+          new Audio('./sounds/clear.wav').play();
+        }
       });
       btn.addEventListener('contextmenu', (e) => {
         e.preventDefault();
@@ -92,6 +98,11 @@ function createFrame(picture) {
       const btn = document.createElement('button');
       btn.addEventListener('mouseup', (e) => {
         e.currentTarget.classList.toggle('cross');
+        if (e.currentTarget.classList.contains('cross')) {
+          new Audio('./sounds/cross.wav').play();
+        } else {
+          new Audio('./sounds/clear.wav').play();
+        }
       });
       btn.addEventListener('contextmenu', (e) => {
         e.preventDefault();
@@ -115,14 +126,22 @@ function createFrame(picture) {
       }
       if (e.currentTarget.classList.contains('black') && e.button !== 2) {
         e.currentTarget.classList.remove('black');
+        new Audio('./sounds/clear.wav').play();
         checker(picture);
-      } else if (e.currentTarget.classList.contains('cross') && e.button === 2)
+      } else if (
+        e.currentTarget.classList.contains('cross') &&
+        e.button === 2
+      ) {
         e.currentTarget.classList.remove('cross');
-      else {
+        new Audio('./sounds/clear.wav').play();
+      } else {
         e.currentTarget.classList.remove('cross', 'black');
-        if (e.button === 2) e.currentTarget.classList.add('cross');
-        else {
+        if (e.button === 2) {
+          e.currentTarget.classList.add('cross');
+          new Audio('./sounds/cross.wav').play();
+        } else {
           e.currentTarget.classList.add('black');
+          new Audio('./sounds/black.wav').play();
           checker(picture);
         }
       }
@@ -138,6 +157,7 @@ function createFrame(picture) {
   lineContainer.style.position = 'relative';
   lineContainer.style.width = '100%';
   lineContainer.style.height = '100%';
+  lineContainer.className = 'line-container';
   frame.prepend(lineContainer);
   let line = document.createElement('div');
   line.style.position = 'absolute';
@@ -180,6 +200,16 @@ function createFrame(picture) {
       lineContainer.prepend(line);
     }
   }
+  /* document.querySelectorAll('.line-container div').forEach((el) => {
+    el.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+    });
+  }); */
+  document
+    .querySelector('.frame-wrapper')
+    .addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+    });
 }
 
 function create() {
