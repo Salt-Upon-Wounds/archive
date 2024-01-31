@@ -171,3 +171,11 @@ body {
   font-size: medium;
   cursor: pointer;
 }
+
+.block {
+  display: none;
+}
+
+.block.active {
+  display: block;
+}

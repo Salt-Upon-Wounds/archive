@@ -13,9 +13,7 @@ function checker() {
   field.forEach((el) => {
     if (el.dataset.secret === '1') {
       if (!el.classList.contains('black')) win = false;
-    } else {
-      if (el.classList.contains('black')) win = false;
-    }
+    } else if (el.classList.contains('black')) win = false;
   });
   if (win) {
     clearInterval(intevalId);
@@ -23,6 +21,7 @@ function checker() {
     modal.querySelector('.message').innerHTML =
       `Отлично! Вы решили нонограмму за ${counter} с`;
     modal.classList.add('active');
+    document.querySelector('.block').classList.add('active');
     counter = 0;
     intevalId = null;
   }
@@ -126,13 +125,19 @@ function createFrame(picture) {
   line.style.borderTop = '3px solid';
   line.style.top = `${top.offsetHeight}px`;
   lineContainer.prepend(line);
-
   line = document.createElement('div');
   line.style.position = 'absolute';
   line.style.height = `${frame.offsetHeight}px`;
   line.style.width = '3px';
   line.style.borderLeft = '3px solid';
   line.style.left = `${left.offsetWidth}px`;
+  lineContainer.prepend(line);
+  line = document.createElement('div');
+  line.style.position = 'absolute';
+  line.style.height = `${frame.offsetHeight}px`;
+  line.style.width = `${frame.offsetWidth}px`;
+  line.style.zIndex = '888';
+  line.className = 'block';
   lineContainer.prepend(line);
   const lines = Math.sqrt(picture.square.length) / 5 + 1;
   if (lines > 1) {
