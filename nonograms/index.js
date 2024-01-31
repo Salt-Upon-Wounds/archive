@@ -251,6 +251,16 @@ function create() {
   let btn = document.createElement('button');
   btn.className = 'reset';
   btn.innerHTML = 'reset';
+  btn.addEventListener('mouseup', () => {
+    document.querySelector('.block').classList.remove('active');
+    document.querySelectorAll('.frame-wrapper button').forEach((el) => {
+      el.classList.remove('black', 'cross');
+      clearInterval(intevalId);
+      counter = 0;
+      intevalId = null;
+      document.querySelector('.timer').innerHTML = `${counter} s`;
+    });
+  });
   tmp.append(btn);
   btn = document.createElement('button');
   btn.className = 'solution';
