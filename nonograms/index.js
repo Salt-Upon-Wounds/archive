@@ -6,6 +6,21 @@ const buttonSize = 20;
 let counter = 0;
 let intevalId = null;
 
+function updateScore() {
+  const arr = JSON.parse(localStorage.getItem('arr'));
+  const list = document.querySelector('.score-box-list');
+  while (list.firstChild) {
+    list.removeChild(list.firstChild);
+  }
+  if (!arr) list.append(document.createTextNode('Пусто'));
+  arr.sort((a, b) => a.time - b.time);
+  arr.forEach((el) => {
+    const tmp = document.createElement('li');
+    tmp.innerHTML = `${el.name} | ${el.time} s`;
+    list.append(tmp);
+  });
+}
+
 function checker(picture) {
   const field = document.querySelectorAll('.square button');
   let win = true;
@@ -29,6 +44,7 @@ function checker(picture) {
     localStorage.setItem('arr', JSON.stringify(arr));
     counter = 0;
     intevalId = null;
+    updateScore();
   }
 }
 
@@ -249,7 +265,7 @@ function create() {
   body.append(tmp);
   tmp = document.createElement('div');
   tmp.className = 'btns-wrapper';
-  const p = document.createElement('p');
+  let p = document.createElement('p');
   p.className = 'timer';
   p.innerHTML = '0 s';
   tmp.append(p);
@@ -286,14 +302,20 @@ function create() {
   body.append(tmp);
   tmp = document.createElement('div');
   tmp.className = 'score-box';
+  p = document.createElement('p');
+  p.className = 'title';
+  p.innerHTML = 'Таблица результатов';
+  tmp.append(p);
   const ul = document.createElement('ul');
   ul.className = 'score-box-list';
   tmp.append(ul);
   body.append(tmp);
+  tmp = document.createElement('div');
 }
 
 create();
 createFrame(games[0]);
+updateScore();
 
 const body = document.querySelector('body');
 const frame = document.querySelector('.frame-wrapper');
