@@ -298,6 +298,22 @@ function create() {
   btn = document.createElement('button');
   btn.className = 'solution';
   btn.innerHTML = 'solution';
+  btn.addEventListener('mouseup', () => {
+    document.querySelector('.block').classList.add('active');
+    clearInterval(intevalId);
+    counter = 0;
+    intevalId = null;
+    document.querySelector('.timer').innerHTML = `${counter} s`;
+    document.querySelectorAll('.square button').forEach((el) => {
+      if (el.dataset.secret === '1') {
+        el.classList.remove('cross');
+        el.classList.add('black');
+      } else {
+        el.classList.add('cross');
+        el.classList.remove('black');
+      }
+    });
+  });
   tmp.append(btn);
   btn = document.createElement('button');
   btn.className = 'save';
