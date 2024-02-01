@@ -4,7 +4,7 @@ import games from './games.js';
 
 const buttonSize = 20;
 let counter = 0;
-let intevalId = null;
+let intervalId = null;
 
 function updateScore() {
   const arr = JSON.parse(localStorage.getItem('arr'));
@@ -31,7 +31,7 @@ function checker(picture) {
     } else if (el.classList.contains('black')) win = false;
   });
   if (win) {
-    clearInterval(intevalId);
+    clearInterval(intervalId);
     const modal = document.querySelector('.modal');
     modal.querySelector('.message').innerHTML =
       `Отлично! Вы решили нонограмму за ${counter} с`;
@@ -43,13 +43,16 @@ function checker(picture) {
     if (arr.length > 5) arr = arr.slice(-5);
     localStorage.setItem('arr', JSON.stringify(arr));
     counter = 0;
-    intevalId = null;
+    intervalId = null;
     updateScore();
     new Audio('./sounds/win.wav').play();
   }
 }
 
 function createFrame(picture) {
+  clearInterval(intervalId);
+  counter = 0;
+  intervalId = null;
   const frame = document.querySelector('.frame-wrapper');
   while (frame.firstChild) {
     frame.removeChild(frame.firstChild);
@@ -118,8 +121,8 @@ function createFrame(picture) {
     btn.dataset.secret = picture.square[i];
     square.append(btn);
     btn.addEventListener('mouseup', (e) => {
-      if (intevalId === null) {
-        intevalId = setInterval(() => {
+      if (intervalId === null) {
+        intervalId = setInterval(() => {
           counter += 1;
           document.querySelector('.timer').innerHTML = `${counter} s`;
         }, 1000);
@@ -307,9 +310,9 @@ function create() {
     document.querySelectorAll('.frame-wrapper button').forEach((el) => {
       el.classList.remove('black', 'cross');
     });
-    clearInterval(intevalId);
+    clearInterval(intervalId);
     counter = 0;
-    intevalId = null;
+    intervalId = null;
     document.querySelector('.timer').innerHTML = `${counter} s`;
   });
   tmp.append(btn);
@@ -318,9 +321,9 @@ function create() {
   btn.innerHTML = 'random game';
   btn.addEventListener('mouseup', () => {
     document.querySelector('.block').classList.remove('active');
-    clearInterval(intevalId);
+    clearInterval(intervalId);
     counter = 0;
-    intevalId = null;
+    intervalId = null;
     document.querySelector('.timer').innerHTML = `${counter} s`;
     createFrame(games[Math.floor(Math.random() * games.length)]);
   });
@@ -330,9 +333,9 @@ function create() {
   btn.innerHTML = 'solution';
   btn.addEventListener('mouseup', () => {
     document.querySelector('.block').classList.add('active');
-    clearInterval(intevalId);
+    clearInterval(intervalId);
     counter = 0;
-    intevalId = null;
+    intervalId = null;
     document.querySelector('.timer').innerHTML = `${counter} s`;
     document.querySelectorAll('.square button').forEach((el) => {
       if (el.dataset.secret === '1') {
@@ -348,10 +351,89 @@ function create() {
   btn = document.createElement('button');
   btn.className = 'save';
   btn.innerHTML = 'save';
+  btn.addEventListener('mouseup', () => {
+    if (intervalId) {
+      const top = [];
+      const topCross = [];
+      const left = [];
+      const leftCross = [];
+      const square = [];
+      const squareCross = [];
+      const time = counter;
+      document.querySelectorAll('.top .row').forEach((el) => {
+        const row = [];
+        const rowC = [];
+        el.querySelectorAll('button').forEach((button) => {
+          row.push(button.innerHTML);
+          rowC.push(button.classList.contains('cross'));
+        });
+        top.push(row);
+        topCross.push(rowC);
+      });
+      document.querySelectorAll('.left .row').forEach((el) => {
+        const row = [];
+        const rowC = [];
+        el.querySelectorAll('button').forEach((button) => {
+          row.push(button.innerHTML);
+          rowC.push(button.classList.contains('cross'));
+        });
+        left.push(row);
+        leftCross.push(rowC);
+      });
+      document.querySelectorAll('.square button').forEach((button) => {
+        square.push(button.dataset.secret);
+        squareCross.push({
+          cross: button.classList.contains('cross'),
+          black: button.classList.contains('black'),
+        });
+      });
+      localStorage.setItem(
+        'save',
+        JSON.stringify({
+          top,
+          left,
+          square,
+          topCross,
+          leftCross,
+          squareCross,
+          time,
+        })
+      );
+    }
+  });
   tmp.append(btn);
   btn = document.createElement('button');
   btn.className = 'load';
   btn.innerHTML = 'load';
+  btn.addEventListener('mouseup', () => {
+    // TODO: ВРЕМЯ НЕ СОХРАНЯЕТСЯ
+    document.querySelector('.block').classList.add('active');
+    clearInterval(intervalId);
+    const arr = JSON.parse(localStorage.getItem('save'));
+    if (arr) {
+      createFrame({ top: arr.top, left: arr.left, square: arr.square });
+      document.querySelectorAll('.square button').forEach((el, id) => {
+        if (arr.squareCross[id].cross) el.classList.add('cross');
+        if (arr.squareCross[id].black) el.classList.add('black');
+      });
+      document.querySelectorAll('.top .row').forEach((el, idx) => {
+        el.querySelectorAll('button').forEach((button, idy) => {
+          if (arr.topCross[idx][idy]) button.classList.add('cross');
+        });
+      });
+      document.querySelectorAll('.left .row').forEach((el, idx) => {
+        el.querySelectorAll('button').forEach((button, idy) => {
+          if (arr.leftCross[idx][idy]) button.classList.add('cross');
+        });
+      });
+      counter = arr.time;
+      document.querySelector('.timer').innerHTML = `${counter} s`;
+      intervalId = setInterval(() => {
+        counter += 1;
+        document.querySelector('.timer').innerHTML = `${counter} s`;
+      }, 1000);
+    }
+  });
   tmp.append(btn);
   btn = document.createElement('button');
   btn.className = 'theme-switch';
