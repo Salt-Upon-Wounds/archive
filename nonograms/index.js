@@ -57,6 +57,7 @@ function createFrame(picture) {
   intervalId = null;
   document.querySelector('.timer').innerHTML = `${counter} s`;
   const frame = document.querySelector('.frame-wrapper');
+  frame.dataset.name = picture.name;
   while (frame.firstChild) {
     frame.removeChild(frame.firstChild);
   }
@@ -363,6 +364,7 @@ function create() {
       const square = [];
       const squareCross = [];
       const time = counter;
+      const { name } = document.querySelector('.frame-wrapper').dataset;
       document.querySelectorAll('.top .row').forEach((el) => {
         const row = [];
         const rowC = [];
@@ -400,6 +402,7 @@ function create() {
           leftCross,
           squareCross,
           time,
+          name,
         })
       );
     }
@@ -413,7 +416,12 @@ function create() {
     clearInterval(intervalId);
     const arr = JSON.parse(localStorage.getItem('save'));
     if (arr) {
-      createFrame({ top: arr.top, left: arr.left, square: arr.square });
+      createFrame({
+        name: arr.name,
+        top: arr.top,
+        left: arr.left,
+        square: arr.square,
+      });
       document.querySelectorAll('.square button').forEach((el, id) => {
         if (arr.squareCross[id].cross) el.classList.add('cross');
         if (arr.squareCross[id].black) el.classList.add('black');
