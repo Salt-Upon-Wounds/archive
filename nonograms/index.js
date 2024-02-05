@@ -13,12 +13,14 @@ function updateScore() {
     list.removeChild(list.firstChild);
   }
   if (!arr) list.append(document.createTextNode('Пусто'));
-  arr.sort((a, b) => a.time - b.time);
-  arr.forEach((el) => {
-    const tmp = document.createElement('li');
-    tmp.innerHTML = `${el.name} | ${el.time} s`;
-    list.append(tmp);
-  });
+  else {
+    arr.sort((a, b) => a.time - b.time);
+    arr.forEach((el) => {
+      const tmp = document.createElement('li');
+      tmp.innerHTML = `${el.name} | ${el.time} s`;
+      list.append(tmp);
+    });
+  }
 }
 
 function checker(picture) {
@@ -53,6 +55,7 @@ function createFrame(picture) {
   clearInterval(intervalId);
   counter = 0;
   intervalId = null;
+  document.querySelector('.timer').innerHTML = `${counter} s`;
   const frame = document.querySelector('.frame-wrapper');
   while (frame.firstChild) {
     frame.removeChild(frame.firstChild);
@@ -406,7 +409,6 @@ function create() {
   btn.className = 'load';
   btn.innerHTML = 'load';
   btn.addEventListener('mouseup', () => {
-    // TODO: ВРЕМЯ НЕ СОХРАНЯЕТСЯ
     document.querySelector('.block').classList.add('active');
     clearInterval(intervalId);
     const arr = JSON.parse(localStorage.getItem('save'));
@@ -438,6 +440,9 @@ function create() {
   btn = document.createElement('button');
   btn.className = 'theme-switch';
   btn.innerHTML = 'theme switch';
+  btn.addEventListener('mouseup', () => {
+    document.querySelector('body').classList.toggle('night');
+  });
   tmp.append(btn);
   body.append(tmp);
   tmp = document.createElement('div');
@@ -456,7 +461,3 @@ function create() {
 create();
 createFrame(games[0]);
 updateScore();
-
-const body = document.querySelector('body');
-const frame = document.querySelector('.frame-wrapper');
-const timer = document.querySelector('.timer');

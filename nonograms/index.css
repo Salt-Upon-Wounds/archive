@@ -15,6 +15,17 @@ body {
   }
 }
 
+body.night {
+  background-color: #373737;
+}
+
+body.night .score-box,
+body.night .side-list .list-item,
+body.night .timer {
+  color: #f0e7e7;
+  border-color: #f0e7e7;
+}
+
 .frame-wrapper {
   display: flex;
   flex-wrap: wrap;
@@ -182,4 +193,9 @@ body {
 
 .btns-wrapper button {
   cursor: pointer;
+}
+
+.score-box-list {
+  list-style-type: none;
+  padding: 0;
 }
