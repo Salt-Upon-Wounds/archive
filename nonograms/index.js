@@ -169,14 +169,14 @@ function createFrame(picture) {
   line.style.position = 'absolute';
   line.style.width = `${frame.offsetWidth}px`;
   line.style.height = '3px';
-  line.style.borderTop = '3px solid';
+  line.style.backgroundColor = 'black';
   line.style.top = `${top.offsetHeight}px`;
   lineContainer.prepend(line);
   line = document.createElement('div');
   line.style.position = 'absolute';
   line.style.height = `${frame.offsetHeight}px`;
   line.style.width = '3px';
-  line.style.borderLeft = '3px solid';
+  line.style.backgroundColor = 'black';
   line.style.left = `${left.offsetWidth}px`;
   lineContainer.prepend(line);
   line = document.createElement('div');
@@ -193,7 +193,7 @@ function createFrame(picture) {
       line.style.position = 'absolute';
       line.style.width = `${frame.offsetWidth}px`;
       line.style.height = '3px';
-      line.style.borderTop = '3px solid';
+      line.style.backgroundColor = 'black';
       line.style.top = `${top.offsetHeight + buttonSize * 5 * i}px`;
       lineContainer.prepend(line);
 
@@ -201,7 +201,7 @@ function createFrame(picture) {
       line.style.position = 'absolute';
       line.style.height = `${frame.offsetHeight}px`;
       line.style.width = '3px';
-      line.style.borderLeft = '3px solid';
+      line.style.backgroundColor = 'black';
       line.style.left = `${left.offsetWidth + buttonSize * 5 * i}px`;
       lineContainer.prepend(line);
     }

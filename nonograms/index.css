@@ -19,9 +19,15 @@ body.night {
   background-color: #373737;
 }
 
+body.night .side-list-wrapper {
+  background-color: #373737;
+  border-color: #f0e7e7;
+}
+
 body.night .score-box,
 body.night .side-list .list-item,
-body.night .timer {
+body.night .timer,
+body.night .side-list {
   color: #f0e7e7;
   border-color: #f0e7e7;
 }
@@ -103,7 +109,7 @@ body.night .timer {
 }
 
 .side-list-wrapper {
-  height: 80vh;
+  max-height: 80vh;
   position: fixed;
   right: -50%;
   top: 10%;
@@ -114,6 +120,14 @@ body.night .timer {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+  background-color: #fff;
+  border: 1px solid black;
+}
+
+.side-list-wrapper .buttons-wrappper {
+  display: flex;
+  gap: 3px;
+  margin: 10px 0 0;
 }
 
 .side-list-wrapper.active {
@@ -129,6 +143,8 @@ body.night .timer {
 }
 
 .side-list-wrapper .side-list {
+  border: 1px solid black;
+  margin: 10px 0 0;
   padding: 0px;
   overflow-y: scroll;
   width: 100%;
@@ -192,6 +208,7 @@ body.night .timer {
 }
 
 .btns-wrapper button {
+  margin: 0 3px 0 0;
   cursor: pointer;
 }
 
