@@ -111,7 +111,7 @@ body.night .side-list {
 .side-list-wrapper {
   max-height: 80vh;
   position: fixed;
-  right: -50%;
+  right: -70%;
   top: 10%;
   transition: right 0.5s;
   max-width: 200px;
@@ -122,6 +122,7 @@ body.night .side-list {
   justify-content: flex-start;
   background-color: #fff;
   border: 1px solid black;
+  z-index: 999;
 }
 
 .side-list-wrapper .buttons-wrappper {
