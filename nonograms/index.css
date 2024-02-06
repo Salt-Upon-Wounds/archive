@@ -130,6 +130,10 @@ body.night .side-list {
   margin: 10px 0 0;
 }
 
+.side-list-wrapper .buttons-wrappper button {
+  cursor: pointer;
+}
+
 .side-list-wrapper.active {
   right: 0%;
   transition: right 0.5s;
