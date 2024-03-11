@@ -5,6 +5,12 @@
   gap: 30px;
   .input {
     height: 30px;
+    &:invalid:not(:placeholder-shown) {
+      background: pink;
+    }
+  }
+  .text {
+    max-width: 350px;
   }
   .btn {
     max-width: 200px;

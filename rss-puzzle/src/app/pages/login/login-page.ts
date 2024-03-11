@@ -24,9 +24,22 @@ export default class LoginPage extends BaseComponent {
       },
     });
     this.title = h1('', 'ENGLISH PUZZLE');
-    this.desc = p('', 'cogito ergo sum cogito ergo sum cogito ergo sum');
-    this.name = input(style.input, { placeholder: 'Name', required: true });
-    this.surname = input(style.input, { placeholder: 'Surname', required: true });
+    this.desc = p(
+      style.text,
+      'Click on words, collect phrases. Words can be drag and drop. Select tooltips in the menu',
+    );
+    this.name = input(style.input, {
+      placeholder: 'Name',
+      required: true,
+      pattern: '[A-Z]{1}[A-Za-z\\-]{2,}',
+      title: 'First letter must be capital && word length > 1',
+    });
+    this.surname = input(style.input, {
+      placeholder: 'Surname',
+      required: true,
+      pattern: '[A-Z]{1}[A-Za-z\\-]{3,}',
+      title: 'First letter must be capital && word length > 2',
+    });
     this.btn = input(style.btn, { type: 'submit', value: 'Login' });
 
     this.appendChildren([this.title, this.desc, this.name, this.surname, this.btn]);
