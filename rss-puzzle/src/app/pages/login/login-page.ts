@@ -1,6 +1,5 @@
 import { BaseComponent } from '../../components/base-component';
 import { h1, input, p } from '../../components/tags';
-import GamePage from '../game/game-page';
 import style from './styles.module.scss';
 
 export default class LoginPage extends BaseComponent {
@@ -14,7 +13,7 @@ export default class LoginPage extends BaseComponent {
 
   private readonly btn: BaseComponent;
 
-  constructor(pageSwitcher: (page: BaseComponent) => void) {
+  constructor() {
     super({
       className: style.loginPage,
       tag: 'form',
@@ -27,9 +26,11 @@ export default class LoginPage extends BaseComponent {
         }
         localStorage.setItem('name', formExtractor('name'));
         localStorage.setItem('surname', formExtractor('surname'));
-        pageSwitcher(new GamePage());
+        window.history.pushState({ path: 'game' }, '', `${window.location.origin}/rss-puzzle/game`);
       },
     });
+    if (localStorage.getItem('surname') && localStorage.getItem('name'))
+      window.history.pushState({ path: 'game' }, '', `${window.location.origin}/rss-puzzle/game`);
     this.title = h1('', 'ENGLISH PUZZLE');
     this.desc = p(
       style.text,

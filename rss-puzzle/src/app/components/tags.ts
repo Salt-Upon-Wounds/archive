@@ -22,3 +22,6 @@ export const button = (className: string, txt: string, onClick?: () => void) =>
       onClick?.();
     },
   });
+
+export const div = (props: ElementFnProps<HTMLDivElement>, ...children: (BaseComponent | HTMLElement | null)[]) =>
+  new BaseComponent<HTMLDivElement>(props, ...children);
