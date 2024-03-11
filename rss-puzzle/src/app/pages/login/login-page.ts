@@ -18,8 +18,15 @@ export default class LoginPage extends BaseComponent {
     super({
       className: style.loginPage,
       tag: 'form',
-      onsubmit: (e: Event) => {
+      onsubmit: (e: SubmitEvent) => {
         e.preventDefault();
+        function formExtractor(name: string) {
+          const form = e.target as HTMLFormElement;
+          const elem = form.elements.namedItem(name) as HTMLInputElement;
+          return elem.value ?? 'error';
+        }
+        localStorage.setItem('name', formExtractor('name'));
+        localStorage.setItem('surname', formExtractor('surname'));
         pageSwitcher(new GamePage());
       },
     });
@@ -29,12 +36,14 @@ export default class LoginPage extends BaseComponent {
       'Click on words, collect phrases. Words can be drag and drop. Select tooltips in the menu',
     );
     this.name = input(style.input, {
+      name: 'name',
       placeholder: 'Name',
       required: true,
       pattern: '[A-Z]{1}[A-Za-z\\-]{2,}',
       title: 'First letter must be capital && word length > 1',
     });
     this.surname = input(style.input, {
+      name: 'surname',
       placeholder: 'Surname',
       required: true,
       pattern: '[A-Z]{1}[A-Za-z\\-]{3,}',
