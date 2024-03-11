@@ -14,7 +14,8 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> {
 
   constructor(props: Props<T>, ...children: (BaseComponent | HTMLElement | null)[]) {
     this.node = document.createElement(props.tag ?? 'div') as T;
-    this.node.textContent = props.txt ?? null;
+    if (props.txt) this.node.textContent = props.txt;
+    Object.assign(this.node, props);
     if (children) {
       this.appendChildren(children.filter((el): el is BaseComponent | HTMLElement => el !== null));
     }
@@ -57,12 +58,16 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> {
     this.node.classList.remove(className);
   }
 
-  public destroy(): void {
+  public destroyChildren(): void {
     this.children.reduce((_, child) => {
       child.destroy();
       return null;
     }, null);
     this.children = [];
+  }
+
+  public destroy(): void {
+    this.destroyChildren();
     this.node.remove();
   }
 }
