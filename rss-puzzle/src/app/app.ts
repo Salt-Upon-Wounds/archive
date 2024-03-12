@@ -4,10 +4,10 @@ import GamePage from './pages/game/game-page';
 import LoginPage from './pages/login/login-page';
 
 class App {
-  private routes: { [str: string]: BaseComponent } = {
-    '404': new LoginPage(),
-    '/rss-puzzle/': new LoginPage(),
-    '/rss-puzzle/game': new GamePage(),
+  private routes: { [str: string]: () => BaseComponent } = {
+    '404': () => new LoginPage(),
+    '/rss-puzzle/': () => new LoginPage(),
+    '/rss-puzzle/game': () => new GamePage(),
   };
 
   constructor(
@@ -20,7 +20,7 @@ class App {
   }
 
   public route(path: string) {
-    this.pageWrapper.switchPage(this.routes[path] ?? this.routes['404']);
+    this.pageWrapper.switchPage((this.routes[path] ?? this.routes['404'])());
   }
 }
 const app = new App(PageWrapper(), document.querySelector<HTMLDivElement>('#app')!);
@@ -51,7 +51,6 @@ window.history.replaceState = new Proxy(window.history.replaceState, {
 });
 
 function handleStateChange(path: string) {
-  console.log(path);
   app.route(`/rss-puzzle/${path}`);
 }
 
@@ -62,4 +61,4 @@ window.addEventListener('replaceState', ((e: CustomEvent) => {
   handleStateChange(e.detail.path);
 }) as EventListener);
 
-app.route(window.location.pathname);
+if (window.location.pathname !== '/rss-puzzle/') app.route(window.location.pathname);
