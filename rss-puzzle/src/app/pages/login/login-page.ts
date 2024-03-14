@@ -38,7 +38,6 @@ export default class LoginPage extends BaseComponent {
       style.text,
       'Click on words, collect phrases. Words can be drag and drop. Select tooltips in the menu',
     );
-    console.log(!(name && surname));
     if (!(name && surname)) {
       this.name = input(style.input, {
         name: 'name',

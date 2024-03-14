@@ -10,7 +10,7 @@ export type ElementFnProps<T extends HTMLElement = HTMLElement> = Omit<Props<T>,
 export class BaseComponent<T extends HTMLElement = HTMLElement> {
   protected node: T;
 
-  protected children: BaseComponent[] = [];
+  public children: BaseComponent[] = [];
 
   protected parent: BaseComponent | null = null;
 
@@ -59,6 +59,10 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> {
 
   public removeClass(className: string): void {
     this.node.classList.remove(className);
+  }
+
+  public containsClass(className: string): boolean {
+    return this.node.classList.contains(className);
   }
 
   public destroyChildren(): void {

@@ -1,0 +1,93 @@
+.game {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  max-width: 900px;
+  margin: 0 auto;
+  .buttons {
+    display: flex;
+    justify-content: space-between;
+  }
+  .field-wrapper {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    .row-numbers {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 10px;
+    }
+    .field {
+      min-width: 697px;
+      min-height: 460px;
+      background-size: contain;
+      background-image: url('https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/images/level1/9th_wave.jpg');
+    }
+  }
+}
+
+.hide {
+  visibility: hidden;
+}
+
+.bottom-field {
+  display: flex;
+  justify-content: space-around;
+  min-height: 46px;
+  min-width: 697px;
+  background-color: rgb(70, 64, 64);
+  margin-left: auto;
+  .element {
+    cursor: pointer;
+    position: relative;
+    background-color: #c61bcc;
+    display: flex;
+    flex:1 1 auto;
+    justify-content: center;
+    align-items: center;
+    &.toleft {
+      margin-left: -14px;
+    }
+    &.toright {
+      margin-left: 14px;
+    }
+    &.center {
+      mask-image: url('../../assets/left-mask.svg'), url('../../assets/right-mask.svg'), linear-gradient(#fff 0 0);
+      mask-position: left, right;
+      mask-repeat: no-repeat;
+      mask-composite: exclude, exclude, add;
+      margin-right: -14px;
+    }
+    &.first {
+      mask-image: url('../../assets/right-mask.svg'), linear-gradient(#fff 0 0);
+      mask-position: right;
+      mask-repeat: no-repeat;
+      mask-composite: exclude, add;
+      margin-right: -14px;
+    }
+    &.last {
+      mask-image: url('../../assets/left-mask.svg'), linear-gradient(#fff 0 0);
+      mask-position: left;
+      mask-repeat: no-repeat;
+      mask-composite: exclude, add;
+      margin-right: 1px;
+    }
+  }
+}
+
+.btn {
+  max-width: 200px;
+  height: 40px;
+  width: 100%;
+  font-size: large;
+  background-color: rgb(121, 7, 228);
+  border-color: transparent;
+  cursor: pointer;
+  transition: background-color 0.5s;
+  &:hover {
+    background-color: rgb(145, 39, 243);
+  }
+}
