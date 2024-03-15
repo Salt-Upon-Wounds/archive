@@ -110,17 +110,35 @@ export default class GamePage extends BaseComponent {
   }
 
   private checkClick() {
-    this.mainfield.children[1].children[this.field].children.forEach((el) => {
-      if (Number(el.getNode().getAttribute('answer')) !== Number(el.getNode().style.order) - 1) {
-        (async () => {
-          el.addClass(style.error);
-          await new Promise((resolve) => {
-            setTimeout(resolve, 2000);
-          });
-          el.removeClass(style.error);
-        })();
+    const row = this.mainfield.children[1].children[this.field].children;
+    const flags = GamePage.checkLine(row.map((el) => el.getNode()));
+    if (flags[0]) {
+      if (flags[1]) {
+        this.continueBtn.removeClass(style.completeHide);
+        this.checkBtn.addClass(style.completeHide);
+        row.forEach((el) => {
+          (async () => {
+            el.addClass(style.right);
+            await new Promise((resolve) => {
+              setTimeout(resolve, 2000);
+            });
+            el.removeClass(style.right);
+          })();
+        });
+      } else {
+        row.forEach((el) => {
+          if (Number(el.getNode().getAttribute('answer')) !== Number(el.getNode().style.order) - 1) {
+            (async () => {
+              el.addClass(style.error);
+              await new Promise((resolve) => {
+                setTimeout(resolve, 2000);
+              });
+              el.removeClass(style.error);
+            })();
+          }
+        });
       }
-    });
+    }
   }
 
   private continueClick() {
@@ -173,8 +191,7 @@ export default class GamePage extends BaseComponent {
     (currentTarget as HTMLElement).style.visibility = 'hidden';
     const flags = GamePage.checkLine([...fields[idx].querySelectorAll<HTMLElement>(`.${style.element}`)]);
     if (flags[0]) {
-      if (flags[1]) this.continueBtn.removeClass(style.completeHide);
-      else this.checkBtn.removeClass(style.completeHide);
+      this.checkBtn.removeClass(style.completeHide);
     } else {
       this.checkBtn.addClass(style.completeHide);
       this.continueBtn.addClass(style.completeHide);

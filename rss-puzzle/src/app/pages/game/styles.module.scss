@@ -63,8 +63,12 @@
     justify-content: center;
     align-items: center;
     transition: 2s color ease-in-out;
+    font-weight: 700;
     &.error {
       color: red;
+    }
+    &.right {
+      color: rgb(8, 248, 8);
     }
     &.toleft {
       margin-left: -14px;
