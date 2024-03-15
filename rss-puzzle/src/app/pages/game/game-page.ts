@@ -82,10 +82,29 @@ export default class GamePage extends BaseComponent {
           div({ className: 'sound-hint' }),
           this.mainfield,
           this.bottomfield,
-          div({ className: style.bottomBtns }, button(style.btn, "I don't know"), this.continueBtn, this.checkBtn),
+          div(
+            { className: style.bottomBtns },
+            button(style.btn, 'Autocomplete', this.autocompleteClick.bind(this)),
+            this.continueBtn,
+            this.checkBtn,
+          ),
         ),
       ]);
     })();
+  }
+
+  private autocompleteClick() {
+    this.mainfield.children[1].children[this.field].children.forEach((el, idx) => {
+      const tmp = el;
+      tmp.getNode().style.visibility = 'visible';
+      tmp.getNode().style.order = `${idx + 1}`;
+    });
+    this.bottomfield.children.forEach((el) => {
+      const tmp = el;
+      tmp.getNode().style.visibility = 'hidden';
+    });
+    this.continueBtn.removeClass(style.completeHide);
+    this.checkBtn.addClass(style.completeHide);
   }
 
   private populateField() {
