@@ -12,14 +12,14 @@ export const h2 = (className: string, txt: string): BaseComponent<HTMLElementTag
 export const p = (className: string, txt: string): BaseComponent<HTMLElementTagNameMap['p']> =>
   new BaseComponent({ tag: 'p', className, txt });
 
-export const button = (className: string, txt: string, onClick?: () => void) =>
+export const button = (className: string, txt: string, onClick?: (e: Event) => void) =>
   new BaseComponent({
     tag: 'button',
     className,
     txt,
     onclick: (e: Event) => {
       e.preventDefault();
-      onClick?.();
+      onClick?.(e);
     },
   });
 

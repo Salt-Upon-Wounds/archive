@@ -23,7 +23,7 @@ export default class LoginPage extends BaseComponent {
         e.preventDefault();
         if (!(name && surname)) {
           const formExtractor = (fname: string) => {
-            const form = e.target as HTMLFormElement;
+            const form = e.currentTarget as HTMLFormElement;
             const elem = form.elements.namedItem(fname) as HTMLInputElement;
             return elem.value ?? 'error';
           };

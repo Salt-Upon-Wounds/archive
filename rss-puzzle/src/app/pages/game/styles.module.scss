@@ -33,6 +33,18 @@
   visibility: hidden;
 }
 
+.complete-hide {
+  display: none;
+}
+
+.bottom-btns {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  justify-content: center;
+}
+
 .bottom-field {
   display: flex;
   justify-content: space-around;
@@ -41,6 +53,8 @@
   background-color: rgb(70, 64, 64);
   margin-left: auto;
   .element {
+    margin-top: 1px;
+    margin-bottom: 1px;
     cursor: pointer;
     position: relative;
     background-color: #c61bcc;
@@ -87,6 +101,8 @@
   border-color: transparent;
   cursor: pointer;
   transition: background-color 0.5s;
+  flex-grow: 0;
+  flex-shrink: 0;
   &:hover {
     background-color: rgb(145, 39, 243);
   }
