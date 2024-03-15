@@ -19,6 +19,8 @@ export default class GamePage extends BaseComponent {
 
   private continueBtn: BaseComponent = new BaseComponent({});
 
+  private checkBtn: BaseComponent = new BaseComponent({});
+
   private field: number = 0;
 
   private data: Data[] = [];
@@ -62,6 +64,7 @@ export default class GamePage extends BaseComponent {
       this.populateField();
 
       this.continueBtn = button(`${style.btn} ${style.completeHide}`, 'Continue', this.continueClick.bind(this));
+      this.checkBtn = button(`${style.btn} ${style.completeHide}`, 'Check', this.checkClick.bind(this));
 
       this.appendChildren([
         div(
@@ -79,7 +82,7 @@ export default class GamePage extends BaseComponent {
           div({ className: 'sound-hint' }),
           this.mainfield,
           this.bottomfield,
-          div({ className: style.bottomBtns }, button(style.btn, "I don't know"), this.continueBtn),
+          div({ className: style.bottomBtns }, button(style.btn, "I don't know"), this.continueBtn, this.checkBtn),
         ),
       ]);
     })();
@@ -87,7 +90,7 @@ export default class GamePage extends BaseComponent {
 
   private populateField() {
     for (let i = 0; i < 10; i += 1) {
-      const tmp = this.words(this.data[this.level].rounds[this.round].words[i].textExample, GamePage.upperClick);
+      const tmp = this.words(this.data[this.level].rounds[this.round].words[i].textExample, this.upperClick);
       for (let idx = 0; idx < tmp.length; idx += 1) {
         tmp[idx].getNode().style.order = `${idx + 1}`;
         tmp[idx].getNode().setAttribute('answer', `${idx}`);
@@ -106,6 +109,20 @@ export default class GamePage extends BaseComponent {
     );
   }
 
+  private checkClick() {
+    this.mainfield.children[1].children[this.field].children.forEach((el) => {
+      if (Number(el.getNode().getAttribute('answer')) !== Number(el.getNode().style.order) - 1) {
+        (async () => {
+          el.addClass(style.error);
+          await new Promise((resolve) => {
+            setTimeout(resolve, 2000);
+          });
+          el.removeClass(style.error);
+        })();
+      }
+    });
+  }
+
   private continueClick() {
     if (this.field >= 9) {
       this.field = 0;
@@ -117,6 +134,10 @@ export default class GamePage extends BaseComponent {
       this.populateField();
       this.populateBottom();
     } else {
+      this.mainfield.children[1].children[this.field].children.forEach((el) => {
+        const tmp = el;
+        tmp.getNode().onclick = () => {};
+      });
       this.field += 1;
       this.populateBottom();
     }
@@ -150,29 +171,35 @@ export default class GamePage extends BaseComponent {
     fieldOrig.style.order = tmp;
     fieldOrig.style.visibility = 'visible';
     (currentTarget as HTMLElement).style.visibility = 'hidden';
-    if (GamePage.checkLine([...fields[idx].querySelectorAll<HTMLElement>(`.${style.element}`)]))
-      this.continueBtn.removeClass(style.completeHide);
-    else this.continueBtn.addClass(style.completeHide);
+    const flags = GamePage.checkLine([...fields[idx].querySelectorAll<HTMLElement>(`.${style.element}`)]);
+    if (flags[0]) {
+      if (flags[1]) this.continueBtn.removeClass(style.completeHide);
+      else this.checkBtn.removeClass(style.completeHide);
+    } else {
+      this.checkBtn.addClass(style.completeHide);
+      this.continueBtn.addClass(style.completeHide);
+    }
   }
 
   private static checkLine(line: HTMLElement[]) {
+    let right = true;
     for (let i = 0; i < line.length; i += 1) {
-      if (
-        !line[i].checkVisibility({ contentVisibilityAuto: true, visibilityProperty: true } as CheckVisibilityOptions) ||
-        Number(line[i].getAttribute('answer')) !== Number(line[i].style.order) - 1
-      )
-        return false;
+      if (!line[i].checkVisibility({ contentVisibilityAuto: true, visibilityProperty: true } as CheckVisibilityOptions))
+        return [false, false];
+      if (Number(line[i].getAttribute('answer')) !== Number(line[i].style.order) - 1) right = false;
     }
-    return true;
+    return [true, right];
   }
 
-  private static upperClick(e: Event) {
+  private upperClick(e: Event) {
     const { currentTarget } = e;
     const fields = document.querySelectorAll<HTMLElement>(`.${style.bottomField}`);
     (currentTarget as HTMLElement).style.visibility = 'hidden';
     [...fields[fields.length - 1].querySelectorAll<HTMLElement>(`.${style.element}`)].filter(
       (el) => el.getAttribute('answer') === (currentTarget as HTMLElement).getAttribute('answer'),
     )[0].style.visibility = 'visible';
+    this.checkBtn.addClass(style.completeHide);
+    this.continueBtn.addClass(style.completeHide);
   }
 
   /* private static makeCounter() {
