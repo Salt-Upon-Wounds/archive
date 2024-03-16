@@ -25,3 +25,16 @@ export const button = (className: string, txt: string, onClick?: (e: Event) => v
 
 export const div = (props: ElementFnProps<HTMLDivElement>, ...children: (BaseComponent | HTMLElement | null)[]) =>
   new BaseComponent<HTMLDivElement>(props, ...children);
+
+export const select = (className: string, options: string[], onClick?: (e: Event) => void) =>
+  new BaseComponent<HTMLElementTagNameMap['select']>(
+    { tag: 'select', className, size: 1 },
+    ...options.map((el, idx) => {
+      return new BaseComponent<HTMLElementTagNameMap['option']>({
+        tag: 'option',
+        txt: el,
+        selected: idx === 0,
+        onclick: onClick,
+      });
+    }),
+  );

@@ -8,8 +8,18 @@
   .buttons {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    .hints {
+      display: flex;
+      gap: 10px;
+      .btn {
+        flex-shrink: 1;
+      }
+    }
   }
   .field-wrapper {
+    margin-right: 20px;
     display: flex;
     gap: 10px;
     justify-content: center;
@@ -24,8 +34,18 @@
       min-width: 697px;
       min-height: 460px;
       background-size: contain;
-      background-image: url('https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/images/level1/9th_wave.jpg');
+      background-color: rgb(70, 64, 64);;
+      //background-image: url('https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/images/level1/9th_wave.jpg');
     }
+  }
+}
+
+.translation {
+  font-weight: 600;
+  margin: 0;
+  &::before {
+    content: 'a';
+    visibility: hidden;
   }
 }
 
@@ -51,7 +71,6 @@
   min-height: 46px;
   min-width: 697px;
   background-color: rgb(70, 64, 64);
-  margin-left: auto;
   .element {
     margin-top: 1px;
     margin-bottom: 1px;
@@ -114,4 +133,11 @@
   &:hover {
     background-color: rgb(145, 39, 243);
   }
+}
+
+.changeLevel {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
 }

@@ -1,5 +1,5 @@
 import { BaseComponent } from '../../components/base-component';
-import { button, div } from '../../components/tags';
+import { button, div, p, select } from '../../components/tags';
 import style from './styles.module.scss';
 
 type Data = {
@@ -20,6 +20,14 @@ export default class GamePage extends BaseComponent {
   private continueBtn: BaseComponent = new BaseComponent({});
 
   private checkBtn: BaseComponent = new BaseComponent({});
+
+  private levelSelect: BaseComponent = new BaseComponent({});
+
+  private roundSelect: BaseComponent = new BaseComponent({});
+
+  private translateHint: BaseComponent = new BaseComponent({});
+
+  private soundHint: BaseComponent = new BaseComponent({});
 
   private field: number = 0;
 
@@ -65,32 +73,50 @@ export default class GamePage extends BaseComponent {
 
       this.continueBtn = button(`${style.btn} ${style.completeHide}`, 'Continue', this.continueClick.bind(this));
       this.checkBtn = button(`${style.btn} ${style.completeHide}`, 'Check', this.checkClick.bind(this));
+      this.levelSelect = select(
+        '',
+        new Array(this.data.length).fill(0).map((_, idx) => String(idx + 1)),
+      );
+      this.roundSelect = select(
+        '',
+        new Array(this.data[0].roundsCount).fill(0).map((_, idx) => String(idx + 1)),
+      );
+      this.soundHint = button('', 'play', () => {});
+      this.translateHint = p(style.translation, ' ');
 
       this.appendChildren([
         div(
-          { className: style.game },
+          { className: style.buttons },
+          div({ className: style.changeLevel }, p('', 'Level: '), this.levelSelect, p('', 'Round: '), this.roundSelect),
           div(
-            { className: style.buttons },
-            div({ className: 'level-selections' }),
-            div({ className: 'hints' }),
-            button(style.btn, 'Logout', () => {
-              localStorage.removeItem('name');
-              localStorage.removeItem('surname');
-              window.history.pushState({ path: '' }, '', `${window.location.origin}/rss-puzzle/`);
-            }),
+            { className: style.hints },
+            button(style.btn, 'translate', this.translateClick.bind(this)),
+            button(style.btn, 'picture'),
+            button(style.btn, 'sound'),
           ),
-          div({ className: 'sound-hint' }),
-          this.mainfield,
-          this.bottomfield,
-          div(
-            { className: style.bottomBtns },
-            button(style.btn, 'Autocomplete', this.autocompleteClick.bind(this)),
-            this.continueBtn,
-            this.checkBtn,
-          ),
+          button(style.btn, 'Logout', () => {
+            localStorage.removeItem('name');
+            localStorage.removeItem('surname');
+            window.history.pushState({ path: '' }, '', `${window.location.origin}/rss-puzzle/`);
+          }),
+        ),
+        div({ className: 'sound-hint' }),
+        this.translateHint,
+        this.mainfield,
+        this.bottomfield,
+        div(
+          { className: style.bottomBtns },
+          button(style.btn, 'Autocomplete', this.autocompleteClick.bind(this)),
+          this.continueBtn,
+          this.checkBtn,
         ),
       ]);
     })();
+  }
+
+  private translateClick() {
+    console.log(this.data[this.level].rounds[this.round].words[this.field].textExampleTranslate);
+    this.translateHint.setTextContent(this.data[this.level].rounds[this.round].words[this.field].textExampleTranslate);
   }
 
   private autocompleteClick() {
@@ -179,6 +205,7 @@ export default class GamePage extends BaseComponent {
       this.populateBottom();
     }
     this.continueBtn.addClass(style.completeHide);
+    this.translateHint.setTextContent(' ');
   }
 
   private static api<T>(url: string): Promise<T> {
