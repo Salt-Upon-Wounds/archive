@@ -1,7 +1,7 @@
 .game {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
   align-items: center;
   max-width: 900px;
   margin: 0 auto;
@@ -15,7 +15,7 @@
       gap: 10px;
       .btn {
         flex-shrink: 1;
-        &.active {
+        .active {
           background-color: rgb(15, 207, 15);
           &:hover {
             background-color: rgb(8, 122, 8);
@@ -138,6 +138,24 @@
   flex-shrink: 0;
   &:hover {
     background-color: rgb(145, 39, 243);
+  }
+}
+
+.sound-hint {
+  width: fit-content;
+  &::before {
+    display: block;
+    content: ' ';
+    background-image: url('../../assets/speaker.svg');
+    background-size: 28px 28px;
+    height: 28px;
+    width: 28px;
+  }
+  &.on {
+    background-color: rgb(15, 207, 15);
+    &:hover {
+      background-color: rgb(15, 207, 15);
+    }
   }
 }
 

@@ -87,7 +87,7 @@ export default class GamePage extends BaseComponent {
         '',
         new Array(this.data[0].roundsCount).fill(0).map((_, idx) => String(idx + 1)),
       );
-      this.soundHint = button('', 'play', () => {});
+      this.soundHint = button(`${style.btn} ${style.soundHint}`, '', this.playSound.bind(this));
       this.translateHint = p(style.translation, ' ');
       this.translateBtn = button(style.btn, 'translate', this.translateClick.bind(this));
       this.pictureBtn = button(style.btn, 'picture');
@@ -104,7 +104,7 @@ export default class GamePage extends BaseComponent {
             window.history.pushState({ path: '' }, '', `${window.location.origin}/rss-puzzle/`);
           }),
         ),
-        div({ className: 'sound-hint' }),
+        this.soundHint,
         this.translateHint,
         this.mainfield,
         this.bottomfield,
@@ -116,6 +116,23 @@ export default class GamePage extends BaseComponent {
         ),
       ]);
     })();
+  }
+
+  private playSound() {
+    if (!this.soundHint.containsClass(style.on)) {
+      (async () => {
+        this.soundHint.addClass(style.on);
+        const str = 'https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/';
+        await new Promise((resolve) => {
+          const audio = new Audio(str.concat(this.data[this.level].rounds[this.round].words[this.field].audioExample));
+          audio.addEventListener('loadedmetadata', () => {
+            audio.play();
+            setTimeout(resolve, audio.duration * 1000);
+          });
+        });
+        this.soundHint.removeClass(style.on);
+      })();
+    }
   }
 
   private translateClick(e: Event) {
