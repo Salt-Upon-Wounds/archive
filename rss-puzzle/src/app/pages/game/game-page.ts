@@ -115,7 +115,47 @@ export default class GamePage extends BaseComponent {
           this.checkBtn,
         ),
       ]);
+      this.backgroundInit();
+      this.backgroundBottomInit();
     })();
+  }
+
+  private backgroundInit() {
+    const str = 'https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/images/';
+    const path = this.data[this.level].rounds[this.round].levelData.imageSrc;
+    let x = 0;
+    let y = 0;
+    this.mainfield.children[1].children.forEach((row) => {
+      row.children.forEach((el) => {
+        const tmp = el;
+        tmp.getNode().style.backgroundRepeat = 'no-repeat';
+        tmp.getNode().style.backgroundImage = `url(${str.concat(path)})`;
+        tmp.getNode().style.backgroundSize = `${this.mainfield.children[1].getNode().offsetWidth}px ${this.mainfield.getNode().offsetHeight}px`;
+        tmp.getNode().style.backgroundPositionX = `${x}px`;
+        tmp.getNode().style.backgroundPositionY = `${y}px`;
+        x -= tmp.getNode().offsetWidth - 15;
+      });
+      y -= this.mainfield.getNode().offsetHeight / 10;
+      x = 0;
+    });
+  }
+
+  private backgroundBottomInit() {
+    const str = 'https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/images/';
+    const path = this.data[this.level].rounds[this.round].levelData.imageSrc;
+    let x = 0;
+    const y = -(this.field * this.mainfield.getNode().offsetHeight) / 10;
+    this.bottomfield.children
+      .sort((a, b) => Number(a.getNode().getAttribute('answer')) - Number(b.getNode().getAttribute('answer')))
+      .forEach((el) => {
+        const tmp = el;
+        tmp.getNode().style.backgroundRepeat = 'no-repeat';
+        tmp.getNode().style.backgroundImage = `url(${str.concat(path)})`;
+        tmp.getNode().style.backgroundSize = `${this.mainfield.children[1].getNode().offsetWidth}px ${this.mainfield.getNode().offsetHeight}px`;
+        tmp.getNode().style.backgroundPositionX = `${x}px`;
+        tmp.getNode().style.backgroundPositionY = `${y}px`;
+        x -= tmp.getNode().offsetWidth - 15;
+      });
   }
 
   private soundClick(e: Event) {
@@ -232,6 +272,8 @@ export default class GamePage extends BaseComponent {
       }
       this.populateField();
       this.populateBottom();
+      this.backgroundInit();
+      this.backgroundBottomInit();
     } else {
       this.mainfield.children[1].children[this.field].children.forEach((el) => {
         const tmp = el;
