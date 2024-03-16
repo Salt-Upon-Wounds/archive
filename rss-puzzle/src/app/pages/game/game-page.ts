@@ -27,6 +27,12 @@ export default class GamePage extends BaseComponent {
 
   private translateHint: BaseComponent = new BaseComponent({});
 
+  private translateBtn: BaseComponent = new BaseComponent({});
+
+  private pictureBtn: BaseComponent = new BaseComponent({});
+
+  private soundBtn: BaseComponent = new BaseComponent({});
+
   private soundHint: BaseComponent = new BaseComponent({});
 
   private field: number = 0;
@@ -83,17 +89,15 @@ export default class GamePage extends BaseComponent {
       );
       this.soundHint = button('', 'play', () => {});
       this.translateHint = p(style.translation, ' ');
+      this.translateBtn = button(style.btn, 'translate', this.translateClick.bind(this));
+      this.pictureBtn = button(style.btn, 'picture');
+      this.soundBtn = button(style.btn, 'sound');
 
       this.appendChildren([
         div(
           { className: style.buttons },
           div({ className: style.changeLevel }, p('', 'Level: '), this.levelSelect, p('', 'Round: '), this.roundSelect),
-          div(
-            { className: style.hints },
-            button(style.btn, 'translate', this.translateClick.bind(this)),
-            button(style.btn, 'picture'),
-            button(style.btn, 'sound'),
-          ),
+          div({ className: style.hints }, this.translateBtn, this.pictureBtn, this.soundBtn),
           button(style.btn, 'Logout', () => {
             localStorage.removeItem('name');
             localStorage.removeItem('surname');
@@ -114,9 +118,19 @@ export default class GamePage extends BaseComponent {
     })();
   }
 
-  private translateClick() {
-    console.log(this.data[this.level].rounds[this.round].words[this.field].textExampleTranslate);
-    this.translateHint.setTextContent(this.data[this.level].rounds[this.round].words[this.field].textExampleTranslate);
+  private translateClick(e: Event) {
+    (e.currentTarget as HTMLElement).classList.toggle(style.active);
+    this.translate();
+  }
+
+  private translate() {
+    if (this.translateBtn.containsClass(style.active)) {
+      this.translateHint.setTextContent(
+        this.data[this.level].rounds[this.round].words[this.field].textExampleTranslate,
+      );
+    } else {
+      this.translateHint.setTextContent('');
+    }
   }
 
   private autocompleteClick() {
@@ -205,7 +219,7 @@ export default class GamePage extends BaseComponent {
       this.populateBottom();
     }
     this.continueBtn.addClass(style.completeHide);
-    this.translateHint.setTextContent(' ');
+    this.translate();
   }
 
   private static api<T>(url: string): Promise<T> {
