@@ -91,7 +91,7 @@ export default class GamePage extends BaseComponent {
       this.translateHint = p(style.translation, ' ');
       this.translateBtn = button(style.btn, 'translate', this.translateClick.bind(this));
       this.pictureBtn = button(style.btn, 'picture');
-      this.soundBtn = button(style.btn, 'sound');
+      this.soundBtn = button(style.btn, 'sound', this.soundClick.bind(this));
 
       this.appendChildren([
         div(
@@ -118,6 +118,11 @@ export default class GamePage extends BaseComponent {
     })();
   }
 
+  private soundClick(e: Event) {
+    (e.currentTarget as HTMLElement).classList.toggle(style.toggle);
+    this.soundHint.toggleClass(style.active);
+  }
+
   private playSound() {
     if (!this.soundHint.containsClass(style.on)) {
       (async () => {
@@ -136,12 +141,12 @@ export default class GamePage extends BaseComponent {
   }
 
   private translateClick(e: Event) {
-    (e.currentTarget as HTMLElement).classList.toggle(style.active);
+    (e.currentTarget as HTMLElement).classList.toggle(style.toggle);
     this.translate();
   }
 
   private translate() {
-    if (this.translateBtn.containsClass(style.active)) {
+    if (this.translateBtn.containsClass(style.toggle)) {
       this.translateHint.setTextContent(
         this.data[this.level].rounds[this.round].words[this.field].textExampleTranslate,
       );
