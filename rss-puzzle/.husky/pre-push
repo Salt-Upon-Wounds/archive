@@ -1,6 +1,0 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
-cd rss-puzzle
-exec 1> /dev/tty
-npx validate-branch-name
