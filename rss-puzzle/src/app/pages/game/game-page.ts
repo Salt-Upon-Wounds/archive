@@ -82,10 +82,12 @@ export default class GamePage extends BaseComponent {
       this.levelSelect = select(
         '',
         new Array(this.data.length).fill(0).map((_, idx) => String(idx + 1)),
+        this.selectLevel.bind(this),
       );
       this.roundSelect = select(
         '',
         new Array(this.data[0].roundsCount).fill(0).map((_, idx) => String(idx + 1)),
+        this.selectRound.bind(this),
       );
       this.soundHint = button(`${style.btn} ${style.soundHint}`, '', this.playSound.bind(this));
       this.translateHint = p(style.translation, ' ');
@@ -113,6 +115,37 @@ export default class GamePage extends BaseComponent {
       ]);
       this.loadSavedHintState();
     })();
+  }
+
+  private selectLevel(e: Event) {
+    this.level = Number((e.currentTarget as HTMLSelectElement).value) - 1;
+    this.round = 0;
+    this.roundSelect.destroyChildren();
+    this.roundSelect.appendChildren(
+      new Array(this.data[this.level].roundsCount).fill(0).map((_, idx) => {
+        return new BaseComponent<HTMLElementTagNameMap['option']>({
+          tag: 'option',
+          txt: String(idx + 1),
+          selected: idx === 0,
+        });
+      }),
+    );
+    this.populateField();
+    this.populateBottom();
+    const flag = !this.pictureBtn.containsClass(style.toggle);
+    this.backgroundInit(flag);
+    this.backgroundBottomInit(flag);
+    this.translate();
+  }
+
+  private selectRound(e: Event) {
+    this.round = Number((e.currentTarget as HTMLSelectElement).value) - 1;
+    this.populateField();
+    this.populateBottom();
+    const flag = !this.pictureBtn.containsClass(style.toggle);
+    this.backgroundInit(flag);
+    this.backgroundBottomInit(flag);
+    this.translate();
   }
 
   private loadSavedHintState() {
