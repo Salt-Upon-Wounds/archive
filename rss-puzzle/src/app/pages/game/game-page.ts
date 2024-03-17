@@ -100,7 +100,7 @@ export default class GamePage extends BaseComponent {
           { className: style.buttons },
           div({ className: style.changeLevel }, p('', 'Level: '), this.levelSelect, p('', 'Round: '), this.roundSelect),
           div({ className: style.hints }, this.translateBtn, this.pictureBtn, this.soundBtn),
-          button(style.btn, 'Logout', GamePage.logout),
+          button(style.btn, 'Logout', this.logout.bind(this)),
         ),
         this.soundHint,
         this.translateHint,
@@ -114,7 +114,45 @@ export default class GamePage extends BaseComponent {
         ),
       ]);
       this.loadSavedHintState();
+      this.loadState();
     })();
+  }
+
+  private loadState() {
+    const levels = localStorage.getItem(`Levels`);
+    if (levels) {
+      const arr = JSON.parse(levels);
+      this.levelSelect.children.forEach((el) => {
+        const tmp = el;
+        if (arr.includes(Number(tmp.getNode().textContent))) tmp.getNode().style.backgroundColor = 'green';
+      });
+    }
+    for (let i = 0; i < this.data.length; i += 1) {
+      const rounds = localStorage.getItem(`Level${i}`);
+      if (rounds) {
+        const arr = JSON.parse(rounds);
+        this.roundSelect.children.forEach((el) => {
+          const tmp = el;
+          if (arr.includes(Number(tmp.getNode().textContent) - 1)) tmp.getNode().style.backgroundColor = 'green';
+        });
+      }
+    }
+  }
+
+  private saveState(l: number, r: number) {
+    const tmp = localStorage.getItem(`Level${l}`);
+    if (tmp) {
+      let res = JSON.parse(tmp);
+      if (!res.includes(r)) res.push(r);
+      localStorage.setItem(`Level${l}`, JSON.stringify(res));
+      if (res.length === this.data[l].rounds.length) {
+        res = JSON.parse('Levels');
+        if (!res.includes(l)) res.push(l);
+        localStorage.setItem(`Levels`, JSON.stringify(res));
+      }
+    } else {
+      localStorage.setItem(`Level${l}`, JSON.stringify([r]));
+    }
   }
 
   private selectLevel(e: Event) {
@@ -136,6 +174,7 @@ export default class GamePage extends BaseComponent {
     this.backgroundInit(flag);
     this.backgroundBottomInit(flag);
     this.translate();
+    this.loadState();
   }
 
   private selectRound(e: Event) {
@@ -156,12 +195,16 @@ export default class GamePage extends BaseComponent {
     });
   }
 
-  private static logout() {
+  private logout() {
     localStorage.removeItem('name');
     localStorage.removeItem('surname');
     localStorage.removeItem('tHint');
     localStorage.removeItem('pHint');
     localStorage.removeItem('sHint');
+    localStorage.removeItem('Levels');
+    for (let i = 0; i < this.data.length; i += 1) {
+      localStorage.removeItem(`Level${i}`);
+    }
     window.history.pushState({ path: '' }, '', `${window.location.origin}/rss-puzzle/`);
   }
 
@@ -321,12 +364,15 @@ export default class GamePage extends BaseComponent {
 
   private continueClick() {
     if (this.field >= 9) {
+      this.saveState(this.level, this.round);
       this.field = 0;
       this.round += 1;
       if (this.round >= Number(this.data[this.level].roundsCount)) {
         this.round = 0;
         if (this.field !== 5) this.field += 1;
       }
+      (this.levelSelect.getNode() as HTMLSelectElement).value = String(this.level + 1);
+      (this.roundSelect.getNode() as HTMLSelectElement).value = String(this.round + 1);
       this.populateField();
       this.populateBottom();
       const flag = !this.pictureBtn.containsClass(style.toggle);
