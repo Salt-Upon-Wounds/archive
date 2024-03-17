@@ -89,10 +89,10 @@
       color: rgb(8, 248, 8);
     }
     &.toleft {
-      margin-left: -14px;
+      left: -14px;
     }
     &.toright {
-      margin-left: 14px;
+      left: 14px;
     }
     &.center {
       mask-image: url('../../assets/left-mask.svg'), url('../../assets/right-mask.svg'), linear-gradient(#fff 0 0);

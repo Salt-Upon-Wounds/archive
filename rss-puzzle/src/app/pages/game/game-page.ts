@@ -98,11 +98,7 @@ export default class GamePage extends BaseComponent {
           { className: style.buttons },
           div({ className: style.changeLevel }, p('', 'Level: '), this.levelSelect, p('', 'Round: '), this.roundSelect),
           div({ className: style.hints }, this.translateBtn, this.pictureBtn, this.soundBtn),
-          button(style.btn, 'Logout', () => {
-            localStorage.removeItem('name');
-            localStorage.removeItem('surname');
-            window.history.pushState({ path: '' }, '', `${window.location.origin}/rss-puzzle/`);
-          }),
+          button(style.btn, 'Logout', GamePage.logout),
         ),
         this.soundHint,
         this.translateHint,
@@ -115,7 +111,25 @@ export default class GamePage extends BaseComponent {
           this.checkBtn,
         ),
       ]);
+      this.loadSavedHintState();
     })();
+  }
+
+  private loadSavedHintState() {
+    Object.entries({ tHint: this.translateBtn, pHint: this.pictureBtn, sHint: this.soundBtn }).forEach((el) => {
+      if (!localStorage.getItem(el[0])) {
+        el[1].getNode().click();
+      }
+    });
+  }
+
+  private static logout() {
+    localStorage.removeItem('name');
+    localStorage.removeItem('surname');
+    localStorage.removeItem('tHint');
+    localStorage.removeItem('pHint');
+    localStorage.removeItem('sHint');
+    window.history.pushState({ path: '' }, '', `${window.location.origin}/rss-puzzle/`);
   }
 
   private backgroundInit(remove: boolean = false) {
@@ -161,11 +175,14 @@ export default class GamePage extends BaseComponent {
     const flag = !(e.currentTarget as HTMLElement).classList.contains(style.toggle);
     this.backgroundInit(flag);
     this.backgroundBottomInit(flag);
+    localStorage.setItem('pHint', flag ? '1' : '');
   }
 
   private soundClick(e: Event) {
     (e.currentTarget as HTMLElement).classList.toggle(style.toggle);
     this.soundHint.toggleClass(style.active);
+    const flag = !(e.currentTarget as HTMLElement).classList.contains(style.toggle);
+    localStorage.setItem('sHint', flag ? '1' : '');
   }
 
   private playSound() {
@@ -188,6 +205,8 @@ export default class GamePage extends BaseComponent {
   private translateClick(e: Event) {
     (e.currentTarget as HTMLElement).classList.toggle(style.toggle);
     this.translate();
+    const flag = !(e.currentTarget as HTMLElement).classList.contains(style.toggle);
+    localStorage.setItem('tHint', flag ? '1' : '');
   }
 
   private translate() {
@@ -287,6 +306,8 @@ export default class GamePage extends BaseComponent {
       });
       this.field += 1;
       this.populateBottom();
+      const flag = !this.pictureBtn.containsClass(style.toggle);
+      this.backgroundBottomInit(flag);
     }
     this.continueBtn.addClass(style.completeHide);
     this.translate();
@@ -380,11 +401,8 @@ export default class GamePage extends BaseComponent {
     }
     if (!res[0].containsClass(style.first)) {
       for (let i = 0; i < res.length; i += 1) {
-        if (i === 0 && res[i].containsClass(style.center)) res[i].addClass(style.toleft);
-        else if (res[i].containsClass(style.first)) {
-          if (!(i > 0 && res[i - 1].containsClass(style.last))) res[i].addClass(style.toright);
-          break;
-        }
+        if (res[i].containsClass(style.first) && i !== 0 && !res[i - 1].containsClass(style.last)) break;
+        res[i].addClass(style.toleft);
       }
     }
     return res;
