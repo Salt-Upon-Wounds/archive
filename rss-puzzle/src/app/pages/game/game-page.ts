@@ -90,7 +90,7 @@ export default class GamePage extends BaseComponent {
       this.soundHint = button(`${style.btn} ${style.soundHint}`, '', this.playSound.bind(this));
       this.translateHint = p(style.translation, ' ');
       this.translateBtn = button(style.btn, 'translate', this.translateClick.bind(this));
-      this.pictureBtn = button(style.btn, 'picture');
+      this.pictureBtn = button(style.btn, 'picture', this.pictureClick.bind(this));
       this.soundBtn = button(style.btn, 'sound', this.soundClick.bind(this));
 
       this.appendChildren([
@@ -115,12 +115,10 @@ export default class GamePage extends BaseComponent {
           this.checkBtn,
         ),
       ]);
-      this.backgroundInit();
-      this.backgroundBottomInit();
     })();
   }
 
-  private backgroundInit() {
+  private backgroundInit(remove: boolean = false) {
     const str = 'https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/images/';
     const path = this.data[this.level].rounds[this.round].levelData.imageSrc;
     let x = 0;
@@ -129,7 +127,7 @@ export default class GamePage extends BaseComponent {
       row.children.forEach((el) => {
         const tmp = el;
         tmp.getNode().style.backgroundRepeat = 'no-repeat';
-        tmp.getNode().style.backgroundImage = `url(${str.concat(path)})`;
+        tmp.getNode().style.backgroundImage = remove ? '' : `url(${str.concat(path)})`;
         tmp.getNode().style.backgroundSize = `${this.mainfield.children[1].getNode().offsetWidth}px ${this.mainfield.getNode().offsetHeight}px`;
         tmp.getNode().style.backgroundPositionX = `${x}px`;
         tmp.getNode().style.backgroundPositionY = `${y}px`;
@@ -140,7 +138,7 @@ export default class GamePage extends BaseComponent {
     });
   }
 
-  private backgroundBottomInit() {
+  private backgroundBottomInit(remove: boolean = false): void {
     const str = 'https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/images/';
     const path = this.data[this.level].rounds[this.round].levelData.imageSrc;
     let x = 0;
@@ -150,12 +148,19 @@ export default class GamePage extends BaseComponent {
       .forEach((el) => {
         const tmp = el;
         tmp.getNode().style.backgroundRepeat = 'no-repeat';
-        tmp.getNode().style.backgroundImage = `url(${str.concat(path)})`;
+        tmp.getNode().style.backgroundImage = remove ? '' : `url(${str.concat(path)})`;
         tmp.getNode().style.backgroundSize = `${this.mainfield.children[1].getNode().offsetWidth}px ${this.mainfield.getNode().offsetHeight}px`;
         tmp.getNode().style.backgroundPositionX = `${x}px`;
         tmp.getNode().style.backgroundPositionY = `${y}px`;
         x -= tmp.getNode().offsetWidth - 15;
       });
+  }
+
+  private pictureClick(e: Event) {
+    (e.currentTarget as HTMLElement).classList.toggle(style.toggle);
+    const flag = !(e.currentTarget as HTMLElement).classList.contains(style.toggle);
+    this.backgroundInit(flag);
+    this.backgroundBottomInit(flag);
   }
 
   private soundClick(e: Event) {
@@ -272,8 +277,9 @@ export default class GamePage extends BaseComponent {
       }
       this.populateField();
       this.populateBottom();
-      this.backgroundInit();
-      this.backgroundBottomInit();
+      const flag = !this.pictureBtn.containsClass(style.toggle);
+      this.backgroundInit(flag);
+      this.backgroundBottomInit(flag);
     } else {
       this.mainfield.children[1].children[this.field].children.forEach((el) => {
         const tmp = el;
