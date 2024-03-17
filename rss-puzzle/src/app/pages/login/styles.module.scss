@@ -1,0 +1,28 @@
+.login-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  .input {
+    height: 30px;
+    &:invalid:not(:placeholder-shown) {
+      background: pink;
+    }
+  }
+  .text {
+    max-width: 350px;
+  }
+  .btn {
+    max-width: 200px;
+    height: 40px;
+    width: 100%;
+    font-size: large;
+    background-color: rgb(121, 7, 228);
+    border-color: transparent;
+    cursor: pointer;
+    transition: background-color 0.5s;
+    &:hover {
+      background-color: rgb(145, 39, 243);
+    }
+  }
+}
