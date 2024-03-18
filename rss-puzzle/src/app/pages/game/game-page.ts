@@ -57,14 +57,7 @@ export default class GamePage extends BaseComponent {
     (async () => {
       this.data = await Promise.all(links.map((link) => GamePage.api<Data>(link)));
 
-      const str = this.data[this.level].rounds[this.round].words[this.field].textExample;
-
-      this.bottomfield = div(
-        {
-          className: style.bottomField,
-        },
-        ...GamePage.shuffleArray(this.words(str, this.bottomClick)),
-      );
+      this.bottomfield = div({ className: style.bottomField });
       this.mainfield = div(
         { className: style.fieldWrapper },
         div({ className: style.rowNumbers }),
@@ -75,7 +68,6 @@ export default class GamePage extends BaseComponent {
             .map<BaseComponent>(() => div({ className: `${style.bottomField} ${style.hide}` })),
         ),
       );
-      this.populateField();
 
       this.continueBtn = button(`${style.btn} ${style.completeHide}`, 'Continue', this.continueClick.bind(this));
       this.checkBtn = button(`${style.btn} ${style.completeHide}`, 'Check', this.checkClick.bind(this));
@@ -94,6 +86,17 @@ export default class GamePage extends BaseComponent {
       this.translateBtn = button(style.btn, 'translate', this.translateClick.bind(this));
       this.pictureBtn = button(style.btn, 'picture', this.pictureClick.bind(this));
       this.soundBtn = button(style.btn, 'sound', this.soundClick.bind(this));
+
+      const lastSave = localStorage.getItem('last');
+      if (lastSave) {
+        const arr = JSON.parse(lastSave);
+        this.level = arr.level;
+        this.round = arr.round;
+        (this.levelSelect.getNode() as HTMLSelectElement).value = String(this.level + 1);
+        (this.roundSelect.getNode() as HTMLSelectElement).value = String(this.round + 1);
+      }
+      this.populateBottom();
+      this.populateField();
 
       this.appendChildren([
         div(
@@ -175,6 +178,7 @@ export default class GamePage extends BaseComponent {
     this.backgroundBottomInit(flag);
     this.translate();
     this.loadState();
+    localStorage.setItem('last', JSON.stringify({ level: this.level, round: this.round }));
   }
 
   private selectRound(e: Event) {
@@ -185,10 +189,11 @@ export default class GamePage extends BaseComponent {
     this.backgroundInit(flag);
     this.backgroundBottomInit(flag);
     this.translate();
+    localStorage.setItem('last', JSON.stringify({ level: this.level, round: this.round }));
   }
 
   private loadSavedHintState() {
-    Object.entries({ tHint: this.translateBtn, pHint: this.pictureBtn, sHint: this.soundBtn }).forEach((el) => {
+    Object.entries({ tHint: this.translateBtn, sHint: this.soundBtn, pHint: this.pictureBtn }).forEach((el) => {
       if (!localStorage.getItem(el[0])) {
         el[1].getNode().click();
       }
@@ -202,6 +207,7 @@ export default class GamePage extends BaseComponent {
     localStorage.removeItem('pHint');
     localStorage.removeItem('sHint');
     localStorage.removeItem('Levels');
+    localStorage.removeItem('last');
     for (let i = 0; i < this.data.length; i += 1) {
       localStorage.removeItem(`Level${i}`);
     }
@@ -369,7 +375,8 @@ export default class GamePage extends BaseComponent {
       this.round += 1;
       if (this.round >= Number(this.data[this.level].roundsCount)) {
         this.round = 0;
-        if (this.field !== 5) this.field += 1;
+        if (this.level !== 5) this.level += 1;
+        else this.level = 0;
       }
       (this.levelSelect.getNode() as HTMLSelectElement).value = String(this.level + 1);
       (this.roundSelect.getNode() as HTMLSelectElement).value = String(this.round + 1);
@@ -378,6 +385,7 @@ export default class GamePage extends BaseComponent {
       const flag = !this.pictureBtn.containsClass(style.toggle);
       this.backgroundInit(flag);
       this.backgroundBottomInit(flag);
+      localStorage.setItem('last', JSON.stringify({ level: this.level, round: this.round }));
     } else {
       this.mainfield.children[1].children[this.field].children.forEach((el) => {
         const tmp = el;
