@@ -6,8 +6,8 @@ import LoginPage from './pages/login/login-page';
 class App {
   private routes: { [str: string]: () => BaseComponent } = {
     '404': () => new LoginPage(),
-    '/rss-puzzle/': () => new LoginPage(),
-    '/rss-puzzle/game': () => new GamePage(),
+    '/salt-upon-wounds-JSFE2023Q4/rss-puzzle/': () => new LoginPage(),
+    '/salt-upon-wounds-JSFE2023Q4/rss-puzzle/game': () => new GamePage(),
   };
 
   constructor(
@@ -51,7 +51,7 @@ window.history.replaceState = new Proxy(window.history.replaceState, {
 });
 
 function handleStateChange(path: string) {
-  app.route(`/rss-puzzle/${path}`);
+  app.route(`/salt-upon-wounds-JSFE2023Q4/rss-puzzle/${path}`);
 }
 
 window.addEventListener('pushState', ((e: CustomEvent) => {
@@ -61,4 +61,4 @@ window.addEventListener('replaceState', ((e: CustomEvent) => {
   handleStateChange(e.detail.path);
 }) as EventListener);
 
-if (window.location.pathname !== '/rss-puzzle/') app.route(window.location.pathname);
+if (window.location.pathname !== '/salt-upon-wounds-JSFE2023Q4/rss-puzzle/') app.route(window.location.pathname);
