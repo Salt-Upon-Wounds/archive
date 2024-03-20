@@ -1,19 +1,21 @@
-import type { BaseComponent } from './components/base-component';
-import PageWrapper from './page';
-// import GamePage from './pages/game/game-page';
-// import LoginPage from './pages/login/login-page';
+import { BaseComponent } from './components/base-component';
+import GaragePage from './pages/garage/garage-page';
+import WinnersPage from './pages/winners/winners-page';
 
 class App {
   private routes: { [str: string]: () => BaseComponent } = {
-    // '404': () => new LoginPage(),
-    // '/salt-upon-wounds-JSFE2023Q4/async-race/': () => new LoginPage(),
-    // '/salt-upon-wounds-JSFE2023Q4/async-race/game': () => new GamePage(),
+    '404': () => new GaragePage(),
+    'salt-upon-wounds-JSFE2023Q4/async-race/': () => new GaragePage(),
+    '/salt-upon-wounds-JSFE2023Q4/async-race/winners': () => new WinnersPage(),
   };
 
-  constructor(
-    private pageWrapper: BaseComponent,
-    private root: HTMLElement,
-  ) {}
+  private pageWrapper: BaseComponent = new BaseComponent({ className: 'main' });
+
+  private root: HTMLElement = document.querySelector<HTMLDivElement>('#app')!;
+
+  constructor(startPage: BaseComponent) {
+    this.pageWrapper.append(startPage);
+  }
 
   public start(): void {
     this.root.append(this.pageWrapper.getNode());
@@ -23,7 +25,7 @@ class App {
     this.pageWrapper.switchPage((this.routes[path] ?? this.routes['404'])());
   }
 }
-const app = new App(PageWrapper(), document.querySelector<HTMLDivElement>('#app')!);
+const app = new App(new GaragePage());
 
 app.start();
 
