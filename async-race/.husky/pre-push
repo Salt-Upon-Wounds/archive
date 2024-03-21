@@ -1,6 +1,6 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-cd asunc-race
+cd async-race
 exec 1> /dev/tty
 npx validate-branch-name
