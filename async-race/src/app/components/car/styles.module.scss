@@ -1,0 +1,77 @@
+.box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  .buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: left;
+    align-items: center;
+    .btn {
+      font-size: 1.2em;
+      text-transform: uppercase;
+      font-weight: 400;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: fit-content;
+      cursor: pointer;
+      transition: 0.5s background-color ease-in-out, 0.5s border-bottom ease-in-out, 0.5s color ease-in-out;
+      background-color: aliceblue;
+      border: 0px;
+      border-bottom: 3px solid rgb(76, 76, 245);
+      &:hover {
+        background-color: rgb(68, 159, 238);
+        border-bottom: 3px solid rgb(9, 9, 226);
+        color: azure;
+      }
+    }
+    .switch {
+      font-weight: 400;
+      font-size: 1.5em;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: transparent;
+      border: 1px solid rgb(140, 206, 16);
+      color: rgb(140, 206, 16);
+      cursor: pointer;
+      &.disabled {
+        border: 1px solid rgb(78, 83, 68);
+        color: rgb(78, 83, 68);
+      }
+    }
+    .title {
+      color: chocolate;
+      font-weight: 400;
+      font-size: 1.2em;
+      margin: 0;
+    }
+  }
+  .road {
+    display: flex;
+    border-bottom: 3px dotted white;
+    align-items: start;
+    .car {
+      background-color: yellow;
+      mask-image: url('../../assets/car.svg');
+      mask-size: cover;
+      mask-repeat: no-repeat;
+      width: 134px;
+      height: 58px;
+      margin-top: 10px;
+    }
+    .flag {
+      margin-top: 10px;
+      margin-left: auto;
+      background-color: red;
+      mask-image: url('../../assets/flag.svg');
+      mask-repeat: no-repeat;
+      mask-size: contain;
+      width: 80px;
+      height: 55px;
+    }
+  }
+}

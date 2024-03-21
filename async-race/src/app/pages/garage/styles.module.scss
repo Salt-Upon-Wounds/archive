@@ -1,3 +1,71 @@
 .garage {
+  width: 100%;
   display: flex;
+  flex-direction: column;
+  gap: 50px;
+  .wrapper {
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    .row {
+      display: flex;
+      gap: 10px;
+      .input {
+        min-width: 200px;
+        min-height: 20px;
+      }
+      .color-input {
+        min-width: 30px;
+        min-height: 20px;
+      }
+      .btn {
+        font-size: 1.2em;
+        text-transform: uppercase;
+        font-weight: 400;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: fit-content;
+        cursor: pointer;
+        transition: 0.5s background-color ease-in-out, 0.5s border-bottom ease-in-out, 0.5s color ease-in-out;
+        background-color: aliceblue;
+        border: 0px;
+        border-bottom: 3px solid rgb(76, 76, 245);
+        &:hover {
+          background-color: rgb(68, 159, 238);
+          border-bottom: 3px solid rgb(9, 9, 226);
+          color: azure;
+        }
+      }
+      .green {
+        background-color: aliceblue;
+        border-bottom: 3px solid rgb(76, 245, 90);
+        &:hover {
+          background-color: rgb(68, 238, 96);
+          border-bottom: 3px solid rgb(7, 138, 29);
+          color: azure;
+        }
+      }
+      .wide {
+        width: 100%;
+      }
+    }
+  }
+  .list {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 20px;
+    .title {
+      font-size: 2em;
+      font-weight: 600;
+      margin: 0;
+    }
+    .page {
+      font-size: 1em;
+      font-weight: 600;
+      margin: 0;
+    }
+  }
 }
