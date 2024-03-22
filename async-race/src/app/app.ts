@@ -11,9 +11,13 @@ class App {
 
   private pageWrapper: BaseComponent = new BaseComponent({ className: 'main' });
 
-  private root: HTMLElement = document.querySelector<HTMLDivElement>('#app')!;
+  private root: HTMLElement;
 
   constructor(startPage: BaseComponent) {
+    const appdiv = document.createElement('div');
+    appdiv.setAttribute('id', 'app');
+    document.querySelector('body')!.prepend(appdiv);
+    this.root = document.querySelector<HTMLDivElement>('#app')!;
     this.pageWrapper.append(startPage);
   }
 
