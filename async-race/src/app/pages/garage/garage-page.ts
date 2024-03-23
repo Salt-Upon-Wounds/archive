@@ -1,7 +1,7 @@
 import { BaseComponent } from '../../components/base-component';
 import Car from '../../components/car/car';
 import { button, div, input, p } from '../../components/tags';
-import { createCar, getCars, updateCar } from '../../utils/api';
+import { createCar, deleteCar, getCars, updateCar } from '../../utils/api';
 import style from './styles.module.scss';
 
 export default class Garage extends BaseComponent {
@@ -61,6 +61,10 @@ export default class Garage extends BaseComponent {
       this.carList.push(new Car(Number(arr[i].id), arr[i].name, arr[i].color));
       this.carList[i].getNode().addEventListener('selectClick', ((e: CustomEvent<number>) => {
         this.selectedId = e.detail;
+      }) as EventListener);
+      this.carList[i].getNode().addEventListener('removeClick', ((e: CustomEvent<number>) => {
+        deleteCar(e.detail);
+        this.updateList(this.pageCounter);
       }) as EventListener);
     }
     this.list.appendChildren([this.title, this.page, ...this.carList]);

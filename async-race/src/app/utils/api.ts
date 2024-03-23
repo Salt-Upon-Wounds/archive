@@ -42,17 +42,10 @@ export function getCar(id: number) {
   );
 }
 
-export function deleteCar(id: number) {
-  fetch(`http://localhost:3000/garage?${new URLSearchParams({ id: id.toString() })}`, {
+export async function deleteCar(id: number) {
+  await fetch(`http://localhost:3000/garage/${id}`, {
     method: 'DELETE',
-  }).then(
-    (val) => {
-      console.log(val);
-    },
-    (err) => {
-      console.log(err);
-    },
-  );
+  });
 }
 
 export async function updateCar(id: number, name: string, color: string) {

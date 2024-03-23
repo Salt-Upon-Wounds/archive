@@ -13,7 +13,9 @@ export default class Car extends BaseComponent {
     const selectBtn = button(style.btn, 'Select', () =>
       this.getNode().dispatchEvent(new CustomEvent<number>('selectClick', { detail: this.id })),
     );
-    const removeBtn = button(style.btn, 'Remove');
+    const removeBtn = button(style.btn, 'Remove', () =>
+      this.getNode().dispatchEvent(new CustomEvent<number>('removeClick', { detail: this.id })),
+    );
     const ABtn = button(style.switch, 'A');
     const BBtn = button(style.switch, 'B');
     BBtn.addClass(style.disabled);
