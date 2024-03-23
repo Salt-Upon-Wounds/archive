@@ -1,6 +1,7 @@
 import { BaseComponent } from '../../components/base-component';
 import Car from '../../components/car/car';
 import { button, div, input, p } from '../../components/tags';
+import { createCar } from '../../utils/api';
 import style from './styles.module.scss';
 
 export default class Garage extends BaseComponent {
@@ -22,7 +23,7 @@ export default class Garage extends BaseComponent {
     this.raceBtn.addClass(style.green);
     this.resetBtn.addClass(style.green);
     this.generateBtn.addClass(style.wide);
-    // this.crBtn.getNode().onclick = this.createCar.bind(this);
+    this.crBtn.getNode().onclick = this.createClick.bind(this);
 
     this.carList = [];
     for (let i = 0; i < 10; i += 1) {
@@ -41,4 +42,25 @@ export default class Garage extends BaseComponent {
 
   // name: this.crTextInput.getNode().textContent === '' ? 'DefaultName' : this.crTextInput.getNode().textContent,
   // color: this.crColorInput.getNode().value,
+
+  private createClick() {
+    const el = this.crTextInput;
+    if (Garage.checkInput(el)) {
+      createCar(el.getNode().value, el.getNode().value);
+    }
+  }
+
+  private static checkInput(elem: BaseComponent<HTMLInputElement>) {
+    if (elem.getNode().value === '') {
+      (async () => {
+        elem.addClass(style.red);
+        await new Promise((resolve) => {
+          setTimeout(resolve, 2000);
+        });
+        elem.removeClass(style.red);
+      })();
+      return false;
+    }
+    return true;
+  }
 }
