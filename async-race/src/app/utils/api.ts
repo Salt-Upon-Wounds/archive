@@ -1,3 +1,9 @@
+export type CardType = {
+  id: number | string;
+  color: string;
+  name: string;
+};
+
 export function createCar(name: string, color: string) {
   fetch('http://localhost:3000/garage', {
     method: 'POST',
@@ -14,17 +20,19 @@ export function createCar(name: string, color: string) {
 }
 
 // разбивает весь список машин на сервере на группы по limit машин и дает набор на page странице
-export function getCars(page: number, limit: number) {
-  fetch(`http://localhost:3000/garage?${new URLSearchParams({ _page: page.toString(), _limit: limit.toString() })}`, {
-    method: 'GET',
-  }).then(
-    (val) => {
-      console.log(val);
-    },
-    (err) => {
-      console.log(err);
+export async function getCars(page: number, limit: number) {
+  const response = await fetch(
+    `http://localhost:3000/garage?${new URLSearchParams({ _page: page.toString(), _limit: limit.toString() })}`,
+    {
+      method: 'GET',
     },
   );
+  if (response.ok) {
+    const json: CardType[] = await response.json();
+    return json;
+  }
+  console.log(`Ошибка HTTP: ${response.status}`);
+  return [];
 }
 
 export function getCar(id: number) {

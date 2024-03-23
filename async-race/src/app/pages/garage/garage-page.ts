@@ -1,7 +1,7 @@
 import { BaseComponent } from '../../components/base-component';
 import Car from '../../components/car/car';
 import { button, div, input, p } from '../../components/tags';
-import { createCar } from '../../utils/api';
+import { createCar, getCars } from '../../utils/api';
 import style from './styles.module.scss';
 
 export default class Garage extends BaseComponent {
@@ -18,6 +18,7 @@ export default class Garage extends BaseComponent {
     private title = p(style.title, `Garage (???)`),
     private page = p(style.page, `Page (???)`),
     private carList: Car[] = [],
+    private list = div({ className: style.list }),
   ) {
     super({ className: style.garage });
     this.raceBtn.addClass(style.green);
@@ -25,23 +26,26 @@ export default class Garage extends BaseComponent {
     this.generateBtn.addClass(style.wide);
     this.crBtn.getNode().onclick = this.createClick.bind(this);
 
-    this.carList = [];
-    for (let i = 0; i < 10; i += 1) {
-      this.carList.push(new Car(`Asadasd ${i + 1}`));
-    }
-
     const wrapper = div(
       { className: style.wrapper },
       div({ className: style.row }, this.crTextInput, this.crColorInput, this.crBtn),
       div({ className: style.row }, this.upTextInput, this.upColorInput, this.upBtn),
       div({ className: style.row }, this.raceBtn, this.resetBtn, this.generateBtn),
     );
-    const list = div({ className: style.list }, this.title, this.page, ...this.carList);
     this.appendChildren([wrapper, list]);
+    this.updateList();
   }
 
-  // name: this.crTextInput.getNode().textContent === '' ? 'DefaultName' : this.crTextInput.getNode().textContent,
-  // color: this.crColorInput.getNode().value,
+  private async updateList() {
+    this.list.destroyChildren();
+    this.carList = [];
+    const arr = await getCars(1, 7);
+    // TODO: id отсутствует в компоненте
+    for (let i = 0; i < arr.length; i += 1) {
+      this.carList.push(new Car(arr[i].name, arr[i].color));
+    }
+    this.list.appendChildren([this.title, this.page, ...this.carList]);
+  }
 
   private createClick() {
     const el = this.crTextInput;
