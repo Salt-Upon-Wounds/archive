@@ -1,7 +1,7 @@
 import { BaseComponent } from '../../components/base-component';
 import Car from '../../components/car/car';
 import { button, div, input, p } from '../../components/tags';
-import { createCar, getCars } from '../../utils/api';
+import { createCar, getCars, updateCar } from '../../utils/api';
 import style from './styles.module.scss';
 
 export default class Garage extends BaseComponent {
@@ -23,6 +23,7 @@ export default class Garage extends BaseComponent {
     private nextBtn = button(style.btn, 'next'),
     private pageCounter = 1,
     private pageLimit = -1,
+    private selectedId = -1,
   ) {
     super({ className: style.garage });
     [this.raceBtn, this.resetBtn, this.prevBtn, this.nextBtn].forEach((el) => {
@@ -30,6 +31,7 @@ export default class Garage extends BaseComponent {
     });
     this.generateBtn.addClass(style.wide);
     this.crBtn.getNode().onclick = this.createClick.bind(this);
+    this.upBtn.getNode().onclick = this.updateClick.bind(this);
     this.nextBtn.getNode().onclick = () => this.updateList(this.pageCounter + 1);
     this.prevBtn.getNode().onclick = () => this.updateList(this.pageCounter - 1);
 
@@ -45,6 +47,7 @@ export default class Garage extends BaseComponent {
   }
 
   private async updateList(page: number) {
+    this.selectedId = -1;
     this.list.destroyChildren();
     this.carList = [];
     this.pageCounter = page < 1 ? this.pageLimit : page;
@@ -55,15 +58,27 @@ export default class Garage extends BaseComponent {
     this.page.getNode().textContent = `Page #${this.pageCounter}`;
 
     for (let i = 0; i < arr.length; i += 1) {
-      this.carList.push(new Car(arr[i].name, arr[i].color));
+      this.carList.push(new Car(Number(arr[i].id), arr[i].name, arr[i].color));
+      this.carList[i].getNode().addEventListener('selectClick', ((e: CustomEvent<number>) => {
+        this.selectedId = e.detail;
+      }) as EventListener);
     }
     this.list.appendChildren([this.title, this.page, ...this.carList]);
   }
 
-  private createClick() {
+  private async updateClick() {
+    const el = this.upTextInput;
+    if (Garage.checkInput(el) && this.selectedId > 0) {
+      await updateCar(this.selectedId, el.getNode().value, this.upColorInput.getNode().value);
+      this.updateList(this.pageCounter);
+    }
+  }
+
+  private async createClick() {
     const el = this.crTextInput;
     if (Garage.checkInput(el)) {
-      createCar(el.getNode().value, el.getNode().value);
+      await createCar(el.getNode().value, this.crColorInput.getNode().value);
+      this.updateList(this.pageCounter);
     }
   }
 

@@ -4,19 +4,12 @@ export type CardType = {
   name: string;
 };
 
-export function createCar(name: string, color: string) {
-  fetch('http://localhost:3000/garage', {
+export async function createCar(name: string, color: string) {
+  await fetch('http://localhost:3000/garage', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name, color }),
-  }).then(
-    (val) => {
-      console.log(val);
-    },
-    (err) => {
-      console.log(err);
-    },
-  );
+  });
 }
 
 // разбивает весь список машин на сервере на группы по limit машин и дает набор на page странице
@@ -62,19 +55,12 @@ export function deleteCar(id: number) {
   );
 }
 
-export function updateCar(id: number, name: string, color: string) {
-  fetch(`http://localhost:3000/garage?${new URLSearchParams({ id: id.toString() })}`, {
+export async function updateCar(id: number, name: string, color: string) {
+  await fetch(`http://localhost:3000/garage/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name, color }),
-  }).then(
-    (val) => {
-      console.log(val);
-    },
-    (err) => {
-      console.log(err);
-    },
-  );
+  });
 }
 
 // перед использованием drive нужно завести машину
