@@ -20,7 +20,7 @@ export function createCar(name: string, color: string) {
 }
 
 // разбивает весь список машин на сервере на группы по limit машин и дает набор на page странице
-export async function getCars(page: number, limit: number) {
+export async function getCars(page: number, limit: number): Promise<{ arr: CardType[]; total: number }> {
   const response = await fetch(
     `http://localhost:3000/garage?${new URLSearchParams({ _page: page.toString(), _limit: limit.toString() })}`,
     {
@@ -28,11 +28,12 @@ export async function getCars(page: number, limit: number) {
     },
   );
   if (response.ok) {
-    const json: CardType[] = await response.json();
-    return json;
+    const arr: CardType[] = await response.json();
+    const total: number = Number(response.headers.get('X-Total-Count'));
+    return { arr, total };
   }
   console.log(`Ошибка HTTP: ${response.status}`);
-  return [];
+  return { arr: [], total: 0 };
 }
 
 export function getCar(id: number) {
