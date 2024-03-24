@@ -35,12 +35,19 @@
       justify-content: center;
       align-items: center;
       background-color: transparent;
-      border: 1px solid rgb(140, 206, 16);
-      color: rgb(140, 206, 16);
       cursor: pointer;
+      &.a-color {
+        border: 1px solid rgb(140, 206, 16);
+        color: rgb(140, 206, 16);
+      }
+      &.b-color {
+        border: 1px solid rgb(241, 58, 12);
+        color: rgb(241, 58, 12);
+      }
       &.disabled {
         border: 1px solid rgb(78, 83, 68);
         color: rgb(78, 83, 68);
+        cursor: auto;
       }
     }
     .title {

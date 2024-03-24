@@ -18,6 +18,22 @@ export default class Car extends BaseComponent {
     );
     const ABtn = button(style.switch, 'A');
     const BBtn = button(style.switch, 'B');
+    ABtn.addClass(style.aColor);
+    BBtn.addClass(style.bColor);
+    ABtn.getNode().onclick = () => {
+      if (BBtn.containsClass(style.disabled)) {
+        ABtn.toggleClass(style.disabled);
+        BBtn.toggleClass(style.disabled);
+        this.getNode().dispatchEvent(new CustomEvent<number>('AClick', { detail: this.id }));
+      }
+    };
+    BBtn.getNode().onclick = () => {
+      if (ABtn.containsClass(style.disabled)) {
+        ABtn.toggleClass(style.disabled);
+        BBtn.toggleClass(style.disabled);
+        this.getNode().dispatchEvent(new CustomEvent<number>('BClick', { detail: this.id }));
+      }
+    };
     BBtn.addClass(style.disabled);
     const title = p(style.title, name);
     const btnsRow = div({ className: style.buttons }, selectBtn, removeBtn, title);

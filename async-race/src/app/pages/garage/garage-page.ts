@@ -2,7 +2,7 @@ import { BaseComponent } from '../../components/base-component';
 import Car from '../../components/car/car';
 import { button, div, input, p } from '../../components/tags';
 import { getColor, getName } from '../../utils/100-cars-data';
-import { createCar, deleteCar, getCars, updateCar } from '../../utils/api';
+import { createCar, deleteCar, engine, getCars, updateCar } from '../../utils/api';
 import style from './styles.module.scss';
 
 export default class Garage extends BaseComponent {
@@ -67,6 +67,30 @@ export default class Garage extends BaseComponent {
       this.carList[i].getNode().addEventListener('removeClick', ((e: CustomEvent<number>) => {
         deleteCar(e.detail);
         this.updateList(this.pageCounter);
+      }) as EventListener);
+      this.carList[i].getNode().addEventListener('AClick', ((e: CustomEvent<number>) => {
+        const id = e.detail;
+        // TODO: start race
+        engine(id, 'started')
+          .then(() => {
+            // start animation
+            return engine(id, 'drive');
+          })
+          .then((response) => {
+            if (response.ok) {
+              console.log('success');
+            } else {
+              // end animation
+              console.log('fail');
+            }
+          });
+      }) as EventListener);
+      this.carList[i].getNode().addEventListener('BClick', ((e: CustomEvent<number>) => {
+        const id = e.detail;
+        // TODO: end race
+        engine(id, 'stopped').then(() => {
+          // end animation
+        });
       }) as EventListener);
     }
     this.list.appendChildren([this.title, this.page, ...this.carList]);

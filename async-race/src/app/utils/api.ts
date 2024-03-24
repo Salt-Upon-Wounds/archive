@@ -25,7 +25,7 @@ export async function getCars(page: number, limit: number): Promise<{ arr: CardT
     const total: number = Number(response.headers.get('X-Total-Count'));
     return { arr, total };
   }
-  console.log(`Ошибка HTTP: ${response.status}`);
+  // console.log(`Ошибка HTTP: ${response.status}`);
   return { arr: [], total: 0 };
 }
 
@@ -57,17 +57,11 @@ export async function updateCar(id: number, name: string, color: string) {
 }
 
 // перед использованием drive нужно завести машину
-export function engine(id: number, status: 'started' | 'stopped' | 'drive') {
-  fetch(`http://localhost:3000/engine?${new URLSearchParams({ id: id.toString(), status })}`, {
+export async function engine(id: number, status: 'started' | 'stopped' | 'drive') {
+  const response = await fetch(`http://localhost:3000/engine?${new URLSearchParams({ id: id.toString(), status })}`, {
     method: 'PATCH',
-  }).then(
-    (val) => {
-      console.log(val);
-    },
-    (err) => {
-      console.log(err);
-    },
-  );
+  });
+  return response;
 }
 
 export function getWinners(page: number, limit: number, sort: 'id' | 'wins' | 'time', order: 'ASC' | 'DESC') {
