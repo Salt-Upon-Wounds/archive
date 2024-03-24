@@ -1,6 +1,7 @@
 import { BaseComponent } from '../../components/base-component';
 import Car from '../../components/car/car';
 import { button, div, input, p } from '../../components/tags';
+import { getColor, getName } from '../../utils/100-cars-data';
 import { createCar, deleteCar, getCars, updateCar } from '../../utils/api';
 import style from './styles.module.scss';
 
@@ -34,6 +35,7 @@ export default class Garage extends BaseComponent {
     this.upBtn.getNode().onclick = this.updateClick.bind(this);
     this.nextBtn.getNode().onclick = () => this.updateList(this.pageCounter + 1);
     this.prevBtn.getNode().onclick = () => this.updateList(this.pageCounter - 1);
+    this.generateBtn.getNode().onclick = () => this.create100Click();
 
     const wrapper = div(
       { className: style.wrapper },
@@ -53,7 +55,7 @@ export default class Garage extends BaseComponent {
     this.pageCounter = page < 1 ? this.pageLimit : page;
     this.pageCounter = page > this.pageLimit ? 1 : this.pageCounter;
     const { arr, total } = await getCars(this.pageCounter, 7);
-    if (this.pageLimit < 1) this.pageLimit = Math.ceil(total / 7);
+    this.pageLimit = Math.ceil(total / 7);
     this.title.getNode().textContent = `Garage (${total})`;
     this.page.getNode().textContent = `Page #${this.pageCounter}`;
 
@@ -84,6 +86,11 @@ export default class Garage extends BaseComponent {
       await createCar(el.getNode().value, this.crColorInput.getNode().value);
       this.updateList(this.pageCounter);
     }
+  }
+
+  private async create100Click() {
+    await Promise.all(new Array(100).fill(1).map(() => createCar(getName(), getColor())));
+    this.updateList(this.pageCounter);
   }
 
   private static checkInput(elem: BaseComponent<HTMLInputElement>) {

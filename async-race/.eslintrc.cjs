@@ -33,6 +33,7 @@ module.exports = {
     {
       files: ['*.ts', '*.tsx', '*.js', '*.jsx'],
       rules: {
+        'no-restricted-syntax': ['error', 'ForInStatement', 'LabeledStatement', 'WithStatement'],
         'no-use-before-define': 'off',
         '@typescript-eslint/no-use-before-define': 'error',
         'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
