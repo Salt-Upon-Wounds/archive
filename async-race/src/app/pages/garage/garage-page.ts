@@ -60,7 +60,6 @@ export default class Garage extends BaseComponent {
 
   private async updateList(page: number) {
     this.selectedId = -1;
-    this.list.destroyChildren();
     this.carList = [];
     this.pageCounter = page < 1 ? this.pageLimit : page;
     this.pageCounter = page > this.pageLimit ? 1 : this.pageCounter;
@@ -85,6 +84,7 @@ export default class Garage extends BaseComponent {
         Garage.carStop(e.detail);
       }) as EventListener);
     }
+    this.list.destroyChildren();
     this.list.appendChildren([this.title, this.page, ...this.carList]);
   }
 
