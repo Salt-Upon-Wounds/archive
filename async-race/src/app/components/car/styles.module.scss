@@ -69,6 +69,21 @@
       width: 134px;
       height: 58px;
       margin-top: 10px;
+      position: relative;
+      left: 0%;
+      animation-name: ride;
+      animation-duration: 5s;
+      animation-fill-mode: forwards;
+      animation-play-state: paused;
+      animation-timing-function: linear;
+      @keyframes ride {
+        from {
+          left: 0%;
+        }
+        to {
+          left: 80%;
+        }
+      }
     }
     .flag {
       margin-top: 10px;

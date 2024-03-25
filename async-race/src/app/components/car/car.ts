@@ -24,14 +24,18 @@ export default class Car extends BaseComponent {
       if (BBtn.containsClass(style.disabled)) {
         ABtn.toggleClass(style.disabled);
         BBtn.toggleClass(style.disabled);
-        this.getNode().dispatchEvent(new CustomEvent<number>('AClick', { detail: this.id }));
+        this.getNode().dispatchEvent(
+          new CustomEvent<{ id: number; inst: Car }>('AClick', { detail: { id: this.id, inst: this } }),
+        );
       }
     };
     BBtn.getNode().onclick = () => {
       if (ABtn.containsClass(style.disabled)) {
         ABtn.toggleClass(style.disabled);
         BBtn.toggleClass(style.disabled);
-        this.getNode().dispatchEvent(new CustomEvent<number>('BClick', { detail: this.id }));
+        this.getNode().dispatchEvent(
+          new CustomEvent<{ id: number; inst: Car }>('BClick', { detail: { id: this.id, inst: this } }),
+        );
       }
     };
     BBtn.addClass(style.disabled);
@@ -42,6 +46,30 @@ export default class Car extends BaseComponent {
     const road = div({ className: style.road }, switchBtnsRow, car, flag);
     this.changeColor(color);
     this.appendChildren([btnsRow, road]);
+  }
+
+  private resetAnimation() {
+    const el = this.car.getNode();
+    el.style.animation = 'none';
+    el.focus();
+    el.style.animation = '';
+  }
+
+  public on() {
+    this.car.getNode().style.animationPlayState = 'running';
+  }
+
+  public pause() {
+    this.car.getNode().style.animationPlayState = 'paused';
+  }
+
+  public off() {
+    this.resetAnimation();
+    this.pause();
+  }
+
+  public animationDuration(sec: number) {
+    this.car.getNode().style.animationDuration = `${sec}s`;
   }
 
   public changeColor(color: string) {

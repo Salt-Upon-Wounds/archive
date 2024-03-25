@@ -68,29 +68,26 @@ export default class Garage extends BaseComponent {
         deleteCar(e.detail);
         this.updateList(this.pageCounter);
       }) as EventListener);
-      this.carList[i].getNode().addEventListener('AClick', ((e: CustomEvent<number>) => {
-        const id = e.detail;
-        // TODO: start race
+      this.carList[i].getNode().addEventListener('AClick', ((e: CustomEvent<{ id: number; inst: Car }>) => {
+        const { id } = e.detail;
         engine(id, 'started')
-          .then(() => {
-            // start animation
+          .then((response) => response.json())
+          .then((data) => {
+            e.detail.inst.animationDuration(data.distance / data.velocity / 1000);
+            e.detail.inst.on();
             return engine(id, 'drive');
           })
           .then((response) => {
-            if (response.ok) {
-              console.log('success');
-            } else {
-              // end animation
+            if (!response.ok) {
+              e.detail.inst.pause();
               console.log('fail');
             }
           });
       }) as EventListener);
-      this.carList[i].getNode().addEventListener('BClick', ((e: CustomEvent<number>) => {
-        const id = e.detail;
-        // TODO: end race
-        engine(id, 'stopped').then(() => {
-          // end animation
-        });
+      this.carList[i].getNode().addEventListener('BClick', ((e: CustomEvent<{ id: number; inst: Car }>) => {
+        const { id } = e.detail;
+        e.detail.inst.off();
+        engine(id, 'stopped');
       }) as EventListener);
     }
     this.list.appendChildren([this.title, this.page, ...this.carList]);
