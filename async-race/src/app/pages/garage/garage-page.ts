@@ -36,6 +36,8 @@ export default class Garage extends BaseComponent {
     this.nextBtn.getNode().onclick = () => this.updateList(this.pageCounter + 1);
     this.prevBtn.getNode().onclick = () => this.updateList(this.pageCounter - 1);
     this.generateBtn.getNode().onclick = () => this.create100Click();
+    this.raceBtn.getNode().onclick = () => this.startRace();
+    this.resetBtn.getNode().onclick = () => this.resetRace();
 
     const wrapper = div(
       { className: style.wrapper },
@@ -46,6 +48,14 @@ export default class Garage extends BaseComponent {
     const bottomBtns = div({ className: style.row }, this.prevBtn, this.nextBtn);
     this.appendChildren([wrapper, list, bottomBtns]);
     this.updateList(this.pageCounter);
+  }
+
+  private async startRace() {
+    await Promise.all(new Array(this.carList.length).fill(1).map((_, idx) => Garage.carDrive(this.carList[idx])));
+  }
+
+  private async resetRace() {
+    await Promise.all(new Array(this.carList.length).fill(1).map((_, idx) => Garage.carStop(this.carList[idx])));
   }
 
   private async updateList(page: number) {
@@ -68,29 +78,36 @@ export default class Garage extends BaseComponent {
         deleteCar(e.detail);
         this.updateList(this.pageCounter);
       }) as EventListener);
-      this.carList[i].getNode().addEventListener('AClick', ((e: CustomEvent<{ id: number; inst: Car }>) => {
-        const { id } = e.detail;
-        engine(id, 'started')
-          .then((response) => response.json())
-          .then((data) => {
-            e.detail.inst.animationDuration(data.distance / data.velocity / 1000);
-            e.detail.inst.on();
-            return engine(id, 'drive');
-          })
-          .then((response) => {
-            if (!response.ok) {
-              e.detail.inst.pause();
-              console.log('fail');
-            }
-          });
+      this.carList[i].getNode().addEventListener('AClick', ((e: CustomEvent<Car>) => {
+        Garage.carDrive(e.detail);
       }) as EventListener);
-      this.carList[i].getNode().addEventListener('BClick', ((e: CustomEvent<{ id: number; inst: Car }>) => {
-        const { id } = e.detail;
-        e.detail.inst.off();
-        engine(id, 'stopped');
+      this.carList[i].getNode().addEventListener('BClick', ((e: CustomEvent<Car>) => {
+        Garage.carStop(e.detail);
       }) as EventListener);
     }
     this.list.appendChildren([this.title, this.page, ...this.carList]);
+  }
+
+  private static carDrive(car: Car) {
+    const { id } = car;
+    engine(id, 'started')
+      .then((response) => response.json())
+      .then((data) => {
+        car.animationDuration(data.distance / data.velocity / 1000);
+        car.on();
+        return engine(id, 'drive');
+      })
+      .then((response) => {
+        if (!response.ok) {
+          car.pause();
+          console.log('fail');
+        }
+      });
+  }
+
+  private static carStop(car: Car) {
+    car.off();
+    engine(car.id, 'stopped');
   }
 
   private async updateClick() {

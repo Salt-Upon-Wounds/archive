@@ -24,18 +24,14 @@ export default class Car extends BaseComponent {
       if (BBtn.containsClass(style.disabled)) {
         ABtn.toggleClass(style.disabled);
         BBtn.toggleClass(style.disabled);
-        this.getNode().dispatchEvent(
-          new CustomEvent<{ id: number; inst: Car }>('AClick', { detail: { id: this.id, inst: this } }),
-        );
+        this.getNode().dispatchEvent(new CustomEvent<Car>('AClick', { detail: this }));
       }
     };
     BBtn.getNode().onclick = () => {
       if (ABtn.containsClass(style.disabled)) {
         ABtn.toggleClass(style.disabled);
         BBtn.toggleClass(style.disabled);
-        this.getNode().dispatchEvent(
-          new CustomEvent<{ id: number; inst: Car }>('BClick', { detail: { id: this.id, inst: this } }),
-        );
+        this.getNode().dispatchEvent(new CustomEvent<Car>('BClick', { detail: this }));
       }
     };
     BBtn.addClass(style.disabled);
