@@ -60,17 +60,27 @@ export default class Garage extends BaseComponent {
   }
 
   private async startRace() {
-    Promise.any(new Array(this.carList.length).fill(1).map((_, idx) => Garage.carDrive(this.carList[idx])))
+    await this.resetRace();
+    Promise.any(
+      new Array(this.carList.length).fill(1).map((_, idx) => {
+        this.carList[idx].onButtons();
+        return Garage.carDrive(this.carList[idx]);
+      }),
+    )
       .then((value) => {
         this.anounce(`${value} won!`);
       })
-      .catch(() => {
-        this.anounce(`Everyone lost`);
+      .catch((err) => {
+        if (!(err as AggregateError).errors.filter((el) => el.name === 'AbortError').length)
+          this.anounce(`Everyone lost`);
       });
   }
 
   private async resetRace() {
-    return Promise.all(new Array(this.carList.length).fill(1).map((_, idx) => Garage.carStop(this.carList[idx])));
+    new Array(this.carList.length).fill(1).map((_, idx) => {
+      this.carList[idx].offButtons();
+      return Garage.carStop(this.carList[idx]);
+    });
   }
 
   private async updateList(page: number) {
@@ -105,12 +115,14 @@ export default class Garage extends BaseComponent {
 
   private static async carDrive(car: Car) {
     const { id } = car;
-    return engine(id, 'started')
+    const controller = new AbortController();
+    car.setSignal(controller);
+    return engine(id, 'started', controller.signal)
       .then((response) => response.json())
       .then((data) => {
         car.animationDuration(data.distance / data.velocity / 1000);
         car.on();
-        return engine(id, 'drive');
+        return engine(id, 'drive', controller.signal);
       })
       .then((response) => {
         if (!response.ok) {
@@ -123,6 +135,7 @@ export default class Garage extends BaseComponent {
 
   private static async carStop(car: Car) {
     car.off();
+    car.getSignal().abort();
     return engine(car.id, 'stopped');
   }
 

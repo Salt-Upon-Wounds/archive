@@ -8,6 +8,9 @@ export default class Car extends BaseComponent {
     public name: string,
     public color: string,
     private car = div({ className: style.car }),
+    private ABtn = button(style.switch, 'A'),
+    private BBtn = button(style.switch, 'B'),
+    private controller = new AbortController(),
   ) {
     super({ className: style.box });
     const selectBtn = button(style.btn, 'Select', () =>
@@ -16,32 +19,48 @@ export default class Car extends BaseComponent {
     const removeBtn = button(style.btn, 'Remove', () =>
       this.getNode().dispatchEvent(new CustomEvent<number>('removeClick', { detail: this.id })),
     );
-    const ABtn = button(style.switch, 'A');
-    const BBtn = button(style.switch, 'B');
-    ABtn.addClass(style.aColor);
-    BBtn.addClass(style.bColor);
-    ABtn.getNode().onclick = () => {
-      if (BBtn.containsClass(style.disabled)) {
-        ABtn.toggleClass(style.disabled);
-        BBtn.toggleClass(style.disabled);
+    this.ABtn.addClass(style.aColor);
+    this.BBtn.addClass(style.bColor);
+    this.ABtn.getNode().onclick = () => {
+      if (this.BBtn.containsClass(style.disabled)) {
+        this.ABtn.toggleClass(style.disabled);
+        this.BBtn.toggleClass(style.disabled);
         this.getNode().dispatchEvent(new CustomEvent<Car>('AClick', { detail: this }));
       }
     };
-    BBtn.getNode().onclick = () => {
-      if (ABtn.containsClass(style.disabled)) {
-        ABtn.toggleClass(style.disabled);
-        BBtn.toggleClass(style.disabled);
+    this.BBtn.getNode().onclick = () => {
+      if (this.ABtn.containsClass(style.disabled)) {
+        this.ABtn.toggleClass(style.disabled);
+        this.BBtn.toggleClass(style.disabled);
         this.getNode().dispatchEvent(new CustomEvent<Car>('BClick', { detail: this }));
       }
     };
-    BBtn.addClass(style.disabled);
+    this.BBtn.addClass(style.disabled);
     const title = p(style.title, name);
     const btnsRow = div({ className: style.buttons }, selectBtn, removeBtn, title);
-    const switchBtnsRow = div({ className: style.buttons }, ABtn, BBtn);
+    const switchBtnsRow = div({ className: style.buttons }, this.ABtn, this.BBtn);
     const flag = div({ className: style.flag });
     const road = div({ className: style.road }, switchBtnsRow, car, flag);
     this.changeColor(color);
     this.appendChildren([btnsRow, road]);
+  }
+
+  public getSignal() {
+    return this.controller;
+  }
+
+  public setSignal(controller: AbortController) {
+    this.controller = controller;
+  }
+
+  public onButtons() {
+    this.ABtn.addClass(style.disabled);
+    this.BBtn.removeClass(style.disabled);
+  }
+
+  public offButtons() {
+    this.ABtn.removeClass(style.disabled);
+    this.BBtn.addClass(style.disabled);
   }
 
   private resetAnimation() {

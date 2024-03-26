@@ -57,9 +57,10 @@ export async function updateCar(id: number, name: string, color: string) {
 }
 
 // перед использованием drive нужно завести машину
-export async function engine(id: number, status: 'started' | 'stopped' | 'drive') {
+export async function engine(id: number, status: 'started' | 'stopped' | 'drive', signal: AbortSignal | null = null) {
   const response = await fetch(`http://localhost:3000/engine?${new URLSearchParams({ id: id.toString(), status })}`, {
     method: 'PATCH',
+    signal,
   });
   return response;
 }
