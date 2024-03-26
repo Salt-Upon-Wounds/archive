@@ -25,6 +25,7 @@ export default class Garage extends BaseComponent {
     private pageCounter = 1,
     private pageLimit = -1,
     private selectedId = -1,
+    private winner = p(style.winner, ''),
   ) {
     super({ className: style.garage });
     [this.raceBtn, this.resetBtn, this.prevBtn, this.nextBtn].forEach((el) => {
@@ -46,16 +47,30 @@ export default class Garage extends BaseComponent {
       div({ className: style.row }, this.raceBtn, this.resetBtn, this.generateBtn),
     );
     const bottomBtns = div({ className: style.row }, this.prevBtn, this.nextBtn);
-    this.appendChildren([wrapper, list, bottomBtns]);
+    this.appendChildren([wrapper, list, bottomBtns, winner]);
     this.updateList(this.pageCounter);
   }
 
+  private anounce(message: string) {
+    const el = this.winner.getNode();
+    el.textContent = message;
+    el.style.animation = 'none';
+    el.focus();
+    el.style.animation = '';
+  }
+
   private async startRace() {
-    await Promise.all(new Array(this.carList.length).fill(1).map((_, idx) => Garage.carDrive(this.carList[idx])));
+    Promise.any(new Array(this.carList.length).fill(1).map((_, idx) => Garage.carDrive(this.carList[idx])))
+      .then((value) => {
+        this.anounce(`${value} won!`);
+      })
+      .catch(() => {
+        this.anounce(`Everyone lost`);
+      });
   }
 
   private async resetRace() {
-    await Promise.all(new Array(this.carList.length).fill(1).map((_, idx) => Garage.carStop(this.carList[idx])));
+    return Promise.all(new Array(this.carList.length).fill(1).map((_, idx) => Garage.carStop(this.carList[idx])));
   }
 
   private async updateList(page: number) {
@@ -88,9 +103,9 @@ export default class Garage extends BaseComponent {
     this.list.appendChildren([this.title, this.page, ...this.carList]);
   }
 
-  private static carDrive(car: Car) {
+  private static async carDrive(car: Car) {
     const { id } = car;
-    engine(id, 'started')
+    return engine(id, 'started')
       .then((response) => response.json())
       .then((data) => {
         car.animationDuration(data.distance / data.velocity / 1000);
@@ -100,14 +115,15 @@ export default class Garage extends BaseComponent {
       .then((response) => {
         if (!response.ok) {
           car.pause();
-          console.log('fail');
+          return Promise.reject(car.name);
         }
+        return Promise.resolve(car.name);
       });
   }
 
-  private static carStop(car: Car) {
+  private static async carStop(car: Car) {
     car.off();
-    engine(car.id, 'stopped');
+    return engine(car.id, 'stopped');
   }
 
   private async updateClick() {
