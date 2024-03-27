@@ -66,5 +66,8 @@ window.addEventListener('pushState', ((e: CustomEvent) => {
 window.addEventListener('replaceState', ((e: CustomEvent) => {
   handleStateChange(e.detail.path);
 }) as EventListener);
+window.addEventListener('popstate', () => {
+  handleStateChange(window.location.pathname.replace('/salt-upon-wounds-JSFE2023Q4/async-race/', ''));
+});
 
 if (window.location.pathname !== '/salt-upon-wounds-JSFE2023Q4/async-race/') app.route(window.location.pathname);

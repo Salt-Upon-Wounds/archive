@@ -3,6 +3,7 @@ import Car from '../../components/car/car';
 import { button, div, input, p } from '../../components/tags';
 import { getColor, getName } from '../../utils/100-cars-data';
 import { createCar, deleteCar, engine, getCars, updateCar } from '../../utils/api';
+import go from '../../utils/routing';
 import style from './styles.module.scss';
 
 export default class Garage extends BaseComponent {
@@ -40,13 +41,16 @@ export default class Garage extends BaseComponent {
     this.raceBtn.getNode().onclick = () => this.startRace();
     this.resetBtn.getNode().onclick = () => this.resetRace();
 
-    const wrapper = div(
-      { className: style.wrapper },
+    const crudContainer = div(
+      { className: style.crudContainer },
       div({ className: style.row }, this.crTextInput, this.crColorInput, this.crBtn),
       div({ className: style.row }, this.upTextInput, this.upColorInput, this.upBtn),
       div({ className: style.row }, this.raceBtn, this.resetBtn, this.generateBtn),
     );
+    const winnersPageBtn = button(style.btn, 'winners', () => go('winners'));
+    const wrapper = div({ className: style.wrapper }, crudContainer, winnersPageBtn);
     const bottomBtns = div({ className: style.row }, this.prevBtn, this.nextBtn);
+
     this.appendChildren([wrapper, list, bottomBtns, winner]);
     this.updateList(this.pageCounter);
   }
@@ -68,7 +72,7 @@ export default class Garage extends BaseComponent {
       }),
     )
       .then((value) => {
-        this.anounce(`${value} won!`);
+        this.anounce(`${value.name} won! (${value.time.toFixed(2)}s)`);
       })
       .catch((err) => {
         if (!(err as AggregateError).errors.filter((el) => el.name === 'AbortError').length)
@@ -117,19 +121,21 @@ export default class Garage extends BaseComponent {
     const { id } = car;
     const controller = new AbortController();
     car.setSignal(controller);
+    let time = 0;
     return engine(id, 'started', controller.signal)
       .then((response) => response.json())
       .then((data) => {
-        car.animationDuration(data.distance / data.velocity / 1000);
+        time = data.distance / data.velocity / 1000;
+        car.animationDuration(time);
         car.on();
         return engine(id, 'drive', controller.signal);
       })
       .then((response) => {
         if (!response.ok) {
           car.pause();
-          return Promise.reject(car.name);
+          return Promise.reject(new Error('car broken'));
         }
-        return Promise.resolve(car.name);
+        return Promise.resolve({ name: car.name, time });
       });
   }
 
