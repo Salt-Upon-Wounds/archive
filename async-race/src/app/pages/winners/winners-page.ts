@@ -1,5 +1,6 @@
 import { BaseComponent } from '../../components/base-component';
 import { button, div, p } from '../../components/tags';
+import go from '../../utils/routing';
 import style from './styles.module.scss';
 
 export default class Winners extends BaseComponent {
@@ -14,7 +15,9 @@ export default class Winners extends BaseComponent {
     const page = p(style.page, `Page #???`);
     const prevBtn = button(style.btn, 'prev');
     const nextBtn = button(style.btn, 'next');
-    const garage = button(style.btn, 'garage');
+    const garage = button(style.btn, 'garage', () => go(''));
+    numberBtn.addClass(style.up);
+    carBtn.addClass(style.down);
 
     const columns = new Array(5).fill(1).map(() => div({ className: style.column }));
     const [numbers, cars, names, wins, bestTime] = columns;
