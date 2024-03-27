@@ -1,3 +1,60 @@
 .winners {
   display: flex;
+  justify-content: space-between;
+  .table {
+    display: flex;
+    .column {
+      display: flex;
+      flex-direction: column;
+      .car {
+
+      }
+      .text {
+
+      }
+      .table-btn {
+
+      }
+    }
+  }
+  .row {
+    display: flex;
+    gap: 10px;
+  }
+  .list {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 20px;
+    .title {
+      font-size: 2em;
+      font-weight: 600;
+      margin: 0;
+    }
+    .page {
+      font-size: 1em;
+      font-weight: 600;
+      margin: 0;
+    }
+  }
+}
+
+.btn {
+  font-size: 1.2em;
+  text-transform: uppercase;
+  font-weight: 400;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: fit-content;
+  cursor: pointer;
+  transition: 0.5s background-color ease-in-out, 0.5s border-bottom ease-in-out, 0.5s color ease-in-out;
+  background-color: aliceblue;
+  border: 0px;
+  border-bottom: 3px solid rgb(76, 76, 245);
+  &:hover {
+    background-color: rgb(68, 159, 238);
+    border-bottom: 3px solid rgb(9, 9, 226);
+    color: azure;
+  }
 }
