@@ -4,6 +4,12 @@ export type CardType = {
   name: string;
 };
 
+export type TableRowType = {
+  id: number | string;
+  wins: number | string;
+  time: string;
+};
+
 export async function createCar(name: string, color: string) {
   await fetch('http://localhost:3000/garage', {
     method: 'POST',
@@ -26,20 +32,19 @@ export async function getCars(page: number, limit: number): Promise<{ arr: CardT
     return { arr, total };
   }
   // console.log(`Ошибка HTTP: ${response.status}`);
-  return { arr: [], total: 0 };
+  return Promise.reject(new Error(`getCars api method failed with status ${response.status}`));
 }
 
-export function getCar(id: number) {
-  fetch(`http://localhost:3000/garage?${new URLSearchParams({ id: id.toString() })}`, {
+export async function getCar(id: number) {
+  const response = await fetch(`http://localhost:3000/garage?${new URLSearchParams({ id: id.toString() })}`, {
     method: 'GET',
-  }).then(
-    (val) => {
-      console.log(val);
-    },
-    (err) => {
-      console.log(err);
-    },
-  );
+  });
+  if (response.ok) {
+    const car: CardType[] = await response.json();
+    return car[0];
+  }
+  // console.log(`Ошибка HTTP: ${response.status}`);
+  return Promise.reject(new Error(`getCar api method failed with status ${response.status}`));
 }
 
 export async function deleteCar(id: number) {
@@ -65,61 +70,40 @@ export async function engine(id: number, status: 'started' | 'stopped' | 'drive'
   return response;
 }
 
-export function getWinners(page: number, limit: number, sort: 'id' | 'wins' | 'time', order: 'ASC' | 'DESC') {
-  fetch(
+export async function getWinners(page: number, limit: number, sort: 'id' | 'wins' | 'time', order: 'ASC' | 'DESC') {
+  const response = await fetch(
     `http://localhost:3000/winners?${new URLSearchParams({ _page: page.toString(), _limit: limit.toString(), _sort: sort, _order: order })}`,
     {
       method: 'GET',
     },
-  ).then(
-    (val) => {
-      console.log(val);
-    },
-    (err) => {
-      console.log(err);
-    },
   );
+  if (response.ok) {
+    const arr: TableRowType[] = await response.json();
+    const total: number = Number(response.headers.get('X-Total-Count'));
+    return { arr, total };
+  }
+  // console.log(`Ошибка HTTP: ${response.status}`);
+  return { arr: [], total: 0 };
 }
 
-export function getWinner(id: number) {
-  fetch(`http://localhost:3000/winners?${new URLSearchParams({ id: id.toString() })}`, {
+export async function getWinner(id: number) {
+  return fetch(`http://localhost:3000/winners?${new URLSearchParams({ id: id.toString() })}`, {
     method: 'GET',
-  }).then(
-    (val) => {
-      console.log(val);
-    },
-    (err) => {
-      console.log(err);
-    },
-  );
+  });
 }
 
-export function createWinner(id: number, wins: number, time: number) {
-  fetch(`http://localhost:3000/winners`, {
+export async function createWinner(id: number | string, wins: number, time: string) {
+  return fetch(`http://localhost:3000/winners`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ id, wins, time }),
-  }).then(
-    (val) => {
-      console.log(val);
-    },
-    (err) => {
-      console.log(err);
-    },
-  );
+  });
 }
 
 export function deleteWinner(id: number) {
   fetch(`http://localhost:3000/winners?${new URLSearchParams({ id: id.toString() })}`, {
     method: 'DELETE',
-  }).then(
-    (val) => {
-      console.log(val);
-    },
-    (err) => {
-      console.log(err);
-    },
-  );
+  });
 }
 
 export function updateWinner(id: number, wins: number, time: number) {
@@ -127,12 +111,5 @@ export function updateWinner(id: number, wins: number, time: number) {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ wins, time }),
-  }).then(
-    (val) => {
-      console.log(val);
-    },
-    (err) => {
-      console.log(err);
-    },
-  );
+  });
 }
