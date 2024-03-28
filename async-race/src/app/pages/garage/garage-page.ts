@@ -43,6 +43,8 @@ export default class Garage extends BaseComponent {
     [this.raceBtn, this.resetBtn, this.prevBtn, this.nextBtn].forEach((el) => {
       el.addClass(style.green);
     });
+    this.crBtn.addClass(style.wide);
+    this.upBtn.addClass(style.wide);
     this.generateBtn.addClass(style.wide);
     this.crBtn.getNode().onclick = this.createClick.bind(this);
     this.upBtn.getNode().onclick = this.updateClick.bind(this);
