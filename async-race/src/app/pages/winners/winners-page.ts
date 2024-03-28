@@ -8,6 +8,8 @@ export default class Winners extends BaseComponent {
   constructor(
     private pageCounter = 1,
     private pageLimit = -1,
+    private sort: 'id' | 'wins' | 'time' = 'id',
+    private order: 'ASC' | 'DESC' = 'ASC',
     private title = p(style.title, `Winners (???)`),
     private page = p(style.page, `Page #???`),
     private numberBtn = button(style.tableBtn, 'Numbers'),
@@ -19,8 +21,8 @@ export default class Winners extends BaseComponent {
   ) {
     super({ className: style.winners });
 
-    const prevBtn = button(style.btn, 'prev');
-    const nextBtn = button(style.btn, 'next');
+    const prevBtn = button(style.btn, 'prev', () => this.updateList(this.pageCounter - 1, this.sort, this.order));
+    const nextBtn = button(style.btn, 'next', () => this.updateList(this.pageCounter + 1, this.sort, this.order));
     const garage = button(style.btn, 'garage', () => go(''));
     // numberBtn.addClass(style.up);
     // carBtn.addClass(style.down);
@@ -37,7 +39,7 @@ export default class Winners extends BaseComponent {
     const list = div({ className: style.list }, title, page, table, div({ className: style.row }, prevBtn, nextBtn));
 
     this.appendChildren([list, garage]);
-    this.updateList(pageCounter, 'id', 'ASC');
+    this.updateList(pageCounter, sort, order);
   }
 
   private async updateList(page: number, sort: 'id' | 'wins' | 'time', order: 'ASC' | 'DESC') {
