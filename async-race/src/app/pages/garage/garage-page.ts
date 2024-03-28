@@ -129,7 +129,6 @@ export default class Garage extends BaseComponent {
       this.carList[i].getNode().addEventListener('removeClick', ((e: CustomEvent<number>) => {
         deleteCar(e.detail);
         deleteWinner(e.detail);
-        // TODO: remove from winners list
         this.updateList(this.pageCounter);
       }) as EventListener);
       this.carList[i].getNode().addEventListener('AClick', ((e: CustomEvent<Car>) => {

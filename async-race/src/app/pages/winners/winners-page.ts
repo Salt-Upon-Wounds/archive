@@ -12,11 +12,11 @@ export default class Winners extends BaseComponent {
     private order: 'ASC' | 'DESC' = 'ASC',
     private title = p(style.title, `Winners (???)`),
     private page = p(style.page, `Page #???`),
-    private numberBtn = button(style.tableBtn, 'Numbers'),
+    private numberBtn = button(style.tableBtn, 'Numbers', () => this.sortClick('id', numberBtn)),
     private carBtn = button(style.tableBtn, 'Car'),
     private nameBtn = button(style.tableBtn, 'Name'),
-    private winsBtn = button(style.tableBtn, 'Wins'),
-    private bestTimeBtn = button(style.tableBtn, 'Best time (seconds)'),
+    private winsBtn = button(style.tableBtn, 'Wins', () => this.sortClick('wins', winsBtn)),
+    private bestTimeBtn = button(style.tableBtn, 'Best time (seconds)', () => this.sortClick('time', bestTimeBtn)),
     private columns = new Array(5).fill(1).map(() => div({ className: style.column })),
   ) {
     super({ className: style.winners });
@@ -40,6 +40,25 @@ export default class Winners extends BaseComponent {
 
     this.appendChildren([list, garage]);
     this.updateList(pageCounter, sort, order);
+  }
+
+  private clearBtnsStyles() {
+    this.columns.forEach((el) => {
+      el.children[0].getNode().classList.remove(style.up, style.down);
+    });
+  }
+
+  private sortClick(type: 'id' | 'wins' | 'time', btn: BaseComponent) {
+    this.sort = type;
+    this.clearBtnsStyles();
+    if (this.order === 'ASC') {
+      btn.addClass(style.up);
+      this.order = 'DESC';
+    } else {
+      btn.addClass(style.down);
+      this.order = 'ASC';
+    }
+    this.updateList(this.pageCounter, this.sort, this.order);
   }
 
   private async updateList(page: number, sort: 'id' | 'wins' | 'time', order: 'ASC' | 'DESC') {
