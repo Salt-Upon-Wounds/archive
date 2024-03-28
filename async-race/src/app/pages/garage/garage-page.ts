@@ -7,6 +7,7 @@ import {
   createCar,
   createWinner,
   deleteCar,
+  deleteWinner,
   engine,
   getCars,
   getWinner,
@@ -127,6 +128,8 @@ export default class Garage extends BaseComponent {
       }) as EventListener);
       this.carList[i].getNode().addEventListener('removeClick', ((e: CustomEvent<number>) => {
         deleteCar(e.detail);
+        deleteWinner(e.detail);
+        // TODO: remove from winners list
         this.updateList(this.pageCounter);
       }) as EventListener);
       this.carList[i].getNode().addEventListener('AClick', ((e: CustomEvent<Car>) => {
@@ -145,6 +148,7 @@ export default class Garage extends BaseComponent {
     const controller = new AbortController();
     car.setSignal(controller);
     let time = 0;
+    // TODO: start smoke animation
     return engine(id, 'started', controller.signal)
       .then((response) => response.json())
       .then((data) => {
@@ -156,6 +160,7 @@ export default class Garage extends BaseComponent {
       .then((response) => {
         if (!response.ok) {
           car.pause();
+          // TODO: fire animation
           return Promise.reject(new Error('car broken'));
         }
         return Promise.resolve({ name: car.name, time, id });
