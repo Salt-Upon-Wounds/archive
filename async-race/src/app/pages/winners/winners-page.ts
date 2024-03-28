@@ -12,7 +12,7 @@ export default class Winners extends BaseComponent {
     private order: 'ASC' | 'DESC' = 'ASC',
     private title = p(style.title, `Winners (???)`),
     private page = p(style.page, `Page #???`),
-    private numberBtn = button(style.tableBtn, 'Numbers', () => this.sortClick('id', numberBtn)),
+    private numberBtn = button(style.tableBtn, 'Numbers'), // , () => this.sortClick('id', numberBtn)),
     private carBtn = button(style.tableBtn, 'Car'),
     private nameBtn = button(style.tableBtn, 'Name'),
     private winsBtn = button(style.tableBtn, 'Wins', () => this.sortClick('wins', winsBtn)),
@@ -77,7 +77,8 @@ export default class Winners extends BaseComponent {
     });
     numbers.appendChildren([
       this.numberBtn,
-      ...tableData.map((el) => div({ textContent: el.id.toString(), className: style.text })),
+      // ...tableData.map((el) => div({ textContent: el.id.toString(), className: style.text })),
+      ...tableData.map((_, idx) => div({ textContent: (idx + 1).toString(), className: style.text })),
     ]);
     cars.appendChildren([
       this.carBtn,
