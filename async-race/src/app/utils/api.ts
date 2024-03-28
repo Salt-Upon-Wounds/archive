@@ -36,12 +36,12 @@ export async function getCars(page: number, limit: number): Promise<{ arr: CardT
 }
 
 export async function getCar(id: number) {
-  const response = await fetch(`http://localhost:3000/garage?${new URLSearchParams({ id: id.toString() })}`, {
+  const response = await fetch(`http://localhost:3000/garage/${id}`, {
     method: 'GET',
   });
   if (response.ok) {
-    const car: CardType[] = await response.json();
-    return car[0];
+    const car: CardType = await response.json();
+    return car;
   }
   // console.log(`Ошибка HTTP: ${response.status}`);
   return Promise.reject(new Error(`getCar api method failed with status ${response.status}`));
@@ -87,7 +87,7 @@ export async function getWinners(page: number, limit: number, sort: 'id' | 'wins
 }
 
 export async function getWinner(id: number) {
-  return fetch(`http://localhost:3000/winners?${new URLSearchParams({ id: id.toString() })}`, {
+  return fetch(`http://localhost:3000/winners/${id}`, {
     method: 'GET',
   });
 }
@@ -100,14 +100,14 @@ export async function createWinner(id: number | string, wins: number, time: stri
   });
 }
 
-export function deleteWinner(id: number) {
-  fetch(`http://localhost:3000/winners?${new URLSearchParams({ id: id.toString() })}`, {
+export function deleteWinner(id: number | string) {
+  return fetch(`http://localhost:3000/winners/${id}`, {
     method: 'DELETE',
   });
 }
 
-export function updateWinner(id: number, wins: number, time: number) {
-  fetch(`http://localhost:3000/winners?${new URLSearchParams({ id: id.toString() })}`, {
+export function updateWinner(id: number | string, wins: number | string, time: number | string) {
+  return fetch(`http://localhost:3000/winners/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ wins, time }),

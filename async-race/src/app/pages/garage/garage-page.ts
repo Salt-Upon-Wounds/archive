@@ -2,7 +2,17 @@ import { BaseComponent } from '../../components/base-component';
 import Car from '../../components/car/car';
 import { button, div, input, p } from '../../components/tags';
 import { getColor, getName } from '../../utils/100-cars-data';
-import { createCar, createWinner, deleteCar, engine, getCars, updateCar } from '../../utils/api';
+import type { TableRowType } from '../../utils/api';
+import {
+  createCar,
+  createWinner,
+  deleteCar,
+  engine,
+  getCars,
+  getWinner,
+  updateCar,
+  updateWinner,
+} from '../../utils/api';
 import go from '../../utils/routing';
 import style from './styles.module.scss';
 
@@ -73,8 +83,19 @@ export default class Garage extends BaseComponent {
     )
       .then((value) => {
         this.anounce(`${value.name} won! (${value.time.toFixed(2)}s)`);
-        // TODO: проверка, если ли победитель
-        createWinner(value.id, 1, value.time.toFixed(2));
+        getWinner(value.id).then((response) => {
+          if (response.ok)
+            response
+              .json()
+              .then((car: TableRowType) =>
+                updateWinner(
+                  car.id,
+                  Number(car.wins) + 1,
+                  Number(car.time) < value.time ? car.time : value.time.toFixed(2),
+                ),
+              );
+          else createWinner(value.id, 1, value.time.toFixed(2));
+        });
       })
       .catch((err) => {
         if (!(err as AggregateError).errors.filter((el) => el.name === 'AbortError').length)
