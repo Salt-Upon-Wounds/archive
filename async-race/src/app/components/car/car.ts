@@ -8,6 +8,7 @@ export default class Car extends BaseComponent {
     public name: string,
     public color: string,
     private car = div({ className: style.car }),
+    private fire = div({ className: style.fire }),
     private ABtn = button(style.switch, 'A'),
     private BBtn = button(style.switch, 'B'),
     private controller = new AbortController(),
@@ -40,13 +41,22 @@ export default class Car extends BaseComponent {
     const btnsRow = div({ className: style.buttons }, selectBtn, removeBtn, title);
     const switchBtnsRow = div({ className: style.buttons }, this.ABtn, this.BBtn);
     const flag = div({ className: style.flag });
-    const road = div({ className: style.road }, switchBtnsRow, car, flag);
+    const road = div({ className: style.road }, switchBtnsRow, car, fire, flag);
     this.changeColor(color);
     this.appendChildren([btnsRow, road]);
   }
 
   public getSignal() {
     return this.controller;
+  }
+
+  public onFire() {
+    this.fire.addClass(style.on);
+    this.fire.getNode().style.left = getComputedStyle(this.car.getNode()).left;
+  }
+
+  public offFire() {
+    this.fire.removeClass(style.on);
   }
 
   public setSignal(controller: AbortController) {

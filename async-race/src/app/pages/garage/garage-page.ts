@@ -109,6 +109,7 @@ export default class Garage extends BaseComponent {
   private async resetRace() {
     new Array(this.carList.length).fill(1).map((_, idx) => {
       this.carList[idx].offButtons();
+      this.carList[idx].offFire();
       return Garage.carStop(this.carList[idx]);
     });
   }
@@ -138,6 +139,7 @@ export default class Garage extends BaseComponent {
       }) as EventListener);
       this.carList[i].getNode().addEventListener('BClick', ((e: CustomEvent<Car>) => {
         Garage.carStop(e.detail);
+        e.detail.offFire();
       }) as EventListener);
     }
     this.list.destroyChildren();
@@ -161,7 +163,7 @@ export default class Garage extends BaseComponent {
       .then((response) => {
         if (!response.ok) {
           car.pause();
-          // TODO: fire animation
+          car.onFire();
           return Promise.reject(new Error('car broken'));
         }
         return Promise.resolve({ name: car.name, time, id });
