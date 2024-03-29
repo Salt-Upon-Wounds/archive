@@ -134,7 +134,7 @@ export default class Garage extends BaseComponent {
         this.updateList(this.pageCounter);
       }) as EventListener);
       this.carList[i].getNode().addEventListener('AClick', ((e: CustomEvent<Car>) => {
-        Garage.carDrive(e.detail);
+        Garage.carDrive(e.detail).catch(() => {});
       }) as EventListener);
       this.carList[i].getNode().addEventListener('BClick', ((e: CustomEvent<Car>) => {
         Garage.carStop(e.detail);

@@ -78,7 +78,9 @@ export default class Winners extends BaseComponent {
     numbers.appendChildren([
       this.numberBtn,
       // ...tableData.map((el) => div({ textContent: el.id.toString(), className: style.text })),
-      ...tableData.map((_, idx) => div({ textContent: (idx + 1).toString(), className: style.text })),
+      ...tableData.map((_, idx) =>
+        div({ textContent: (7 * (this.pageCounter - 1) + idx + 1).toString(), className: style.text }),
+      ),
     ]);
     cars.appendChildren([
       this.carBtn,

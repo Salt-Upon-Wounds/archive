@@ -81,7 +81,7 @@
           left: 0%;
         }
         to {
-          left: 80%;
+          left: calc(100% - 234px);
         }
       }
     }
