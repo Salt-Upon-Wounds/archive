@@ -11,6 +11,7 @@ export default class Car extends BaseComponent {
     private fire = div({ className: style.fire }),
     private ABtn = button(style.switch, 'A'),
     private BBtn = button(style.switch, 'B'),
+    private road = div({ className: style.road }),
     private controller = new AbortController(),
   ) {
     super({ className: style.box });
@@ -41,7 +42,7 @@ export default class Car extends BaseComponent {
     const btnsRow = div({ className: style.buttons }, selectBtn, removeBtn, title);
     const switchBtnsRow = div({ className: style.buttons }, this.ABtn, this.BBtn);
     const flag = div({ className: style.flag });
-    const road = div({ className: style.road }, switchBtnsRow, car, fire, flag);
+    road.appendChildren([switchBtnsRow, car, fire, flag]);
     this.changeColor(color);
     this.appendChildren([btnsRow, road]);
   }
@@ -51,8 +52,23 @@ export default class Car extends BaseComponent {
   }
 
   public onFire() {
+    // у меня не получилось понять, как выяснить относительную позицию машины нормальным коротким способом
+    // поэтому тут снизу черная магия, которую сложно комментировать, но она работает
+    // переменная кек высчитывает относительные единицы, которые позволяют ездить огонечку синхронно с машиной
+    // при ресайзе, а переменная lol убирает разницу между позицией огонечка и нужной нам позицией у капота
+    const kek =
+      ((Number(getComputedStyle(this.car.getNode()).left.slice(0, -2)) - 70) /
+        (Number(getComputedStyle(this.road.getNode()).width.slice(0, -2)) - 220)) *
+      100;
+    this.fire.getNode().style.left = `calc(${kek}%`;
+    const lol =
+      Number(getComputedStyle(this.car.getNode()).left.slice(0, -2)) -
+      Number(getComputedStyle(this.fire.getNode()).left.slice(0, -2)) +
+      120;
+    // console.log(kek,Number(getComputedStyle(this.car.getNode()).left.slice(0, -2)), getComputedStyle(this.road.getNode()).width.slice(0, -2));
+    this.fire.getNode().style.left = `calc(${kek}% ${lol < 0 ? '-' : '+'} ${Math.abs(lol)}px)`;
+    // console.log(getComputedStyle(this.car.getNode()).left.slice(0, -2), getComputedStyle(this.fire.getNode()).left.slice(0, -2))
     this.fire.addClass(style.on);
-    this.fire.getNode().style.left = getComputedStyle(this.car.getNode()).left;
   }
 
   public offFire() {

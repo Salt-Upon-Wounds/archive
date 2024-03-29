@@ -61,6 +61,7 @@
     display: flex;
     border-bottom: 3px dotted white;
     align-items: start;
+    position: relative;
     .car {
       background-color: yellow;
       mask-image: url('../../assets/car.svg');
@@ -69,7 +70,7 @@
       width: 134px;
       height: 58px;
       margin-top: 10px;
-      position: relative;
+      position: absolute;
       animation-name: ride;
       animation-duration: 5s;
       animation-fill-mode: forwards;
@@ -83,9 +84,9 @@
       background-repeat: no-repeat;
       width: 20px;
       height: 30px;
-      position: relative;
+      position: absolute;
       visibility: hidden;
-      margin-left: -20px;
+      // margin-left: -20px;
       top: 15px;
       z-index: 999;
       &.on {
@@ -120,9 +121,9 @@
 
 @keyframes ride {
   from {
-    left: 0%;
+    left: calc(0% + 70px);
   }
   to {
-    left: calc(100% - 234px);
+    left: calc(100% - 150px);
   }
 }
