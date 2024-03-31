@@ -5,6 +5,8 @@ import style from './styles.module.scss';
 export default class Car extends BaseComponent {
   private anim = new Animation();
 
+  private fireanim = new Animation();
+
   constructor(
     public id: number,
     public name: string,
@@ -44,9 +46,9 @@ export default class Car extends BaseComponent {
     const btnsRow = div({ className: style.buttons }, selectBtn, removeBtn, title);
     const switchBtnsRow = div({ className: style.buttons }, this.ABtn, this.BBtn);
     const flag = div({ className: style.flag });
-    road.appendChildren([switchBtnsRow, car, fire, flag]);
+    this.road.appendChildren([switchBtnsRow, car, fire, flag]);
     this.changeColor(color);
-    this.appendChildren([btnsRow, road]);
+    this.appendChildren([btnsRow, this.road]);
 
     const rideKeyframes = new KeyframeEffect(
       this.car.getNode(),
@@ -56,7 +58,16 @@ export default class Car extends BaseComponent {
       ],
       { duration: 5000, fill: 'forwards', easing: 'linear' },
     );
+    const fireKeyframes = new KeyframeEffect(
+      this.fire.getNode(),
+      [
+        { left: 'calc(0% + 70px)' }, // keyframe
+        { left: 'calc(100% - 150px)' }, // keyframe
+      ],
+      { duration: 5000, fill: 'forwards', easing: 'linear' },
+    );
     this.anim = new Animation(rideKeyframes, document.timeline);
+    this.fireanim = new Animation(fireKeyframes, document.timeline);
   }
 
   public getSignal() {
@@ -64,20 +75,6 @@ export default class Car extends BaseComponent {
   }
 
   public onFire() {
-    // у меня не получилось понять, как выяснить относительную позицию машины нормальным коротким способом
-    // поэтому тут снизу черная магия, которую сложно комментировать, но она работает
-    // переменная кек высчитывает относительные единицы, которые позволяют ездить огонечку синхронно с машиной
-    // при ресайзе, а переменная lol убирает разницу между позицией огонечка и нужной нам позицией у капота
-    const kek =
-      ((Number(getComputedStyle(this.car.getNode()).left.slice(0, -2)) - 70) /
-        (Number(getComputedStyle(this.road.getNode()).width.slice(0, -2)) - 220)) *
-      100;
-    this.fire.getNode().style.left = `calc(${kek}%`;
-    const lol =
-      Number(getComputedStyle(this.car.getNode()).left.slice(0, -2)) -
-      Number(getComputedStyle(this.fire.getNode()).left.slice(0, -2)) +
-      120;
-    this.fire.getNode().style.left = `calc(${kek}% ${lol < 0 ? '-' : '+'} ${Math.abs(lol)}px)`;
     this.fire.addClass(style.on);
   }
 
@@ -101,18 +98,22 @@ export default class Car extends BaseComponent {
 
   public on() {
     this.anim.play();
+    this.fireanim.play();
   }
 
   public pause() {
     this.anim.pause();
+    this.fireanim.pause();
   }
 
   public off() {
     this.anim.cancel();
+    this.fireanim.cancel();
   }
 
   public animationDuration(sec: number) {
     this.anim.effect?.updateTiming({ duration: sec * 1000 });
+    this.fireanim.effect?.updateTiming({ duration: sec * 1000 });
   }
 
   public changeColor(color: string) {
