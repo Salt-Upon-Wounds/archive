@@ -3,22 +3,26 @@ import GaragePage from './pages/garage/garage-page';
 import WinnersPage from './pages/winners/winners-page';
 
 class App {
+  private garage = new GaragePage();
+
+  private winners = new WinnersPage();
+
   private routes: { [str: string]: () => BaseComponent } = {
-    '404': () => new GaragePage(),
-    'salt-upon-wounds-JSFE2023Q4/async-race/': () => new GaragePage(),
-    '/salt-upon-wounds-JSFE2023Q4/async-race/winners': () => new WinnersPage(),
+    '404': () => this.garage,
+    'salt-upon-wounds-JSFE2023Q4/async-race/': () => this.garage,
+    '/salt-upon-wounds-JSFE2023Q4/async-race/winners': () => this.winners,
   };
 
   private pageWrapper: BaseComponent = new BaseComponent({ className: 'main' });
 
   private root: HTMLElement;
 
-  constructor(startPage: BaseComponent) {
+  constructor() {
     const appdiv = document.createElement('div');
     appdiv.setAttribute('id', 'app');
     document.querySelector('body')!.prepend(appdiv);
     this.root = document.querySelector<HTMLDivElement>('#app')!;
-    this.pageWrapper.append(startPage);
+    this.pageWrapper.getNode().appendChild(this.garage.getNode());
   }
 
   public start(): void {
@@ -26,10 +30,13 @@ class App {
   }
 
   public route(path: string) {
-    this.pageWrapper.switchPage((this.routes[path] ?? this.routes['404'])());
+    while (this.pageWrapper.getNode().firstChild) {
+      this.pageWrapper.getNode().removeChild(this.pageWrapper.getNode().lastChild as Node);
+    }
+    this.pageWrapper.getNode().append((this.routes[path] ?? this.routes['404'])().getNode());
   }
 }
-const app = new App(new GaragePage());
+const app = new App();
 
 app.start();
 

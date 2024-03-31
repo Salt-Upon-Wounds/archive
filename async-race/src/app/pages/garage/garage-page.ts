@@ -38,6 +38,7 @@ export default class Garage extends BaseComponent {
     private pageLimit = -1,
     private selectedId = -1,
     private winner = p(style.winner, ''),
+    private anim = new Animation(),
   ) {
     super({ className: style.garage });
     [this.raceBtn, this.resetBtn, this.prevBtn, this.nextBtn].forEach((el) => {
@@ -66,14 +67,22 @@ export default class Garage extends BaseComponent {
 
     this.appendChildren([wrapper, list, bottomBtns, winner]);
     this.updateList(this.pageCounter);
+    const anounceKeyframes = new KeyframeEffect(
+      this.winner.getNode(),
+      [
+        { fontSize: '0em' }, // keyframe
+        { fontSize: '5em', offset: 0.75 }, // keyframe
+        { fontSize: '0em' }, // keyframe
+      ],
+      { duration: 5000, fill: 'forwards', easing: 'linear' },
+    );
+    this.anim = new Animation(anounceKeyframes, document.timeline);
   }
 
   private anounce(message: string) {
     const el = this.winner.getNode();
     el.textContent = message;
-    el.style.animation = 'none';
-    el.focus();
-    el.style.animation = '';
+    this.anim.play();
   }
 
   private async startRace() {

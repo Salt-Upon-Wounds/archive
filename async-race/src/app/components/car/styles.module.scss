@@ -71,11 +71,7 @@
       height: 58px;
       margin-top: 10px;
       position: absolute;
-      animation-name: ride;
-      animation-duration: 5s;
-      animation-fill-mode: forwards;
-      animation-play-state: paused;
-      animation-timing-function: linear;
+      left: 70px;
       z-index: 998;
     }
     .fire {
@@ -116,14 +112,5 @@
       width: 80px;
       height: 55px;
     }
-  }
-}
-
-@keyframes ride {
-  from {
-    left: calc(0% + 70px);
-  }
-  to {
-    left: calc(100% - 150px);
   }
 }

@@ -66,20 +66,14 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> {
   }
 
   public destroyChildren(): void {
-    this.children.reduce((_, child) => {
+    this.children.forEach((child) => {
       child.destroy();
-      return null;
-    }, null);
+    });
     this.children = [];
   }
 
   public destroy(): void {
     this.destroyChildren();
     this.node.remove();
-  }
-
-  public switchPage(page: BaseComponent) {
-    this.destroyChildren();
-    this.append(page);
   }
 }

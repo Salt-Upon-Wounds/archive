@@ -98,20 +98,5 @@
   transform: translate(-50%, -50%);
   text-shadow: 0 0 2px #fff;
   animation-name: winanim;
-  animation-duration: 5s;
-  animation-fill-mode: forwards;
-  animation-timing-function: linear;
   white-space: nowrap;
-
-  @keyframes winanim {
-    0% {
-      font-size: 0em;
-    }
-    75% {
-      font-size: 5em;
-    }
-    100% {
-      font-size: 0em;
-    }
-  }
 }

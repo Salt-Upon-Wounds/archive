@@ -3,11 +3,13 @@ import { button, div, p } from '../tags';
 import style from './styles.module.scss';
 
 export default class Car extends BaseComponent {
+  private anim = new Animation();
+
   constructor(
     public id: number,
     public name: string,
     public color: string,
-    private car = div({ className: style.car }),
+    public car = div({ className: style.car }),
     private fire = div({ className: style.fire }),
     private ABtn = button(style.switch, 'A'),
     private BBtn = button(style.switch, 'B'),
@@ -45,6 +47,16 @@ export default class Car extends BaseComponent {
     road.appendChildren([switchBtnsRow, car, fire, flag]);
     this.changeColor(color);
     this.appendChildren([btnsRow, road]);
+
+    const rideKeyframes = new KeyframeEffect(
+      this.car.getNode(),
+      [
+        { left: 'calc(0% + 70px)' }, // keyframe
+        { left: 'calc(100% - 150px)' }, // keyframe
+      ],
+      { duration: 5000, fill: 'forwards', easing: 'linear' },
+    );
+    this.anim = new Animation(rideKeyframes, document.timeline);
   }
 
   public getSignal() {
@@ -65,9 +77,7 @@ export default class Car extends BaseComponent {
       Number(getComputedStyle(this.car.getNode()).left.slice(0, -2)) -
       Number(getComputedStyle(this.fire.getNode()).left.slice(0, -2)) +
       120;
-    // console.log(kek,Number(getComputedStyle(this.car.getNode()).left.slice(0, -2)), getComputedStyle(this.road.getNode()).width.slice(0, -2));
     this.fire.getNode().style.left = `calc(${kek}% ${lol < 0 ? '-' : '+'} ${Math.abs(lol)}px)`;
-    // console.log(getComputedStyle(this.car.getNode()).left.slice(0, -2), getComputedStyle(this.fire.getNode()).left.slice(0, -2))
     this.fire.addClass(style.on);
   }
 
@@ -89,28 +99,20 @@ export default class Car extends BaseComponent {
     this.BBtn.addClass(style.disabled);
   }
 
-  private resetAnimation() {
-    const el = this.car.getNode();
-    el.style.animation = 'none';
-    el.focus();
-    el.style.animation = '';
-  }
-
   public on() {
-    this.car.getNode().style.animationPlayState = 'running';
+    this.anim.play();
   }
 
   public pause() {
-    this.car.getNode().style.animationPlayState = 'paused';
+    this.anim.pause();
   }
 
   public off() {
-    this.resetAnimation();
-    this.pause();
+    this.anim.cancel();
   }
 
   public animationDuration(sec: number) {
-    this.car.getNode().style.animationDuration = `${sec}s`;
+    this.anim.effect?.updateTiming({ duration: sec * 1000 });
   }
 
   public changeColor(color: string) {
