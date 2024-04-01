@@ -40,11 +40,13 @@ export default class Winners extends BaseComponent {
 
     this.appendChildren([list, garage]);
     this.updateList(pageCounter, sort, order);
+    window.addEventListener('winnersListUpdate', () => {
+      this.update();
+    });
   }
 
   public update() {
     this.updateList(this.pageCounter, this.sort, this.order);
-    return this;
   }
 
   private clearBtnsStyles() {

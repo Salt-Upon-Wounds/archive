@@ -10,7 +10,7 @@ class App {
   private routes: { [str: string]: () => BaseComponent } = {
     '404': () => this.garage,
     'salt-upon-wounds-JSFE2023Q4/async-race/': () => this.garage,
-    '/salt-upon-wounds-JSFE2023Q4/async-race/winners': () => this.winners.update(),
+    '/salt-upon-wounds-JSFE2023Q4/async-race/winners': () => this.winners,
   };
 
   private pageWrapper: BaseComponent = new BaseComponent({ className: 'main' });

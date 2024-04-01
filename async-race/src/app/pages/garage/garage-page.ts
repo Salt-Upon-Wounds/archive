@@ -61,7 +61,10 @@ export default class Garage extends BaseComponent {
       div({ className: style.row }, this.upTextInput, this.upColorInput, this.upBtn),
       div({ className: style.row }, this.raceBtn, this.resetBtn, this.generateBtn),
     );
-    const winnersPageBtn = button(style.btn, 'winners', () => go('winners'));
+    const winnersPageBtn = button(style.btn, 'winners', () => {
+      window.dispatchEvent(new CustomEvent('winnersListUpdate'));
+      go('winners');
+    });
     const wrapper = div({ className: style.wrapper }, crudContainer, winnersPageBtn);
     const bottomBtns = div({ className: style.row }, this.prevBtn, this.nextBtn);
 
@@ -96,17 +99,21 @@ export default class Garage extends BaseComponent {
       .then((value) => {
         this.anounce(`${value.name} won! (${value.time.toFixed(2)}s)`);
         getWinner(value.id).then((response) => {
-          if (response.ok)
-            response
-              .json()
-              .then((car: TableRowType) =>
-                updateWinner(
-                  car.id,
-                  Number(car.wins) + 1,
-                  Number(car.time) < value.time ? car.time : value.time.toFixed(2),
-                ),
-              );
-          else createWinner(value.id, 1, value.time.toFixed(2));
+          if (response.ok) {
+            response.json().then((car: TableRowType) =>
+              updateWinner(
+                car.id,
+                Number(car.wins) + 1,
+                Number(car.time) < value.time ? car.time : value.time.toFixed(2),
+              ).then(() => {
+                window.dispatchEvent(new CustomEvent('winnersListUpdate'));
+              }),
+            );
+          } else {
+            createWinner(value.id, 1, value.time.toFixed(2)).then(() => {
+              window.dispatchEvent(new CustomEvent('winnersListUpdate'));
+            });
+          }
         });
       })
       .catch((err) => {
