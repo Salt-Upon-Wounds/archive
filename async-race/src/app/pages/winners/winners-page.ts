@@ -42,6 +42,11 @@ export default class Winners extends BaseComponent {
     this.updateList(pageCounter, sort, order);
   }
 
+  public update() {
+    this.updateList(this.pageCounter, this.sort, this.order);
+    return this;
+  }
+
   private clearBtnsStyles() {
     this.columns.forEach((el) => {
       el.children[0].getNode().classList.remove(style.up, style.down);

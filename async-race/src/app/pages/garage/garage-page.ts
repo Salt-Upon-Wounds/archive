@@ -128,7 +128,11 @@ export default class Garage extends BaseComponent {
     this.carList = [];
     this.pageCounter = page < 1 ? this.pageLimit : page;
     this.pageCounter = page > this.pageLimit ? 1 : this.pageCounter;
-    const { arr, total } = await getCars(this.pageCounter, 7);
+    let { arr, total } = await getCars(this.pageCounter, 7);
+    if (!arr.length) {
+      this.pageCounter -= 1;
+      ({ arr, total } = await getCars(this.pageCounter, 7));
+    }
     this.pageLimit = Math.ceil(total / 7);
     this.title.getNode().textContent = `Garage (${total})`;
     this.page.getNode().textContent = `Page #${this.pageCounter}`;
@@ -139,9 +143,11 @@ export default class Garage extends BaseComponent {
         this.selectedId = e.detail;
       }) as EventListener);
       this.carList[i].getNode().addEventListener('removeClick', ((e: CustomEvent<number>) => {
-        deleteCar(e.detail);
-        deleteWinner(e.detail);
-        this.updateList(this.pageCounter);
+        (async () => {
+          await deleteCar(e.detail);
+          await deleteWinner(e.detail).catch(() => {});
+          await this.updateList(this.pageCounter);
+        })();
       }) as EventListener);
       this.carList[i].getNode().addEventListener('AClick', ((e: CustomEvent<Car>) => {
         Garage.carDrive(e.detail).catch(() => {});
