@@ -71,8 +71,8 @@ export default class Winners extends BaseComponent {
   private async updateList(page: number, sort: 'id' | 'wins' | 'time', order: 'ASC' | 'DESC') {
     this.pageCounter = page < 1 ? this.pageLimit : page;
     this.pageCounter = page > this.pageLimit ? 1 : this.pageCounter;
-    const { arr, total } = await getWinners(this.pageCounter, 7, sort, order);
-    this.pageLimit = Math.ceil(total / 7);
+    const { arr, total } = await getWinners(this.pageCounter, 10, sort, order);
+    this.pageLimit = Math.ceil(total / 10);
     this.title.getNode().textContent = `Winners (${total})`;
     this.page.getNode().textContent = `Page #${this.pageCounter}`;
     const all = await Promise.all(new Array(arr.length).fill(1).map((_, idx) => getCar(Number(arr[idx].id))));
@@ -86,7 +86,7 @@ export default class Winners extends BaseComponent {
       this.numberBtn,
       // ...tableData.map((el) => div({ textContent: el.id.toString(), className: style.text })),
       ...tableData.map((_, idx) =>
-        div({ textContent: (7 * (this.pageCounter - 1) + idx + 1).toString(), className: style.text }),
+        div({ textContent: (10 * (this.pageCounter - 1) + idx + 1).toString(), className: style.text }),
       ),
     ]);
     cars.appendChildren([
