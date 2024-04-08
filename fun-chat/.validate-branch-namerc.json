@@ -1,0 +1,4 @@
+{
+  "pattern": "^(fun-chat){1}$|^(feat|fix|refactor)/RSS-PZ-[0-9]{2}_\\w*$",
+  "errorMsg": "Branch name doesnt match the pattern"
+}

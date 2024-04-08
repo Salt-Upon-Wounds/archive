@@ -1,0 +1,6 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+cd fun-chat
+exec 1> /dev/tty
+npx validate-branch-name
