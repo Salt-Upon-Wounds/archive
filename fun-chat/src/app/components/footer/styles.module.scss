@@ -1,0 +1,33 @@
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .logo {
+    max-width: 100px;
+    width: 100%;
+    position: relative;
+  }
+  .git {
+    text-decoration: none;
+    width: fit-content;
+    color: white;
+    margin : auto;
+    position : absolute;
+    left:0;
+    right:0;
+  }
+  .year {
+    margin: 0;
+    position: relative;
+  }
+}
+
+@media (width < 400px) {
+  .footer {
+    flex-direction: column;
+    gap: 5px;
+    .git {
+      position: static;
+    }
+  }
+}

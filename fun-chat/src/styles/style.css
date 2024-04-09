@@ -22,3 +22,8 @@
   margin: 15px;
   text-align: center;
 }
+
+.main {
+  min-height: calc(100vh - 30px);
+  height: 1px;
+}

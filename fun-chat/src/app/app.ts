@@ -10,7 +10,7 @@ class App {
 
   private about = new AboutPage();
 
-  private pref = import.meta.env.VITE_urlprefix;
+  private pref = import.meta.env.VITE_urlprefix ?? '/';
 
   private routes: { [str: string]: () => BaseComponent } = {
     '404': () => new ErrorPage('404'),

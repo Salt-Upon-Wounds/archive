@@ -37,3 +37,9 @@ export const select = (className: string, options: string[], onChange?: (e: Even
       });
     }),
   );
+
+export const img = (className: string, src: string, alt: string) =>
+  new BaseComponent<HTMLElementTagNameMap['img']>({ tag: 'img', className, src, alt });
+
+export const a = (className: string, href: string, text: string, ...children: (BaseComponent | HTMLElement | null)[]) =>
+  new BaseComponent<HTMLElementTagNameMap['a']>({ tag: 'a', className, href, txt: text }, ...children);
