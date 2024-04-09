@@ -1,9 +1,53 @@
 .header {
   background-color: black;
   width: 100%;
-  .title {
-    font-weight: 600;
-    font-size: 2em;
-    margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  box-sizing: border-box;
+  .text-wrapper {
+    display: flex;
+    align-items: center;
+    .title {
+      font-weight: 600;
+      font-size: 2em;
+      width: fit-content;
+      margin : auto;
+      position : absolute;
+      left:0;
+      right:0;
+    }
+    .text {
+      font-weight: 400;
+      font-size: 1.1em;
+      margin: 0;
+    }
+  }
+  .buttons-wrapper {
+    display: flex;
+    gap: 5px;
+    .button {
+      cursor: pointer;
+    }
+  }
+}
+
+@media (width < 700px) {
+  .header {
+    .text-wrapper {
+      flex-direction: column-reverse;
+      gap: 2px;
+      .title {
+        position: relative;
+        font-size: 1em;
+        font-weight: 500;
+        margin-left: 0;
+      }
+      .text {
+        font-size: 0.9em;
+        text-align: left;
+      }
+    }
   }
 }

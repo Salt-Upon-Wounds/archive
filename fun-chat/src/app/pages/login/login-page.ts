@@ -26,7 +26,7 @@ export default class Login extends BaseComponent {
     const portRow = div({ className: style.rowWrapper }, port, hint);
     const info = button(style.button, 'Info', () => go('about'));
     const ok = button(style.button, 'Ok');
-    const btns = div({ className: style.buttonsWrappper }, info, ok);
+    const btns = div({ className: style.buttonsWrapper }, info, ok);
 
     this.appendChildren([title, name, password, portRow, btns]);
   }
