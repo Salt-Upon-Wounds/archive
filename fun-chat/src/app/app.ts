@@ -23,7 +23,8 @@ class App {
       else return new ChatPage();
       return undefined;
     },
-    [`${this.pref}about`]: () => new AboutPage(),
+    [`${this.pref}about`]: () =>
+      new AboutPage(window.location.pathname.replace(`${import.meta.env.VITE_urlprefix}`, '')),
   };
 
   private pageWrapper: BaseComponent = new BaseComponent({ className: 'main' });

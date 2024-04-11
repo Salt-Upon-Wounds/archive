@@ -8,7 +8,8 @@ import style from './styles.module.scss';
 export default class Header extends BaseComponent {
   constructor() {
     super({ className: style.header });
-    const name = p(style.text, 'Пользователь: Тест');
+    const user = loadUser();
+    const name = p(style.text, `Пользователь: ${user?.login ?? 'error'}`);
     const title = p(style.title, 'FunChat');
     const text = div({ className: style.textWrapper }, name, title);
     const info = button(style.button, 'Info', () => go('about'));
