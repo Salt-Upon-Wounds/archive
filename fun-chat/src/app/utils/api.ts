@@ -32,6 +32,25 @@ export default class Api {
   }
 
   // TODO: сделать методы обертки для send для логин логаут и подобного, чтобы вытянуть апи логику сюда
+  public async login(login: string, password: string) {
+    return this.send(
+      JSON.stringify({
+        id: crypto.randomUUID(),
+        type: 'USER_LOGIN',
+        payload: { user: { login, password } },
+      }),
+    );
+  }
+
+  public async logout(login: string, password: string) {
+    return this.send(
+      JSON.stringify({
+        id: crypto.randomUUID(),
+        type: 'USER_LOGOUT',
+        payload: { user: { login, password } },
+      }),
+    );
+  }
 
   public async send(data: string | ArrayBufferLike | Blob | ArrayBufferView, retries = 0): Promise<WebSocket> {
     try {

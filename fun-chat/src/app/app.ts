@@ -3,7 +3,8 @@ import AboutPage from './pages/about/about-page';
 import ChatPage from './pages/chat/chat-page';
 import ErrorPage from './pages/error/error-page';
 import LoginPage from './pages/login/login-page';
-import { go, redirect } from './utils/routing';
+import Api from './utils/api';
+import { redirect } from './utils/routing';
 import { loadUser } from './utils/storage';
 
 class App {
@@ -11,7 +12,7 @@ class App {
 
   private routes: { [str: string]: () => BaseComponent | undefined } = {
     '404': () => new ErrorPage('404'),
-    [this.pref]: () => go('login'),
+    [this.pref]: () => redirect('login'),
     [`${this.pref}login`]: () => {
       if (loadUser()) redirect('chat');
       else return new LoginPage();
@@ -43,6 +44,11 @@ class App {
   public route(path: string) {
     while (this.pageWrapper.getNode().firstChild) {
       this.pageWrapper.getNode().removeChild(this.pageWrapper.getNode().lastChild as Node);
+    }
+    const user = loadUser();
+    if (user) {
+      const { login, password, port } = user;
+      Api.getInstance(port.toString()).login(login, password);
     }
     const page = (this.routes[path] ?? this.routes['404'])()?.getNode();
     if (page) this.pageWrapper.getNode().append(page);

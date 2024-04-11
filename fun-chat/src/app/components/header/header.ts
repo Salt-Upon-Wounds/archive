@@ -20,15 +20,7 @@ export default class Header extends BaseComponent {
   private static logoutClick() {
     const user = loadUser();
     if (user) {
-      Api.getInstance()
-        .send(
-          JSON.stringify({
-            id: crypto.randomUUID(),
-            type: 'USER_LOGOUT',
-            payload: { user: { login: user.name, password: user.password } },
-          }),
-        )
-        .then((ws) => ws.close());
+      Api.getInstance(user.port?.toString()).logout(user.login, user.password);
     }
     sessionStorage.clear();
     go('login');

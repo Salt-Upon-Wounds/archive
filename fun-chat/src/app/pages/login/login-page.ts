@@ -20,7 +20,7 @@ export default class Login extends BaseComponent {
   constructor(
     private name = input(style.textInput, { type: 'text', placeholder: 'name' }),
     private password = input(style.textInput, { type: 'password', placeholder: 'password' }),
-    private port = input(style.textInput, { type: 'text', placeholder: '4000' }),
+    private port = input(style.textInput, { type: 'text', placeholder: `${import.meta.env.VITE_port}` }),
   ) {
     super({ className: style.login });
 
@@ -42,13 +42,7 @@ export default class Login extends BaseComponent {
     saveUser(login, password, port);
 
     Api.getInstance(port)
-      .send(
-        JSON.stringify({
-          id: crypto.randomUUID(),
-          type: 'USER_LOGIN',
-          payload: { user: { login, password } },
-        }),
-      )
+      .login(login, password)
       .then(() => go('chat'));
   }
 }
