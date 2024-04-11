@@ -1,6 +1,8 @@
 import { BaseComponent } from '../../components/base-component';
 import { button, div, h1, input, p } from '../../components/tags';
-import go from '../../utils/routing';
+import Api from '../../utils/api';
+import { go } from '../../utils/routing';
+import { saveUser } from '../../utils/storage';
 import style from './styles.module.scss';
 /*
 TODO:
@@ -15,19 +17,38 @@ corresponding error sent by the server must be displayed.
 "Enter" key without the need to focus on the button.
 */
 export default class Login extends BaseComponent {
-  constructor() {
+  constructor(
+    private name = input(style.textInput, { type: 'text', placeholder: 'name' }),
+    private password = input(style.textInput, { type: 'password', placeholder: 'password' }),
+    private port = input(style.textInput, { type: 'text', placeholder: '4000' }),
+  ) {
     super({ className: style.login });
 
     const title = h1(style.title, 'Login');
-    const name = input(style.textInput, { type: 'text' });
-    const password = input(style.textInput, { type: 'text' });
-    const port = input(style.textInput, { type: 'text' });
     const hint = p(style.port, '?');
     const portRow = div({ className: style.rowWrapper }, port, hint);
     const info = button(style.button, 'Info', () => go('about'));
-    const ok = button(style.button, 'Ok');
+    const ok = button(style.button, 'Ok', () => this.submit());
     const btns = div({ className: style.buttonsWrapper }, info, ok);
 
     this.appendChildren([title, name, password, portRow, btns]);
+  }
+
+  private submit() {
+    const login = this.name.getNode().value;
+    const password = this.password.getNode().value;
+    const port = this.port.getNode().value;
+
+    saveUser(login, password, port);
+
+    Api.getInstance(port)
+      .send(
+        JSON.stringify({
+          id: crypto.randomUUID(),
+          type: 'USER_LOGIN',
+          payload: { user: { login, password } },
+        }),
+      )
+      .then(() => go('chat'));
   }
 }

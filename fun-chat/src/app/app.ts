@@ -3,21 +3,26 @@ import AboutPage from './pages/about/about-page';
 import ChatPage from './pages/chat/chat-page';
 import ErrorPage from './pages/error/error-page';
 import LoginPage from './pages/login/login-page';
-import go from './utils/routing';
+import { go, redirect } from './utils/routing';
+import { loadUser } from './utils/storage';
 
 class App {
-  private chat = new ChatPage();
-
-  private about = new AboutPage();
-
   private pref = import.meta.env.VITE_urlprefix ?? '/';
 
-  private routes: { [str: string]: () => BaseComponent } = {
+  private routes: { [str: string]: () => BaseComponent | undefined } = {
     '404': () => new ErrorPage('404'),
     [this.pref]: () => go('login'),
-    [`${this.pref}login`]: () => new LoginPage(),
-    [`${this.pref}chat`]: () => this.chat,
-    [`${this.pref}about`]: () => this.about,
+    [`${this.pref}login`]: () => {
+      if (loadUser()) redirect('chat');
+      else return new LoginPage();
+      return undefined;
+    },
+    [`${this.pref}chat`]: () => {
+      if (!loadUser()) redirect('login');
+      else return new ChatPage();
+      return undefined;
+    },
+    [`${this.pref}about`]: () => new AboutPage(),
   };
 
   private pageWrapper: BaseComponent = new BaseComponent({ className: 'main' });
