@@ -3,4 +3,91 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  gap: 15px;
+  .center {
+    display: flex;
+    flex-shrink: 0;
+    flex-grow: 1;
+    flex-basis: 0px;
+    .users {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 0.5;
+      .search {
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .list {
+        flex-shrink: 0;
+        flex-grow: 1;
+        flex-basis: 0px;
+        display: flex;
+        flex-direction: column;
+        overflow-y: scroll;
+        .elem {
+          height: 1.7em;
+          display: flex;
+          align-items: center;
+          justify-content: left;
+          gap: 5px;
+          &:before {
+            content: '';
+            background-image: url('../../assets/dot.svg');
+            background-size: 100%;
+            width: 15px;
+            height: 15px;
+            transform: scale(2.5);
+            filter: invert(15%) sepia(96%) saturate(6588%) hue-rotate(5deg) brightness(95%) contrast(118%);
+          }
+          &.active {
+            &:before {
+              filter: invert(63%) sepia(50%) saturate(5156%) hue-rotate(84deg) brightness(118%) contrast(122%);
+            }
+          }
+        }
+      }
+    }
+
+    .messages {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 10;
+      .top {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        .name {
+          font-weight: 500;
+          margin: 0;
+        }
+        .status {
+          font-weight: 500;
+          font-size: 1.2em;
+          color: red;
+          margin: 0;
+          &.active {
+            color: green;
+          }
+        }
+      }
+      .list {
+        flex-shrink: 0;
+        flex-grow: 1;
+        flex-basis: 0px;
+        display: flex;
+        flex-direction: column;
+        overflow-y: scroll;
+      }
+      .bottom {
+        display: flex;
+        .input {
+          box-sizing: border-box;
+          flex-grow: 1;
+        }
+        .send {
+
+        }
+      }
+    }
+  }
 }
