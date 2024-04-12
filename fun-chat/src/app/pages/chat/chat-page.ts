@@ -1,6 +1,7 @@
 import { BaseComponent } from '../../components/base-component';
 import Footer from '../../components/footer/footer';
 import Header from '../../components/header/header';
+import Message from '../../components/message/message';
 import { button, div, input, p } from '../../components/tags';
 import style from './styles.module.scss';
 
@@ -14,7 +15,9 @@ export default class ChatPage extends BaseComponent {
 
     const messageList = div(
       { className: style.list },
-      ...new Array(50).fill(1).map((_, idx) => button(style.elem, `test_message ${idx}`)),
+      ...new Array(50).fill(1).map((_, idx) => {
+        return new Message(idx % 3 === 0);
+      }),
     );
 
     const messageInput = input(style.input, { type: 'text', placeholder: 'Message' });

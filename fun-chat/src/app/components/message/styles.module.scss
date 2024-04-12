@@ -1,0 +1,30 @@
+.box {
+  max-width: 75%;
+  width: 100%;
+  background-color: bisque;
+  color: black;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  &.self {
+    cursor: pointer;
+    margin-left: auto;
+  }
+  .top {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    .text {
+      font-size: 0.5em;
+      margin: 0;
+    }
+  }
+  .center {
+    background-color: white;
+  }
+  .bottom {
+    font-size: 0.5em;
+    margin-left: auto;
+    margin-right: 20px;
+  }
+}
