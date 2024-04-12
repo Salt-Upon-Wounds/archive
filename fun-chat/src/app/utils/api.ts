@@ -6,6 +6,8 @@ export default class Api {
 
   private static port = envport;
 
+  private static isLoggedFlag: boolean = false;
+
   private static connectionResolvers: { resolve: (value?: unknown) => void; reject: () => void }[] = [];
 
   private constructor(private retries = 4) {}
@@ -31,8 +33,14 @@ export default class Api {
     return Api.port;
   }
 
+  public static isLogged() {
+    return Api.isLoggedFlag;
+  }
+
   // TODO: сделать методы обертки для send для логин логаут и подобного, чтобы вытянуть апи логику сюда
   public async login(login: string, password: string) {
+    if (Api.isLoggedFlag) return Promise.resolve(Api.ws);
+    Api.isLoggedFlag = true;
     return this.send(
       JSON.stringify({
         id: crypto.randomUUID(),
@@ -43,6 +51,8 @@ export default class Api {
   }
 
   public async logout(login: string, password: string) {
+    if (!Api.isLoggedFlag) return Promise.resolve(Api.ws);
+    Api.isLoggedFlag = false;
     return this.send(
       JSON.stringify({
         id: crypto.randomUUID(),
