@@ -19,6 +19,9 @@ export default class ChatPage extends BaseComponent {
         return new Message(idx % 3 === 0);
       }),
     );
+    setTimeout(() => {
+      messageList.getNode().scrollTop = messageList.getNode().scrollHeight;
+    });
 
     const messageInput = input(style.input, { type: 'text', placeholder: 'Message' });
     const sendBtn = button(style.send, 'Send');

@@ -2,13 +2,16 @@
   max-width: 75%;
   width: 100%;
   background-color: bisque;
+  border-radius: 5px;
   color: black;
   display: flex;
   flex-direction: column;
   gap: 5px;
+  margin-left: 1%;
   &.self {
     cursor: pointer;
     margin-left: auto;
+    margin-right: 1%;
   }
   .top {
     display: flex;
@@ -21,6 +24,8 @@
   }
   .center {
     background-color: white;
+    text-align: left;
+    margin: 0 5px 0 5px;
   }
   .bottom {
     font-size: 0.5em;
