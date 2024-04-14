@@ -1,6 +1,18 @@
 const envhost = import.meta.env.VITE_target;
 const envport = import.meta.env.VITE_port;
 
+type User = {
+  login: string;
+  isLoggedIn: boolean;
+};
+type ServerResponse = {
+  id: string;
+  type: string;
+  payload: {
+    user?: User;
+    users?: User[];
+  } | null;
+};
 export default class Api {
   private static ws: WebSocket;
 
@@ -25,6 +37,12 @@ export default class Api {
       Api.ws.addEventListener('open', () => {
         Api.connectionResolvers.forEach((r) => r.resolve());
       });
+      Api.ws.addEventListener('message', (event) => {
+        const message = JSON.parse(event.data) as ServerResponse;
+        if (message.type === 'USER_ACTIVE' || message.type === 'USER_INACTIVE') {
+          window.dispatchEvent(new CustomEvent<User[]>('USERS_EVENT', { detail: message.payload!.users }));
+        }
+      });
     }
     return new Api();
   }
@@ -38,6 +56,26 @@ export default class Api {
   }
 
   // TODO: сделать методы обертки для send для логин логаут и подобного, чтобы вытянуть апи логику сюда
+  public async allNonAuthUsers() {
+    return this.send(
+      JSON.stringify({
+        id: crypto.randomUUID(),
+        type: 'USER_INACTIVE',
+        payload: null,
+      }),
+    );
+  }
+
+  public async allAuthUsers() {
+    return this.send(
+      JSON.stringify({
+        id: crypto.randomUUID(),
+        type: 'USER_ACTIVE',
+        payload: null,
+      }),
+    );
+  }
+
   public async login(login: string, password: string) {
     if (Api.isLoggedFlag) return Promise.resolve(Api.ws);
     Api.isLoggedFlag = true;

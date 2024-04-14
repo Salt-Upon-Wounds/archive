@@ -3,10 +3,15 @@ import Footer from '../../components/footer/footer';
 import Header from '../../components/header/header';
 import Message from '../../components/message/message';
 import { button, div, input, p } from '../../components/tags';
+import Api from '../../utils/api';
+import { loadUser } from '../../utils/storage';
 import style from './styles.module.scss';
 
 export default class ChatPage extends BaseComponent {
-  constructor() {
+  constructor(
+    private users: { login: string; isLogined: boolean }[] = [],
+    private usersList = div({ className: style.list }),
+  ) {
     super({ className: style.chat });
 
     const targetUser = p(style.name, 'Test');
@@ -30,15 +35,38 @@ export default class ChatPage extends BaseComponent {
     const messages = div({ className: style.messages }, topRow, messageList, bottomRow);
 
     const userInput = input(style.search, { type: 'text', placeholder: 'Search...' });
-    const userList = div(
+    /* const userList = div(
       { className: style.list },
       ...new Array(20).fill(1).map((_, idx) => button(style.elem, `test_test ${idx}`)),
-    );
-    const users = div({ className: style.users }, userInput, userList);
-    userList.children[0].addClass(style.active);
+    ); */
+    const usersDiv = div({ className: style.users }, userInput, this.usersList);
 
-    const wrapper = div({ className: style.center }, users, messages);
+    const wrapper = div({ className: style.center }, usersDiv, messages);
 
     this.appendChildren([new Header(), wrapper, new Footer()]);
+
+    window.addEventListener('USERS_EVENT', ((e: CustomEvent) => {
+      this.users = this.users.concat(e.detail);
+      const name = loadUser()?.login ?? '';
+      this.usersList.destroyChildren();
+      this.usersList.appendChildren(
+        this.users
+          .filter((el) => el.login !== name)
+          .map((el) => {
+            const btn = button(style.elem, `${el.login}`);
+            if (el.isLogined) btn.addClass(style.active);
+            return btn;
+          }),
+      );
+    }) as EventListener);
+
+    this.updateUsersList();
+  }
+
+  private async updateUsersList() {
+    this.users = [];
+    Api.getInstance()
+      .allAuthUsers()
+      .then(() => Api.getInstance().allNonAuthUsers());
   }
 }
