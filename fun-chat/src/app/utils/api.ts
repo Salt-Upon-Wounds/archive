@@ -1,11 +1,11 @@
 const envhost = import.meta.env.VITE_target;
 const envport = import.meta.env.VITE_port;
 
-type User = {
+export type User = {
   login: string;
-  isLoggedIn: boolean;
+  isLogined: boolean;
 };
-type ServerResponse = {
+export type ServerResponse = {
   id: string;
   type: string;
   payload: {
@@ -41,6 +41,12 @@ export default class Api {
         const message = JSON.parse(event.data) as ServerResponse;
         if (message.type === 'USER_ACTIVE' || message.type === 'USER_INACTIVE') {
           window.dispatchEvent(new CustomEvent<User[]>('USERS_EVENT', { detail: message.payload!.users }));
+        }
+        if (message.type === 'USER_EXTERNAL_LOGIN') {
+          window.dispatchEvent(new CustomEvent<User>('USER_EXTERNAL_LOGIN_EVENT', { detail: message.payload!.user }));
+        }
+        if (message.type === 'USER_EXTERNAL_LOGOUT') {
+          window.dispatchEvent(new CustomEvent<User>('USER_EXTERNAL_LOGOUT_EVENT', { detail: message.payload!.user }));
         }
       });
     }
