@@ -5,12 +5,26 @@ export type User = {
   login: string;
   isLogined: boolean;
 };
+export type Message = {
+  id?: string;
+  from?: string;
+  to: string;
+  text: string;
+  datetime?: number;
+  status?: {
+    isDelivered: boolean;
+    isReaded: boolean;
+    isEdited: boolean;
+  };
+};
 export type ServerResponse = {
   id: string;
   type: string;
   payload: {
     user?: User;
     users?: User[];
+    message?: Message;
+    messages?: Message[];
   } | null;
 };
 export default class Api {
@@ -41,12 +55,16 @@ export default class Api {
         const message = JSON.parse(event.data) as ServerResponse;
         if (message.type === 'USER_ACTIVE' || message.type === 'USER_INACTIVE') {
           window.dispatchEvent(new CustomEvent<User[]>('USERS_EVENT', { detail: message.payload!.users }));
-        }
-        if (message.type === 'USER_EXTERNAL_LOGIN') {
+        } else if (message.type === 'USER_EXTERNAL_LOGIN') {
           window.dispatchEvent(new CustomEvent<User>('USER_EXTERNAL_LOGIN_EVENT', { detail: message.payload!.user }));
-        }
-        if (message.type === 'USER_EXTERNAL_LOGOUT') {
+        } else if (message.type === 'USER_EXTERNAL_LOGOUT') {
           window.dispatchEvent(new CustomEvent<User>('USER_EXTERNAL_LOGOUT_EVENT', { detail: message.payload!.user }));
+        } else if (message.type === 'MSG_SEND') {
+          window.dispatchEvent(new CustomEvent<Message>('MSG_SEND_EVENT', { detail: message.payload!.message }));
+        } else if (message.type === 'MSG_FROM_USER') {
+          window.dispatchEvent(
+            new CustomEvent<Message[]>('MSG_FROM_USER_EVENT', { detail: message.payload!.messages }),
+          );
         }
       });
     }
@@ -61,7 +79,26 @@ export default class Api {
     return Api.isLoggedFlag;
   }
 
-  // TODO: сделать методы обертки для send для логин логаут и подобного, чтобы вытянуть апи логику сюда
+  public async fetchMessageHistory(targetUser: string) {
+    return this.send(
+      JSON.stringify({
+        id: crypto.randomUUID(),
+        type: 'MSG_FROM_USER',
+        payload: { user: { login: targetUser } },
+      }),
+    );
+  }
+
+  public async sendMessageTo(to: string, text: string) {
+    return this.send(
+      JSON.stringify({
+        id: crypto.randomUUID(),
+        type: 'MSG_SEND',
+        payload: { message: { to, text } },
+      }),
+    );
+  }
+
   public async allNonAuthUsers() {
     return this.send(
       JSON.stringify({
