@@ -66,15 +66,15 @@ export default class ChatPage extends BaseComponent {
     window.addEventListener('MSG_FROM_USER_EVENT', ((e: CustomEvent<Message[]>) => {
       const messages = e.detail;
       const name = loadUser()?.login ?? '';
-      this.messageList.appendChildren(messages.map((el) => new MessageBox(el.to !== name)));
+      this.messageList.appendChildren(messages.map((el) => new MessageBox(el.to !== name, el)));
       setTimeout(() => {
         this.messageList.getNode().scrollTop = this.messageList.getNode().scrollHeight;
       });
     }) as EventListener);
     window.addEventListener('MSG_SEND_EVENT', ((e: CustomEvent<Message>) => {
-      const messages = e.detail;
+      const message = e.detail;
       const name = loadUser()?.login ?? '';
-      this.messageList.append(new MessageBox(messages.to !== name));
+      this.messageList.append(new MessageBox(message.to !== name, message));
       setTimeout(() => {
         this.messageList.getNode().scrollTop = this.messageList.getNode().scrollHeight;
       });
