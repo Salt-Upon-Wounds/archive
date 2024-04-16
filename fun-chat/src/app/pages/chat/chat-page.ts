@@ -1,48 +1,33 @@
 import { BaseComponent } from '../../components/base-component';
 import Footer from '../../components/footer/footer';
 import Header from '../../components/header/header';
-import Message from '../../components/message/message';
+import MessageBox from '../../components/message/message';
 import { button, div, input, p } from '../../components/tags';
-import type { User } from '../../utils/api';
+import type { Message, User } from '../../utils/api';
 import Api from '../../utils/api';
 import { loadUser } from '../../utils/storage';
 import style from './styles.module.scss';
 
 export default class ChatPage extends BaseComponent {
+  private dialogTarget = '';
+
   constructor(
     private users: User[] = [],
     private usersList = div({ className: style.list }),
+    private messageList = div({ className: style.list }),
+    private messageInput = input(style.input, { type: 'text', placeholder: 'Message' }),
   ) {
     super({ className: style.chat });
 
     const targetUser = p(style.name, 'Test');
     const targetUserStatus = p(style.status, 'online');
     const topRow = div({ className: style.top }, targetUser, targetUserStatus);
-
-    const messageList = div(
-      { className: style.list },
-      ...new Array(50).fill(1).map((_, idx) => {
-        return new Message(idx % 3 === 0);
-      }),
-    );
-    setTimeout(() => {
-      messageList.getNode().scrollTop = messageList.getNode().scrollHeight;
-    });
-
-    const messageInput = input(style.input, { type: 'text', placeholder: 'Message' });
-    const sendBtn = button(style.send, 'Send');
+    const sendBtn = button(style.send, 'Send', () => this.sendMessageTo());
     const bottomRow = div({ className: style.bottom }, messageInput, sendBtn);
-
-    const messages = div({ className: style.messages }, topRow, messageList, bottomRow);
-
+    const messagesDiv = div({ className: style.messages }, topRow, messageList, bottomRow);
     const userInput = input(style.search, { type: 'text', placeholder: 'Search...' });
-    /* const userList = div(
-      { className: style.list },
-      ...new Array(20).fill(1).map((_, idx) => button(style.elem, `test_test ${idx}`)),
-    ); */
     const usersDiv = div({ className: style.users }, userInput, this.usersList);
-
-    const wrapper = div({ className: style.center }, usersDiv, messages);
+    const wrapper = div({ className: style.center }, usersDiv, messagesDiv);
 
     this.appendChildren([new Header(), wrapper, new Footer()]);
 
@@ -54,7 +39,7 @@ export default class ChatPage extends BaseComponent {
         this.users
           .filter((el) => el.login !== name)
           .map((el) => {
-            const btn = button(style.elem, `${el.login}`);
+            const btn = button(style.elem, `${el.login}`, () => this.updateMessageList(el.login));
             if (el.isLogined) btn.addClass(style.active);
             return btn;
           }),
@@ -64,7 +49,9 @@ export default class ChatPage extends BaseComponent {
       if (this.users.map((el) => el.login).includes(e.detail.login)) {
         this.usersList.children.filter((el) => el.getNode().textContent === e.detail.login)[0].addClass(style.active);
       } else {
-        this.usersList.append(button(`${style.elem} ${style.active}`, `${e.detail.login}`));
+        this.usersList.append(
+          button(`${style.elem} ${style.active}`, `${e.detail.login}`, () => this.updateMessageList(e.detail.login)),
+        );
       }
       // this.updateUsersList();
     }) as EventListener);
@@ -76,8 +63,34 @@ export default class ChatPage extends BaseComponent {
       }
       // this.updateUsersList();
     }) as EventListener);
+    window.addEventListener('MSG_FROM_USER_EVENT', ((e: CustomEvent<Message[]>) => {
+      const messages = e.detail;
+      const name = loadUser()?.login ?? '';
+      this.messageList.appendChildren(messages.map((el) => new MessageBox(el.to !== name)));
+      setTimeout(() => {
+        this.messageList.getNode().scrollTop = this.messageList.getNode().scrollHeight;
+      });
+    }) as EventListener);
+    window.addEventListener('MSG_SEND_EVENT', ((e: CustomEvent<Message>) => {
+      const messages = e.detail;
+      const name = loadUser()?.login ?? '';
+      this.messageList.append(new MessageBox(messages.to !== name));
+      setTimeout(() => {
+        this.messageList.getNode().scrollTop = this.messageList.getNode().scrollHeight;
+      });
+    }) as EventListener);
 
     this.updateUsersList();
+  }
+
+  private async sendMessageTo() {
+    Api.getInstance().sendMessageTo(this.dialogTarget, this.messageInput.getNode().value);
+    this.messageInput.getNode().value = '';
+  }
+
+  private async updateMessageList(targetUser: string) {
+    Api.getInstance().fetchMessageHistory(targetUser);
+    this.dialogTarget = targetUser;
   }
 
   private async updateUsersList() {
