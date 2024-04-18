@@ -18,6 +18,7 @@ export default class ChatPage extends BaseComponent {
     private messageInput = input(style.input, { type: 'text', placeholder: 'Message' }),
     private targetUser = p(style.name, ''),
     private targetUserStatus = p(style.status, ''),
+    private userInput = input(style.search, { type: 'text', placeholder: 'Search...' }),
   ) {
     super({ className: style.chat });
 
@@ -25,25 +26,19 @@ export default class ChatPage extends BaseComponent {
     const sendBtn = button(style.send, 'Send', () => this.sendMessageTo());
     const bottomRow = div({ className: style.bottom }, messageInput, sendBtn);
     const messagesDiv = div({ className: style.messages }, topRow, messageList, bottomRow);
-    const userInput = input(style.search, { type: 'text', placeholder: 'Search...' });
     const usersDiv = div({ className: style.users }, userInput, this.usersList);
     const wrapper = div({ className: style.center }, usersDiv, messagesDiv);
 
     this.appendChildren([new Header(), wrapper, new Footer()]);
 
+    userInput.getNode().addEventListener('input', (e: Event) => {
+      this.filterUsers((e as InputEvent).data ?? '');
+    });
+
     window.addEventListener('USERS_EVENT', ((e: CustomEvent<User[]>) => {
-      this.users = this.users.concat(e.detail);
       const name = loadUser()?.login ?? '';
-      this.usersList.destroyChildren();
-      this.usersList.appendChildren(
-        this.users
-          .filter((el) => el.login !== name)
-          .map((el) => {
-            const btn = button(style.elem, `${el.login}`, () => this.updateMessageList(el));
-            if (el.isLogined) btn.addClass(style.active);
-            return btn;
-          }),
-      );
+      this.users = this.users.concat(e.detail).filter((el) => el.login !== name);
+      this.filterUsers(this.userInput.getNode().value);
     }) as EventListener);
     window.addEventListener('USER_EXTERNAL_LOGIN_EVENT', ((e: CustomEvent<User>) => {
       if (this.users.map((el) => el.login).includes(e.detail.login)) {
@@ -106,5 +101,18 @@ export default class ChatPage extends BaseComponent {
     Api.getInstance()
       .allAuthUsers()
       .then(() => Api.getInstance().allNonAuthUsers());
+  }
+
+  private filterUsers(txt: string) {
+    this.usersList.destroyChildren();
+    this.usersList.appendChildren(
+      this.users
+        .filter((el) => txt === '' || (txt !== '' && el.login.match(txt)))
+        .map((el) => {
+          const btn = button(style.elem, `${el.login}`, () => this.updateMessageList(el));
+          if (el.isLogined) btn.addClass(style.active);
+          return btn;
+        }),
+    );
   }
 }
