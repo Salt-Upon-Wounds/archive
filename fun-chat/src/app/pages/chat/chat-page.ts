@@ -16,11 +16,11 @@ export default class ChatPage extends BaseComponent {
     private usersList = div({ className: style.list }),
     private messageList = div({ className: style.list }),
     private messageInput = input(style.input, { type: 'text', placeholder: 'Message' }),
+    private targetUser = p(style.name, ''),
+    private targetUserStatus = p(style.status, ''),
   ) {
     super({ className: style.chat });
 
-    const targetUser = p(style.name, 'Test');
-    const targetUserStatus = p(style.status, 'online');
     const topRow = div({ className: style.top }, targetUser, targetUserStatus);
     const sendBtn = button(style.send, 'Send', () => this.sendMessageTo());
     const bottomRow = div({ className: style.bottom }, messageInput, sendBtn);
@@ -39,7 +39,7 @@ export default class ChatPage extends BaseComponent {
         this.users
           .filter((el) => el.login !== name)
           .map((el) => {
-            const btn = button(style.elem, `${el.login}`, () => this.updateMessageList(el.login));
+            const btn = button(style.elem, `${el.login}`, () => this.updateMessageList(el));
             if (el.isLogined) btn.addClass(style.active);
             return btn;
           }),
@@ -50,7 +50,7 @@ export default class ChatPage extends BaseComponent {
         this.usersList.children.filter((el) => el.getNode().textContent === e.detail.login)[0].addClass(style.active);
       } else {
         this.usersList.append(
-          button(`${style.elem} ${style.active}`, `${e.detail.login}`, () => this.updateMessageList(e.detail.login)),
+          button(`${style.elem} ${style.active}`, `${e.detail.login}`, () => this.updateMessageList(e.detail)),
         );
       }
       // this.updateUsersList();
@@ -88,9 +88,17 @@ export default class ChatPage extends BaseComponent {
     this.messageInput.getNode().value = '';
   }
 
-  private async updateMessageList(targetUser: string) {
-    Api.getInstance().fetchMessageHistory(targetUser);
-    this.dialogTarget = targetUser;
+  private async updateMessageList(targetUser: User) {
+    Api.getInstance().fetchMessageHistory(targetUser.login);
+    this.dialogTarget = targetUser.login;
+    this.targetUser.getNode().textContent = targetUser.login;
+    if (targetUser.isLogined) {
+      this.targetUserStatus.addClass(style.active);
+      this.targetUserStatus.getNode().textContent = 'online';
+    } else {
+      this.targetUserStatus.removeClass(style.active);
+      this.targetUserStatus.getNode().textContent = 'offline';
+    }
   }
 
   private async updateUsersList() {
