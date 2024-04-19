@@ -4,10 +4,13 @@ import { div, p } from '../tags';
 import style from './styles.module.scss';
 
 export default class MessageBox extends BaseComponent {
+  #id: string;
+
   constructor(self: boolean, message: Message) {
     super({ className: style.box });
     if (self) this.addClass(style.self);
 
+    this.#id = message.id ?? '';
     const name = p(style.text, message.from ?? '???');
     const date = p(
       style.text,
@@ -19,5 +22,9 @@ export default class MessageBox extends BaseComponent {
 
     const bottomRow = div({ className: style.bottom, txt: `${self ? 'отправлено' : ''}` });
     this.appendChildren([topRow, center, bottomRow]);
+  }
+
+  public get id() {
+    return this.#id;
   }
 }

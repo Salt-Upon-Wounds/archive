@@ -25,13 +25,26 @@ export default class Login extends BaseComponent {
     super({ className: style.login });
 
     const title = h1(style.title, 'Login');
-    const hint = p(style.port, '?');
+    const hint = div({ className: style.port }, p(style.text, '?'));
     const portRow = div({ className: style.rowWrapper }, port, hint);
     const info = button(style.button, 'Info', () => go('about'));
     const ok = button(style.button, 'Ok', () => this.submit());
     const btns = div({ className: style.buttonsWrapper }, info, ok);
+    const hintbox = div(
+      { className: `${style.hintbox} ${style.hide}` },
+      p(style.text, 'You can set a port value in case of using a custom port for a server. Default value is 4000'),
+    );
 
-    this.appendChildren([title, name, password, portRow, btns]);
+    hint.getNode().addEventListener('mousemove', (e: MouseEvent) => {
+      hintbox.removeClass(style.hide);
+      hintbox.getNode().style.left = `${e.clientX - 145}px`;
+      hintbox.getNode().style.top = `${e.clientY - 100}px`;
+    });
+    hint.getNode().addEventListener('mouseleave', () => {
+      hintbox.addClass(style.hide);
+    });
+
+    this.appendChildren([title, name, password, portRow, btns, hintbox]);
   }
 
   private submit() {

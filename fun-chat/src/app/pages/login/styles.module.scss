@@ -16,17 +16,19 @@
     width: calc(100% - 6px);
   }
   .port {
-    color: yellow;
     border: 1px solid yellow;
     border-radius: 50%;
     width: 20px;
     height: 20px;
-    margin: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-weight: 600;
-    cursor: help;
+    cursor: none;
+    .text {
+      font-weight: 600;
+      margin: 0;
+      color: yellow;
+    }
   }
   .row-wrapper {
     display: flex;
@@ -42,5 +44,21 @@
     .button {
       cursor: pointer;
     }
+  }
+}
+
+.hintbox {
+  position: fixed;
+  background-color: rgb(99, 105, 105);
+  border: 2px solid black;
+  max-width: 145px;
+  pointer-events: none;
+  &.hide {
+    display: none;
+  }
+  .text {
+    color: black;
+    margin: 0;
+    text-align: center;
   }
 }

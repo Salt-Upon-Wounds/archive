@@ -40,32 +40,45 @@ export default class ChatPage extends BaseComponent {
       this.users = this.users.concat(e.detail).filter((el) => el.login !== name);
       this.filterUsers(this.userInput.getNode().value);
     }) as EventListener);
+
     window.addEventListener('USER_EXTERNAL_LOGIN_EVENT', ((e: CustomEvent<User>) => {
       if (this.users.map((el) => el.login).includes(e.detail.login)) {
         this.usersList.children.filter((el) => el.getNode().textContent === e.detail.login)[0].addClass(style.active);
+        this.users.filter((el) => el.login === e.detail.login)[0].isLogined = true;
       } else {
         this.usersList.append(
           button(`${style.elem} ${style.active}`, `${e.detail.login}`, () => this.updateMessageList(e.detail)),
         );
       }
-      // this.updateUsersList();
+      if (this.targetUser.getNode().textContent === e.detail.login) {
+        this.targetUserStatus.addClass(style.active);
+        this.targetUserStatus.getNode().textContent = 'online';
+      }
     }) as EventListener);
+
     window.addEventListener('USER_EXTERNAL_LOGOUT_EVENT', ((e: CustomEvent<User>) => {
       if (this.users.map((el) => el.login).includes(e.detail.login)) {
         this.usersList.children
           .filter((el) => el.getNode().textContent === e.detail.login)[0]
           .removeClass(style.active);
+        this.users.filter((el) => el.login === e.detail.login)[0].isLogined = false;
       }
-      // this.updateUsersList();
+      if (this.targetUser.getNode().textContent === e.detail.login) {
+        this.targetUserStatus.removeClass(style.active);
+        this.targetUserStatus.getNode().textContent = 'offline';
+      }
     }) as EventListener);
+
     window.addEventListener('MSG_FROM_USER_EVENT', ((e: CustomEvent<Message[]>) => {
       const messages = e.detail;
       const name = loadUser()?.login ?? '';
+      this.messageList.destroyChildren();
       this.messageList.appendChildren(messages.map((el) => new MessageBox(el.to !== name, el)));
       setTimeout(() => {
         this.messageList.getNode().scrollTop = this.messageList.getNode().scrollHeight;
       });
     }) as EventListener);
+
     window.addEventListener('MSG_SEND_EVENT', ((e: CustomEvent<Message>) => {
       const message = e.detail;
       const name = loadUser()?.login ?? '';
