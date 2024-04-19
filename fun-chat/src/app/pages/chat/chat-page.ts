@@ -3,7 +3,7 @@ import Footer from '../../components/footer/footer';
 import Header from '../../components/header/header';
 import MessageBox from '../../components/message/message';
 import { button, div, input, p } from '../../components/tags';
-import type { Message, User } from '../../utils/api';
+import type { Message, ServerResponse, User } from '../../utils/api';
 import Api from '../../utils/api';
 import { loadUser } from '../../utils/storage';
 import style from './styles.module.scss';
@@ -13,6 +13,7 @@ export default class ChatPage extends BaseComponent {
 
   constructor(
     private users: User[] = [],
+    private messages: { [key: string]: Message[] | string } = {},
     private usersList = div({ className: style.list }),
     private messageList = div({ className: style.list }),
     private messageInput = input(style.input, { type: 'text', placeholder: 'Message' }),
@@ -39,6 +40,11 @@ export default class ChatPage extends BaseComponent {
       const name = loadUser()?.login ?? '';
       this.users = this.users.concat(e.detail).filter((el) => el.login !== name);
       this.filterUsers(this.userInput.getNode().value);
+      this.users.forEach((el) => {
+        const id = crypto.randomUUID();
+        this.messages[`${el.login}`] = id;
+        Api.getInstance().fetchMessageHistory(el.login, id);
+      });
     }) as EventListener);
 
     window.addEventListener('USER_EXTERNAL_LOGIN_EVENT', ((e: CustomEvent<User>) => {
@@ -69,14 +75,11 @@ export default class ChatPage extends BaseComponent {
       }
     }) as EventListener);
 
-    window.addEventListener('MSG_FROM_USER_EVENT', ((e: CustomEvent<Message[]>) => {
-      const messages = e.detail;
-      const name = loadUser()?.login ?? '';
-      this.messageList.destroyChildren();
-      this.messageList.appendChildren(messages.map((el) => new MessageBox(el.to !== name, el)));
-      setTimeout(() => {
-        this.messageList.getNode().scrollTop = this.messageList.getNode().scrollHeight;
-      });
+    window.addEventListener('MSG_FROM_USER_EVENT', ((e: CustomEvent<ServerResponse>) => {
+      const response = e.detail;
+      for (const [key, val] of Object.entries(this.messages)) {
+        if (val === response.id) this.messages[`${key}`] = response.payload!.messages!;
+      }
     }) as EventListener);
 
     window.addEventListener('MSG_SEND_EVENT', ((e: CustomEvent<Message>) => {
@@ -88,7 +91,10 @@ export default class ChatPage extends BaseComponent {
       });
     }) as EventListener);
 
-    this.updateUsersList();
+    this.updateUsersList(); /*
+    setTimeout(() => {
+      console.log(this.messages);
+    }, 1000); */
   }
 
   private async sendMessageTo() {
@@ -97,7 +103,16 @@ export default class ChatPage extends BaseComponent {
   }
 
   private async updateMessageList(targetUser: User) {
-    Api.getInstance().fetchMessageHistory(targetUser.login);
+    const name = loadUser()?.login ?? '';
+    this.messageList.destroyChildren();
+    if (this.messages[`${targetUser.login}`] instanceof Array) {
+      this.messageList.appendChildren(
+        (this.messages[`${targetUser.login}`] as Array<Message>).map((el) => new MessageBox(el.to !== name, el)),
+      );
+    }
+    setTimeout(() => {
+      this.messageList.getNode().scrollTop = this.messageList.getNode().scrollHeight;
+    });
     this.dialogTarget = targetUser.login;
     this.targetUser.getNode().textContent = targetUser.login;
     if (targetUser.isLogined) {

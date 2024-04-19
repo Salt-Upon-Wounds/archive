@@ -62,9 +62,7 @@ export default class Api {
         } else if (message.type === 'MSG_SEND') {
           window.dispatchEvent(new CustomEvent<Message>('MSG_SEND_EVENT', { detail: message.payload!.message }));
         } else if (message.type === 'MSG_FROM_USER') {
-          window.dispatchEvent(
-            new CustomEvent<Message[]>('MSG_FROM_USER_EVENT', { detail: message.payload!.messages }),
-          );
+          window.dispatchEvent(new CustomEvent<ServerResponse>('MSG_FROM_USER_EVENT', { detail: message }));
         }
       });
     }
@@ -79,10 +77,10 @@ export default class Api {
     return Api.isLoggedFlag;
   }
 
-  public async fetchMessageHistory(targetUser: string) {
+  public async fetchMessageHistory(targetUser: string, id: string) {
     return this.send(
       JSON.stringify({
-        id: crypto.randomUUID(),
+        id,
         type: 'MSG_FROM_USER',
         payload: { user: { login: targetUser } },
       }),
