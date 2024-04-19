@@ -51,6 +51,8 @@ export default class ChatPage extends BaseComponent {
         this.usersList.children.filter((el) => el.getNode().textContent === e.detail.login)[0].addClass(style.active);
         this.users.filter((el) => el.login === e.detail.login)[0].isLogined = true;
       } else {
+        this.users.push(e.detail);
+        this.messages[`${e.detail.login}`] = [];
         this.usersList.append(
           button(`${style.elem} ${style.active}`, `${e.detail.login}`, () => this.updateMessageList(e.detail)),
         );
@@ -64,8 +66,8 @@ export default class ChatPage extends BaseComponent {
     window.addEventListener('USER_EXTERNAL_LOGOUT_EVENT', ((e: CustomEvent<User>) => {
       if (this.users.map((el) => el.login).includes(e.detail.login)) {
         this.usersList.children
-          .filter((el) => el.getNode().textContent === e.detail.login)[0]
-          .removeClass(style.active);
+          ?.filter((el) => el.getNode().textContent === e.detail.login)[0]
+          ?.removeClass(style.active);
         this.users.filter((el) => el.login === e.detail.login)[0].isLogined = false;
       }
       if (this.targetUser.getNode().textContent === e.detail.login) {
