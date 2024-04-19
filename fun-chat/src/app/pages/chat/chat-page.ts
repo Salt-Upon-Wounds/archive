@@ -39,7 +39,6 @@ export default class ChatPage extends BaseComponent {
     window.addEventListener('USERS_EVENT', ((e: CustomEvent<User[]>) => {
       const name = loadUser()?.login ?? '';
       this.users = this.users.concat(e.detail).filter((el) => el.login !== name);
-      this.filterUsers(this.userInput.getNode().value);
       this.users.forEach((el) => {
         const id = crypto.randomUUID();
         this.messages[`${el.login}`] = id;
@@ -77,24 +76,37 @@ export default class ChatPage extends BaseComponent {
 
     window.addEventListener('MSG_FROM_USER_EVENT', ((e: CustomEvent<ServerResponse>) => {
       const response = e.detail;
+      let allDoneFlag = true;
       for (const [key, val] of Object.entries(this.messages)) {
         if (val === response.id) this.messages[`${key}`] = response.payload!.messages!;
+        if (typeof this.messages[`${key}`] === 'string') allDoneFlag = false;
       }
+      if (allDoneFlag) this.filterUsers(userInput.getNode().value);
     }) as EventListener);
 
     window.addEventListener('MSG_SEND_EVENT', ((e: CustomEvent<Message>) => {
       const message = e.detail;
       const name = loadUser()?.login ?? '';
+      const target = `${message.to === name ? message.from : message.to}`;
+      if (this.messages[`${target}`] instanceof Array) (this.messages[`${target}`] as Array<Message>).push(message);
+      else this.messages[`${target}`] = [message];
       this.messageList.append(new MessageBox(message.to !== name, message));
+      const btn = usersList.children.filter((el) => el.getNode().textContent === message.from)[0];
+      if (message.from !== name) {
+        const unreadMsgs = (this.messages[`${message.from}`] as Array<Message>).filter(
+          (mes) => mes.from !== name && !mes.status?.isReaded,
+        ).length;
+        if (unreadMsgs > 0) {
+          btn.addClass(style.unread);
+          btn.getNode().dataset.unread = unreadMsgs.toString();
+        }
+      }
       setTimeout(() => {
         this.messageList.getNode().scrollTop = this.messageList.getNode().scrollHeight;
       });
     }) as EventListener);
 
-    this.updateUsersList(); /*
-    setTimeout(() => {
-      console.log(this.messages);
-    }, 1000); */
+    this.updateUsersList();
   }
 
   private async sendMessageTo() {
@@ -132,12 +144,20 @@ export default class ChatPage extends BaseComponent {
   }
 
   private filterUsers(txt: string) {
+    const name = loadUser()?.login;
     this.usersList.destroyChildren();
     this.usersList.appendChildren(
       this.users
         .filter((el) => txt === '' || (txt !== '' && el.login.match(txt)))
         .map((el) => {
           const btn = button(style.elem, `${el.login}`, () => this.updateMessageList(el));
+          const unreadMsgs = (this.messages[`${el.login}`] as Array<Message>).filter(
+            (mes) => mes.from !== name && !mes.status?.isReaded,
+          ).length;
+          if (unreadMsgs > 0) {
+            btn.addClass(style.unread);
+            btn.getNode().dataset.unread = unreadMsgs.toString();
+          }
           if (el.isLogined) btn.addClass(style.active);
           return btn;
         }),

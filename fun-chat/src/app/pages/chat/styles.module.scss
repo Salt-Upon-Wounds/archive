@@ -46,6 +46,17 @@
             transform: scale(2.5);
             filter: invert(15%) sepia(96%) saturate(6588%) hue-rotate(5deg) brightness(95%) contrast(118%);
           }
+          &.unread {
+            &:after {
+              content: attr(data-unread);
+              color: yellow;
+              border: 1px solid yellow;
+              border-radius: 50%;
+              width: 20px;
+              height: 20px;
+              margin-left: auto;
+            }
+          }
           &.active {
             &:before {
               filter: invert(63%) sepia(50%) saturate(5156%) hue-rotate(84deg) brightness(118%) contrast(122%);
