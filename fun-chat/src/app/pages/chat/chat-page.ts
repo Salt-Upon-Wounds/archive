@@ -25,6 +25,9 @@ export default class ChatPage extends BaseComponent {
 
     const topRow = div({ className: style.top }, targetUser, targetUserStatus);
     const sendBtn = button(style.send, 'Send', () => this.sendMessageTo());
+    messageInput.getNode().addEventListener('keyup', (e: Event) => {
+      if ((e as KeyboardEvent).key === 'Enter') this.sendMessageTo();
+    });
     const bottomRow = div({ className: style.bottom }, messageInput, sendBtn);
     const messagesDiv = div({ className: style.messages }, topRow, messageList, bottomRow);
     const usersDiv = div({ className: style.users }, userInput, this.usersList);
