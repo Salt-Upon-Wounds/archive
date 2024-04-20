@@ -138,8 +138,24 @@ export default class ChatPage extends BaseComponent {
         }
       }
       this.messageList.children.forEach((el) => {
-        if (el instanceof MessageBox && (el as MessageBox).id === e.detail.id) {
-          (el as MessageBox).destroy();
+        let box: MessageBox;
+        if (el instanceof MessageBox) {
+          box = el as MessageBox;
+          if (box.id === e.detail.id) {
+            const { status } = el as MessageBox;
+            if (status && !status.isReaded) {
+              const target = usersList.children.filter(
+                (user) => user.getNode().textContent === box.messageFull.from,
+              )[0];
+              if (target) {
+                target.getNode().dataset.unread = (Number(target.getNode().dataset.unread) - 1).toString();
+                if (!Number(target.getNode().dataset.unread)) {
+                  target.removeClass(style.unread);
+                }
+              }
+            }
+            box.destroy();
+          }
         }
       });
     }) as EventListener);

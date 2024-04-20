@@ -41,6 +41,14 @@ export default class MessageBox extends BaseComponent {
     return this.message.id;
   }
 
+  public get status() {
+    return this.message.status;
+  }
+
+  public get messageFull() {
+    return this.message;
+  }
+
   public edit(txt: string) {
     this.message.text = txt;
     this.textDiv.getNode().textContent = txt;
