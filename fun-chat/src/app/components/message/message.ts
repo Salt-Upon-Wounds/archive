@@ -34,6 +34,7 @@ export default class MessageBox extends BaseComponent {
 
     const bottomText = p(style.text, `${self ? 'отправлено' : ''}`);
     const bottomRow = div({ className: style.row }, bottomText, date);
+
     this.appendChildren([topRow, this.textDiv, bottomRow]);
   }
 
@@ -47,6 +48,10 @@ export default class MessageBox extends BaseComponent {
 
   public get messageFull() {
     return this.message;
+  }
+
+  public lineOn() {
+    this.getNode().before(div({ className: style.line, txt: 'New messages' }).getNode());
   }
 
   public edit(txt: string) {

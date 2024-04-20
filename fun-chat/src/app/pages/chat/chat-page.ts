@@ -195,12 +195,20 @@ export default class ChatPage extends BaseComponent {
 
   private async updateMessageList(targetUser: User) {
     const name = loadUser()?.login ?? '';
+    let firstUnreadFlag = true;
     this.messageList.destroyChildren();
     if (this.messages[`${targetUser.login}`] instanceof Array) {
       this.messageList.appendChildren(
         (this.messages[`${targetUser.login}`] as Array<Message>).map((el) => new MessageBox(el.to !== name, el)),
       );
     }
+    this.messageList.children.forEach((el) => {
+      const mes = el as MessageBox;
+      if (firstUnreadFlag && mes.messageFull.from !== name && !mes.status?.isReaded) {
+        mes.lineOn();
+        firstUnreadFlag = false;
+      }
+    });
     setTimeout(() => {
       this.messageList.getNode().scrollTop = this.messageList.getNode().scrollHeight;
     });
