@@ -32,7 +32,10 @@ export default class Login extends BaseComponent {
     const btns = div({ className: style.buttonsWrapper }, info, ok);
     const hintbox = div(
       { className: `${style.hintbox} ${style.hide}` },
-      p(style.text, 'You can set a port value in case of using a custom port for a server. Default value is 4000'),
+      p(
+        style.text,
+        `You can set a port value in case of using a custom port for a server. Default value is ${import.meta.env.VITE_port}`,
+      ),
     );
 
     hint.getNode().addEventListener('mousemove', (e: MouseEvent) => {

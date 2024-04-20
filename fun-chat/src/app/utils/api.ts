@@ -8,13 +8,14 @@ export type User = {
 export type Message = {
   id?: string;
   from?: string;
-  to: string;
-  text: string;
+  to?: string;
+  text?: string;
   datetime?: number;
   status?: {
-    isDelivered: boolean;
-    isReaded: boolean;
-    isEdited: boolean;
+    isDelivered?: boolean;
+    isReaded?: boolean;
+    isEdited?: boolean;
+    isDeleted?: boolean;
   };
 };
 export type ServerResponse = {
@@ -63,6 +64,14 @@ export default class Api {
           window.dispatchEvent(new CustomEvent<Message>('MSG_SEND_EVENT', { detail: message.payload!.message }));
         } else if (message.type === 'MSG_FROM_USER') {
           window.dispatchEvent(new CustomEvent<ServerResponse>('MSG_FROM_USER_EVENT', { detail: message }));
+        } else if (message.type === 'MSG_DELETE') {
+          window.dispatchEvent(new CustomEvent<Message>('MSG_DELETE_EVENT', { detail: message.payload!.message }));
+        } else if (message.type === 'MSG_EDIT') {
+          window.dispatchEvent(new CustomEvent<Message>('MSG_EDIT_EVENT', { detail: message.payload!.message }));
+        } else if (message.type === 'MSG_READ') {
+          window.dispatchEvent(new CustomEvent<Message>('MSG_READ_EVENT', { detail: message.payload!.message }));
+        } else if (message.type === 'MSG_DELIVER') {
+          window.dispatchEvent(new CustomEvent<Message>('MSG_DELIVER_EVENT', { detail: message.payload!.message }));
         }
       });
     }
@@ -75,6 +84,36 @@ export default class Api {
 
   public static isLogged() {
     return Api.isLoggedFlag;
+  }
+
+  public async readMessage(id: string) {
+    return this.send(
+      JSON.stringify({
+        id,
+        type: 'MSG_READ',
+        payload: { message: { id } },
+      }),
+    );
+  }
+
+  public async editMessage(id: string, text: string) {
+    return this.send(
+      JSON.stringify({
+        id,
+        type: 'MSG_EDIT',
+        payload: { message: { id, text } },
+      }),
+    );
+  }
+
+  public async deleteMessage(id: string) {
+    return this.send(
+      JSON.stringify({
+        id,
+        type: 'MSG_DELETE',
+        payload: { message: { id } },
+      }),
+    );
   }
 
   public async fetchMessageHistory(targetUser: string, id: string) {

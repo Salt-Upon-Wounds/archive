@@ -11,6 +11,8 @@ import style from './styles.module.scss';
 export default class ChatPage extends BaseComponent {
   private dialogTarget = '';
 
+  private editId = '';
+
   constructor(
     private users: User[] = [],
     private messages: { [key: string]: Message[] | string } = {},
@@ -19,10 +21,10 @@ export default class ChatPage extends BaseComponent {
     private messageInput = input(style.input, { type: 'text', placeholder: 'Message' }),
     private targetUser = p(style.name, ''),
     private targetUserStatus = p(style.status, ''),
-    private userInput = input(style.search, { type: 'text', placeholder: 'Search...' }),
   ) {
     super({ className: style.chat });
 
+    const userInput = input(style.search, { type: 'text', placeholder: 'Search...' });
     const topRow = div({ className: style.top }, targetUser, targetUserStatus);
     const sendBtn = button(style.send, 'Send', () => this.sendMessageTo());
     messageInput.getNode().addEventListener('keyup', (e: Event) => {
@@ -112,18 +114,46 @@ export default class ChatPage extends BaseComponent {
     }) as EventListener);
 
     window.addEventListener('DELETE_CLICK_EVENT', ((e: CustomEvent<Message>) => {
-      console.log(e.detail);
+      if (e.detail.id) {
+        Api.getInstance().deleteMessage(e.detail.id);
+        if (e.detail.id === this.editId) this.editId = '';
+      }
     }) as EventListener);
 
     window.addEventListener('EDIT_CLICK_EVENT', ((e: CustomEvent<Message>) => {
-      console.log(e.detail);
+      this.editId = e.detail.id ?? '';
+      this.messageInput.getNode().value = e.detail.text!;
+    }) as EventListener);
+
+    window.addEventListener('MSG_DELETE_EVENT', ((e: CustomEvent<Message>) => {
+      for (const key of Object.keys(this.messages)) {
+        for (let i = 0; i < this.messages[`${key}`].length; i += 1) {
+          if (
+            typeof this.messages[`${key}`] === 'object' &&
+            (this.messages[`${key}`][i] as Message).id === e.detail.id
+          ) {
+            (this.messages[`${key}`] as Array<Message>).splice(i, 1);
+            break;
+          }
+        }
+      }
+      this.messageList.children.forEach((el) => {
+        if (el instanceof MessageBox && (el as MessageBox).id === e.detail.id) {
+          (el as MessageBox).destroy();
+        }
+      });
     }) as EventListener);
 
     this.updateUsersList();
   }
 
   private async sendMessageTo() {
-    Api.getInstance().sendMessageTo(this.dialogTarget, this.messageInput.getNode().value);
+    if (this.editId !== '') {
+      Api.getInstance().editMessage(this.editId, this.messageInput.getNode().value);
+      this.editId = '';
+    } else {
+      Api.getInstance().sendMessageTo(this.dialogTarget, this.messageInput.getNode().value);
+    }
     this.messageInput.getNode().value = '';
   }
 

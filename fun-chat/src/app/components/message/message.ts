@@ -26,7 +26,7 @@ export default class MessageBox extends BaseComponent {
     editBtn.getNode().addEventListener('click', () => {
       window.dispatchEvent(new CustomEvent<Message>('EDIT_CLICK_EVENT', { detail: this.message }));
     });
-    const topRow = div({ className: style.row }, name, div({}, deleteBtn, editBtn));
+    const topRow = div({ className: style.row }, name, self ? div({}, deleteBtn, editBtn) : div({}));
 
     const center = div({ className: style.center, txt: message.text });
 
