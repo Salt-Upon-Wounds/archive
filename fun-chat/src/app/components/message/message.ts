@@ -1,30 +1,41 @@
+import deleteIcon from '../../assets/delete.svg';
+import editIcon from '../../assets/edit.svg';
 import type { Message } from '../../utils/api';
 import { BaseComponent } from '../base-component';
-import { div, p } from '../tags';
+import { div, img, p } from '../tags';
 import style from './styles.module.scss';
 
 export default class MessageBox extends BaseComponent {
-  #id: string;
+  private message: Message;
 
   constructor(self: boolean, message: Message) {
     super({ className: style.box });
     if (self) this.addClass(style.self);
 
-    this.#id = message.id ?? '';
+    this.message = message;
     const name = p(style.text, message.from ?? '???');
     const date = p(
       style.text,
       `${new Date(message.datetime!).toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', hour12: false, minute: '2-digit', second: '2-digit' })}`,
     );
-    const topRow = div({ className: style.top }, name, date);
+    const deleteBtn = img(style.icon, deleteIcon, 'delete');
+    const editBtn = img(style.icon, editIcon, 'edit');
+    deleteBtn.getNode().addEventListener('click', () => {
+      window.dispatchEvent(new CustomEvent<Message>('DELETE_CLICK_EVENT', { detail: this.message }));
+    });
+    editBtn.getNode().addEventListener('click', () => {
+      window.dispatchEvent(new CustomEvent<Message>('EDIT_CLICK_EVENT', { detail: this.message }));
+    });
+    const topRow = div({ className: style.row }, name, div({}, deleteBtn, editBtn));
 
     const center = div({ className: style.center, txt: message.text });
 
-    const bottomRow = div({ className: style.bottom, txt: `${self ? 'отправлено' : ''}` });
+    const bottomText = p(style.text, `${self ? 'отправлено' : ''}`);
+    const bottomRow = div({ className: style.row }, bottomText, date);
     this.appendChildren([topRow, center, bottomRow]);
   }
 
   public get id() {
-    return this.#id;
+    return this.message.id;
   }
 }

@@ -6,31 +6,30 @@
   color: black;
   display: flex;
   flex-direction: column;
-  gap: 5px;
   margin-left: 1%;
   margin-bottom: 10px;
   &.self {
-    cursor: pointer;
     margin-left: auto;
     margin-right: 1%;
   }
-  .top {
+  .row {
     display: flex;
-    justify-content: space-around;
     align-items: center;
+    box-sizing: border-box;
+    padding: 2px 5px 2px 5px;
+    justify-content: space-between;
     .text {
       font-size: 0.5em;
       margin: 0;
+    }
+    .icon {
+      width: 10px;
+      cursor: pointer;
     }
   }
   .center {
     background-color: white;
     text-align: left;
     margin: 0 5px 0 5px;
-  }
-  .bottom {
-    font-size: 0.5em;
-    margin-left: auto;
-    margin-right: 20px;
   }
 }

@@ -111,6 +111,14 @@ export default class ChatPage extends BaseComponent {
       });
     }) as EventListener);
 
+    window.addEventListener('DELETE_CLICK_EVENT', ((e: CustomEvent<Message>) => {
+      console.log(e.detail);
+    }) as EventListener);
+
+    window.addEventListener('EDIT_CLICK_EVENT', ((e: CustomEvent<Message>) => {
+      console.log(e.detail);
+    }) as EventListener);
+
     this.updateUsersList();
   }
 
