@@ -8,6 +8,8 @@ import style from './styles.module.scss';
 export default class MessageBox extends BaseComponent {
   private message: Message;
 
+  private textDiv;
+
   constructor(self: boolean, message: Message) {
     super({ className: style.box });
     if (self) this.addClass(style.self);
@@ -28,14 +30,19 @@ export default class MessageBox extends BaseComponent {
     });
     const topRow = div({ className: style.row }, name, self ? div({}, deleteBtn, editBtn) : div({}));
 
-    const center = div({ className: style.center, txt: message.text });
+    this.textDiv = div({ className: style.center, txt: message.text });
 
     const bottomText = p(style.text, `${self ? 'отправлено' : ''}`);
     const bottomRow = div({ className: style.row }, bottomText, date);
-    this.appendChildren([topRow, center, bottomRow]);
+    this.appendChildren([topRow, this.textDiv, bottomRow]);
   }
 
   public get id() {
     return this.message.id;
+  }
+
+  public edit(txt: string) {
+    this.message.text = txt;
+    this.textDiv.getNode().textContent = txt;
   }
 }

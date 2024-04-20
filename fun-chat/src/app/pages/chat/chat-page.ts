@@ -144,10 +144,30 @@ export default class ChatPage extends BaseComponent {
       });
     }) as EventListener);
 
+    window.addEventListener('MSG_EDIT_EVENT', ((e: CustomEvent<Message>) => {
+      for (const key of Object.keys(this.messages)) {
+        for (let i = 0; i < this.messages[`${key}`].length; i += 1) {
+          if (
+            typeof this.messages[`${key}`] === 'object' &&
+            (this.messages[`${key}`][i] as Message).id === e.detail.id
+          ) {
+            (this.messages[`${key}`][i] as Message).text = e.detail.text;
+            break;
+          }
+        }
+      }
+      this.messageList.children.forEach((el) => {
+        if (el instanceof MessageBox && (el as MessageBox).id === e.detail.id) {
+          (el as MessageBox).edit(e.detail.text!);
+        }
+      });
+    }) as EventListener);
+
     this.updateUsersList();
   }
 
   private async sendMessageTo() {
+    if (this.messageInput.getNode().value === '') return;
     if (this.editId !== '') {
       Api.getInstance().editMessage(this.editId, this.messageInput.getNode().value);
       this.editId = '';
