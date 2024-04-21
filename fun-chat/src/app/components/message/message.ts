@@ -41,7 +41,7 @@ export default class MessageBox extends BaseComponent {
 
     this.textDiv = div({ className: style.center, txt: message.text });
 
-    const bottomText = self ? div({}, this.deliveredDiv, this.readDiv, this.editDiv) : div({});
+    const bottomText = self ? div({}, this.deliveredDiv, this.readDiv, this.editDiv) : div({}, this.editDiv);
     const bottomRow = div({ className: style.row }, bottomText, date);
 
     this.appendChildren([topRow, this.textDiv, bottomRow]);

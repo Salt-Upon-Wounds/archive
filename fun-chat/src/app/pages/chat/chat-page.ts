@@ -18,15 +18,17 @@ export default class ChatPage extends BaseComponent {
     private messages: { [key: string]: Message[] | string } = {},
     private usersList = div({ className: style.list }),
     private messageList = div({ className: style.list }),
-    private messageInput = input(style.input, { type: 'text', placeholder: 'Message' }),
+    private messageInput = input(style.input, { type: 'text', placeholder: 'Choose user to enable chat' }),
+    private sendBtn = button(style.send, 'Send', () => this.sendMessageTo()),
     private targetUser = p(style.name, ''),
     private targetUserStatus = p(style.status, ''),
   ) {
     super({ className: style.chat });
 
+    messageInput.addClass(style.hide);
+    sendBtn.addClass(style.hide);
     const userInput = input(style.search, { type: 'text', placeholder: 'Search...' });
     const topRow = div({ className: style.top }, targetUser, targetUserStatus);
-    const sendBtn = button(style.send, 'Send', () => this.sendMessageTo());
     messageInput.getNode().addEventListener('keyup', (e: Event) => {
       if ((e as KeyboardEvent).key === 'Enter') this.sendMessageTo();
     });
@@ -215,6 +217,9 @@ export default class ChatPage extends BaseComponent {
   }
 
   private async updateMessageList(targetUser: User) {
+    this.messageInput.getNode().placeholder = 'Message';
+    this.messageInput.removeClass(style.hide);
+    this.sendBtn.removeClass(style.hide);
     const name = loadUser()?.login ?? '';
     let firstUnreadFlag = true;
     this.messageList.destroyChildren();
