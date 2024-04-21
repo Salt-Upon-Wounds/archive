@@ -13,6 +13,10 @@ export default class ChatPage extends BaseComponent {
 
   private editId = '';
 
+  private scrollTarget: MessageBox | undefined;
+
+  private autoscroll = false;
+
   constructor(
     private users: User[] = [],
     private messages: { [key: string]: Message[] | string } = {},
@@ -30,7 +34,10 @@ export default class ChatPage extends BaseComponent {
     const userInput = input(style.search, { type: 'text', placeholder: 'Search...' });
     const topRow = div({ className: style.top }, targetUser, targetUserStatus);
     messageInput.getNode().addEventListener('keyup', (e: Event) => {
-      if ((e as KeyboardEvent).key === 'Enter') this.sendMessageTo();
+      if ((e as KeyboardEvent).key === 'Enter') {
+        this.readAll();
+        this.sendMessageTo();
+      }
     });
     const bottomRow = div({ className: style.bottom }, messageInput, sendBtn);
     const messagesDiv = div({ className: style.messages }, topRow, messageList, bottomRow);
@@ -111,10 +118,13 @@ export default class ChatPage extends BaseComponent {
           btn.addClass(style.unread);
           btn.getNode().dataset.unread = unreadMsgs.toString();
         }
+        if (unreadMsgs === 1) {
+          const mes = this.messageList.children[this.messageList.children.length - 1] as MessageBox;
+          mes.lineOn();
+          this.scrollTarget = mes;
+        }
       }
-      setTimeout(() => {
-        this.messageList.getNode().scrollTop = this.messageList.getNode().scrollHeight;
-      });
+      this.scrolldown();
     }) as EventListener);
 
     window.addEventListener('DELETE_CLICK_EVENT', ((e: CustomEvent<Message>) => {
@@ -202,7 +212,62 @@ export default class ChatPage extends BaseComponent {
       });
     }) as EventListener);
 
+    window.addEventListener('MSG_READ_EVENT', ((e: CustomEvent<Message>) => {
+      const { id } = e.detail;
+      for (const key of Object.keys(this.messages)) {
+        for (let i = 0; i < this.messages[`${key}`].length; i += 1) {
+          if (typeof this.messages[`${key}`] === 'object' && (this.messages[`${key}`][i] as Message).id === id) {
+            (this.messages[`${key}`][i] as Message).status!.isReaded = e.detail.status!.isReaded;
+            break;
+          }
+        }
+      }
+      this.messageList.children.forEach((el) => {
+        if (el instanceof MessageBox && (el as MessageBox).id === e.detail.id) {
+          (el as MessageBox).lineOff();
+          (el as MessageBox).read();
+        }
+      });
+    }) as EventListener);
+
+    messageList.getNode().addEventListener('scroll', () => {
+      if (!this.autoscroll) this.readAll();
+      this.autoscroll = false;
+    });
+
+    messagesDiv.getNode().addEventListener('click', () => this.readAll());
+
     this.updateUsersList();
+  }
+
+  public readAll() {
+    const name = loadUser()?.login;
+    this.messageList.children.forEach((el) => {
+      if (el instanceof MessageBox && (el as MessageBox).messageFull.from !== name) {
+        Api.getInstance().readMessage((el as MessageBox).id!);
+      }
+    });
+    const target = this.usersList.children.filter(
+      (el) => el.getNode().textContent === this.targetUser.getNode().textContent,
+    );
+    if (target.length > 0) {
+      target[0].removeClass(style.unread);
+      target[0].getNode().dataset.unread = '0';
+      for (const msg of this.messages[`${target[0].getNode().textContent}`] as Message[]) {
+        msg.status!.isReaded = true;
+      }
+    }
+  }
+
+  private scrolldown() {
+    setTimeout(() => {
+      this.autoscroll = true;
+      if (this.scrollTarget) {
+        this.scrollTarget?.getNode().previousElementSibling?.scrollIntoView();
+      } else {
+        this.messageList.getNode().scrollTop = this.messageList.getNode().scrollHeight;
+      }
+    });
   }
 
   private async sendMessageTo() {
@@ -217,6 +282,7 @@ export default class ChatPage extends BaseComponent {
   }
 
   private async updateMessageList(targetUser: User) {
+    this.messageInput.getNode().value = '';
     this.messageInput.getNode().placeholder = 'Message';
     this.messageInput.removeClass(style.hide);
     this.sendBtn.removeClass(style.hide);
@@ -232,12 +298,11 @@ export default class ChatPage extends BaseComponent {
       const mes = el as MessageBox;
       if (firstUnreadFlag && mes.messageFull.from !== name && !mes.status?.isReaded) {
         mes.lineOn();
+        this.scrollTarget = mes;
         firstUnreadFlag = false;
       }
     });
-    setTimeout(() => {
-      this.messageList.getNode().scrollTop = this.messageList.getNode().scrollHeight;
-    });
+    this.scrolldown();
     this.dialogTarget = targetUser.login;
     this.targetUser.getNode().textContent = targetUser.login;
     if (targetUser.isLogined) {
