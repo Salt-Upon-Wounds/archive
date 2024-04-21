@@ -97,6 +97,8 @@ export default class ChatPage extends BaseComponent {
       const target = `${message.to === name ? message.from : message.to}`;
       if (this.messages[`${target}`] instanceof Array) (this.messages[`${target}`] as Array<Message>).push(message);
       else this.messages[`${target}`] = [message];
+      if (!(this.dialogTarget === e.detail.from || this.dialogTarget === e.detail.to)) return;
+
       this.messageList.append(new MessageBox(message.to !== name, message));
       const btn = usersList.children.filter((el) => el.getNode().textContent === message.from)[0];
       if (message.from !== name) {
@@ -175,6 +177,25 @@ export default class ChatPage extends BaseComponent {
       this.messageList.children.forEach((el) => {
         if (el instanceof MessageBox && (el as MessageBox).id === e.detail.id) {
           (el as MessageBox).edit(e.detail.text!);
+        }
+      });
+    }) as EventListener);
+
+    window.addEventListener('MSG_DELIVER_EVENT', ((e: CustomEvent<Message>) => {
+      for (const key of Object.keys(this.messages)) {
+        for (let i = 0; i < this.messages[`${key}`].length; i += 1) {
+          if (
+            typeof this.messages[`${key}`] === 'object' &&
+            (this.messages[`${key}`][i] as Message).id === e.detail.id
+          ) {
+            (this.messages[`${key}`][i] as Message).status!.isDelivered = e.detail.status!.isDelivered;
+            break;
+          }
+        }
+      }
+      this.messageList.children.forEach((el) => {
+        if (el instanceof MessageBox && (el as MessageBox).id === e.detail.id) {
+          (el as MessageBox).deliver();
         }
       });
     }) as EventListener);

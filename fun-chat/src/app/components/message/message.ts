@@ -10,11 +10,20 @@ export default class MessageBox extends BaseComponent {
 
   private textDiv;
 
+  private deliveredDiv;
+
+  private readDiv;
+
+  private editDiv;
+
   constructor(self: boolean, message: Message) {
     super({ className: style.box });
     if (self) this.addClass(style.self);
 
     this.message = message;
+    this.deliveredDiv = p(`${style.text} ${this.message.status?.isDelivered ? '' : style.hide}`, 'delivered');
+    this.readDiv = p(`${style.text} ${this.message.status?.isReaded ? '' : style.hide}`, 'read');
+    this.editDiv = p(`${style.text} ${this.message.status?.isEdited ? '' : style.hide}`, 'edited');
     const name = p(style.text, message.from ?? '???');
     const date = p(
       style.text,
@@ -32,7 +41,7 @@ export default class MessageBox extends BaseComponent {
 
     this.textDiv = div({ className: style.center, txt: message.text });
 
-    const bottomText = p(style.text, `${self ? 'отправлено' : ''}`);
+    const bottomText = self ? div({}, this.deliveredDiv, this.readDiv, this.editDiv) : div({});
     const bottomRow = div({ className: style.row }, bottomText, date);
 
     this.appendChildren([topRow, this.textDiv, bottomRow]);
@@ -54,8 +63,31 @@ export default class MessageBox extends BaseComponent {
     this.getNode().before(div({ className: style.line, txt: 'New messages' }).getNode());
   }
 
+  public lineOff() {
+    const prev = this.getNode().previousSibling;
+    if (prev && (prev as HTMLElement).classList.contains(style.line)) {
+      prev.remove();
+    }
+  }
+
+  public override destroy(): void {
+    this.lineOff();
+    super.destroy();
+  }
+
   public edit(txt: string) {
     this.message.text = txt;
     this.textDiv.getNode().textContent = txt;
+    this.editDiv.removeClass(style.hide);
+  }
+
+  public deliver() {
+    this.message.status!.isDeleted = true;
+    this.deliveredDiv.removeClass(style.hide);
+  }
+
+  public read() {
+    this.message.status!.isReaded = true;
+    this.readDiv.removeClass(style.hide);
   }
 }
