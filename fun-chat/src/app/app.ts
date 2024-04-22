@@ -1,4 +1,5 @@
 import { BaseComponent } from './components/base-component';
+import { div } from './components/tags';
 import AboutPage from './pages/about/about-page';
 import ChatPage from './pages/chat/chat-page';
 import ErrorPage from './pages/error/error-page';
@@ -27,7 +28,9 @@ class App {
       new AboutPage(window.location.pathname.replace(`${import.meta.env.VITE_urlprefix}`, '')),
   };
 
-  private pageWrapper: BaseComponent = new BaseComponent({ className: 'main' });
+  private pageWrapper = new BaseComponent({ className: 'main' });
+
+  private spinner = div({ className: 'spinner' });
 
   private root: HTMLElement;
 
@@ -36,10 +39,12 @@ class App {
     appdiv.setAttribute('id', 'app');
     document.querySelector('body')!.prepend(appdiv);
     this.root = document.querySelector<HTMLDivElement>('#app')!;
+    window.addEventListener('CHAT_SPINNER_ON', () => this.spinner.addClass('active'));
+    window.addEventListener('CHAT_SPINNER_OFF', () => this.spinner.removeClass('active'));
   }
 
   public start(): void {
-    this.root.append(this.pageWrapper.getNode());
+    this.root.append(this.pageWrapper.getNode(), this.spinner.getNode());
   }
 
   public route(path: string) {

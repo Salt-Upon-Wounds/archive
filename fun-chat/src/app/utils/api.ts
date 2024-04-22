@@ -53,8 +53,12 @@ export default class Api {
     Api.port = p;
     if (!Api.ws || Api.ws.readyState === WebSocket.CLOSED) {
       Api.ws = new WebSocket(`ws://${envhost}:${p}`);
+      Api.ws.addEventListener('close', () => {
+        window.dispatchEvent(new Event('SOCKET_CLOSE'));
+      });
       Api.ws.addEventListener('open', () => {
         Api.connectionResolvers.forEach((r) => r.resolve());
+        window.dispatchEvent(new Event('SOCKET_OPEN'));
       });
       Api.ws.addEventListener('message', (event) => {
         const message = JSON.parse(event.data) as ServerResponse;

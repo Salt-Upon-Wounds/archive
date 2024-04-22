@@ -27,3 +27,40 @@
   min-height: calc(100vh - 30px);
   height: 1px;
 }
+
+.spinner {
+  display: none;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 3em;
+  color: rgb(178, 206, 24);
+  background-color: rgba(100, 100, 100, 0.5);
+}
+
+.spinner.active {
+  display: flex;
+}
+
+.spinner::before {
+  content: 'Loading';
+  animation-name: spin;
+  animation-duration: 5000ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes spin {
+  from {
+      transform:rotate(0deg);
+  }
+  to {
+      transform:rotate(360deg);
+  }
+}

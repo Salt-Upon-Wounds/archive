@@ -101,6 +101,9 @@ export default class ChatPage extends BaseComponent {
     }) as EventListener);
 
     window.addEventListener('MSG_SEND_EVENT', ((e: CustomEvent<Message>) => {
+      if (messageList.children.length === 1 && !(messageList.children[0] instanceof MessageBox)) {
+        messageList.children[0].destroy();
+      }
       const message = e.detail;
       const name = loadUser()?.login ?? '';
       const target = `${message.to === name ? message.from : message.to}`;
@@ -237,6 +240,14 @@ export default class ChatPage extends BaseComponent {
 
     messagesDiv.getNode().addEventListener('click', () => this.readAll());
 
+    window.addEventListener('SOCKET_OPEN', () => {
+      window.dispatchEvent(new Event('CHAT_SPINNER_OFF'));
+    });
+
+    window.addEventListener('SOCKET_CLOSE', () => {
+      window.dispatchEvent(new Event('CHAT_SPINNER_ON'));
+    });
+
     this.updateUsersList();
   }
 
@@ -312,6 +323,8 @@ export default class ChatPage extends BaseComponent {
       this.targetUserStatus.removeClass(style.active);
       this.targetUserStatus.getNode().textContent = 'offline';
     }
+    if (this.messageList.children.length === 0) this.messageList.append(div({ className: style.greetings }));
+    else this.messageList.children[0].getNode().style.marginTop = 'auto';
   }
 
   private async updateUsersList() {

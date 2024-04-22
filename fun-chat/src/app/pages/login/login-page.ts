@@ -53,6 +53,15 @@ export default class Login extends BaseComponent {
       go('chat');
     }) as EventListener);
 
+    window.addEventListener('SOCKET_OPEN', () => {
+      window.dispatchEvent(new Event('CHAT_SPINNER_OFF'));
+    });
+
+    window.addEventListener('SOCKET_CLOSE', () => {
+      window.dispatchEvent(new Event('CHAT_SPINNER_OFF'));
+      this.error('failed to connect. Please check the port');
+    });
+
     this.appendChildren([title, name, password, portRow, errormsg, btns, hintbox]);
   }
 
@@ -62,6 +71,8 @@ export default class Login extends BaseComponent {
   }
 
   private submit() {
+    window.dispatchEvent(new Event('CHAT_SPINNER_ON'));
+    this.errormsg.addClass(style.hide);
     const login = this.name.getNode().value;
     const password = this.password.getNode().value;
     const port = this.port.getNode().value;
