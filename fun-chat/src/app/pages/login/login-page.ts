@@ -50,11 +50,11 @@ export default class Login extends BaseComponent {
 
     window.addEventListener('USER_LOGIN_EVENT', ((e: CustomEvent<User>) => {
       saveUser(e.detail.login, this.password.getNode().value, this.port.getNode().value);
-      go('chat');
     }) as EventListener);
 
     window.addEventListener('SOCKET_OPEN', () => {
       window.dispatchEvent(new Event('CHAT_SPINNER_OFF'));
+      go('chat');
     });
 
     window.addEventListener('SOCKET_CLOSE', () => {

@@ -22,7 +22,7 @@ export default class ChatPage extends BaseComponent {
     private messages: { [key: string]: Message[] | string } = {},
     private usersList = div({ className: style.list }),
     private messageList = div({ className: style.list }),
-    private messageInput = input(style.input, { type: 'text', placeholder: 'Choose user to enable chat' }),
+    private messageInput = input(style.input, { type: 'text', placeholder: 'Choose user to enable chat', size: 1 }),
     private sendBtn = button(style.send, 'Send', () => this.sendMessageTo()),
     private targetUser = p(style.name, ''),
     private targetUserStatus = p(style.status, ''),
@@ -31,7 +31,7 @@ export default class ChatPage extends BaseComponent {
 
     messageInput.addClass(style.hide);
     sendBtn.addClass(style.hide);
-    const userInput = input(style.search, { type: 'text', placeholder: 'Search...' });
+    const userInput = input(style.search, { type: 'text', placeholder: 'Search...', size: 1 });
     const topRow = div({ className: style.top }, targetUser, targetUserStatus);
     messageInput.getNode().addEventListener('keyup', (e: Event) => {
       if ((e as KeyboardEvent).key === 'Enter') {
@@ -101,8 +101,8 @@ export default class ChatPage extends BaseComponent {
     }) as EventListener);
 
     window.addEventListener('MSG_SEND_EVENT', ((e: CustomEvent<Message>) => {
-      if (messageList.children.length === 1 && !(messageList.children[0] instanceof MessageBox)) {
-        messageList.children[0].destroy();
+      if (this.messageList.children.length === 1 && !(this.messageList.children[0] instanceof MessageBox)) {
+        this.messageList.children[0].destroy();
       }
       const message = e.detail;
       const name = loadUser()?.login ?? '';
@@ -126,6 +126,9 @@ export default class ChatPage extends BaseComponent {
           mes.lineOn();
           this.scrollTarget = mes;
         }
+      }
+      if (this.messageList.children.length === 2) {
+        (this.messageList.getNode().firstChild as HTMLElement).style.marginTop = 'auto';
       }
       this.scrolldown();
     }) as EventListener);
@@ -324,7 +327,7 @@ export default class ChatPage extends BaseComponent {
       this.targetUserStatus.getNode().textContent = 'offline';
     }
     if (this.messageList.children.length === 0) this.messageList.append(div({ className: style.greetings }));
-    else this.messageList.children[0].getNode().style.marginTop = 'auto';
+    else (this.messageList.getNode().firstChild as HTMLElement).style.marginTop = 'auto';
   }
 
   private async updateUsersList() {

@@ -32,6 +32,9 @@
     background-color: white;
     text-align: left;
     margin: 0 5px 0 5px;
+    word-break: break-all;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 }
 

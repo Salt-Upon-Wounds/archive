@@ -12,7 +12,6 @@
     .users {
       display: flex;
       flex-direction: column;
-      flex-grow: 0.5;
       .search {
         width: 100%;
         box-sizing: border-box;
@@ -69,7 +68,7 @@
     .messages {
       display: flex;
       flex-direction: column;
-      flex-grow: 10;
+      flex-grow: 1;
       .top {
         display: flex;
         justify-content: space-around;
@@ -103,7 +102,7 @@
           flex-grow: 1;
         }
         .send {
-
+          cursor: pointer;
         }
       }
     }

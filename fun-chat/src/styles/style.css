@@ -64,3 +64,13 @@
       transform:rotate(360deg);
   }
 }
+
+button {
+  border: 2px solid gray;
+  border-radius: 5px;
+  background-color: rgb(206, 148, 24);
+  transition: 1s background-color;
+}
+button:hover {
+  background-color: rgb(158, 206, 24);
+}
