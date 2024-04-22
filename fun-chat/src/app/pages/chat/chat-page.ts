@@ -31,7 +31,7 @@ export default class ChatPage extends BaseComponent {
 
     messageInput.addClass(style.hide);
     sendBtn.addClass(style.hide);
-    const userInput = input(style.search, { type: 'text', placeholder: 'Search...', size: 1 });
+    const userInput = input(style.search, { type: 'text', placeholder: 'Search...', size: 3 });
     const topRow = div({ className: style.top }, targetUser, targetUserStatus);
     messageInput.getNode().addEventListener('keyup', (e: Event) => {
       if ((e as KeyboardEvent).key === 'Enter') {
@@ -103,6 +103,7 @@ export default class ChatPage extends BaseComponent {
     window.addEventListener('MSG_SEND_EVENT', ((e: CustomEvent<Message>) => {
       if (this.messageList.children.length === 1 && !(this.messageList.children[0] instanceof MessageBox)) {
         this.messageList.children[0].destroy();
+        this.messageList.children.pop();
       }
       const message = e.detail;
       const name = loadUser()?.login ?? '';
@@ -127,7 +128,7 @@ export default class ChatPage extends BaseComponent {
           this.scrollTarget = mes;
         }
       }
-      if (this.messageList.children.length === 2) {
+      if (this.messageList.children.length === 1) {
         (this.messageList.getNode().firstChild as HTMLElement).style.marginTop = 'auto';
       }
       this.scrolldown();
@@ -174,10 +175,13 @@ export default class ChatPage extends BaseComponent {
                 }
               }
             }
+            this.messageList.children.splice(this.messageList.children.indexOf(box), 1);
             box.destroy();
           }
         }
       });
+      if (this.messageList.children.length === 0) this.messageList.append(div({ className: style.greetings }));
+      else (this.messageList.getNode().firstChild as HTMLElement).style.marginTop = 'auto';
     }) as EventListener);
 
     window.addEventListener('MSG_EDIT_EVENT', ((e: CustomEvent<Message>) => {
@@ -230,6 +234,11 @@ export default class ChatPage extends BaseComponent {
       }
       this.messageList.children.forEach((el) => {
         if (el instanceof MessageBox && (el as MessageBox).id === e.detail.id) {
+          const margin = (el.getNode().previousSibling as HTMLElement).style.marginTop;
+          if (margin && margin === 'auto') {
+            const node = el.getNode();
+            node.style.marginTop = 'auto';
+          }
           (el as MessageBox).lineOff();
           (el as MessageBox).read();
         }

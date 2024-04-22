@@ -43,6 +43,9 @@ export default class Login extends BaseComponent {
     password.getNode().addEventListener('keyup', (e: Event) => {
       if ((e as KeyboardEvent).key === 'Enter') this.submit();
     });
+    port.getNode().addEventListener('keyup', (e: Event) => {
+      if ((e as KeyboardEvent).key === 'Enter') this.submit();
+    });
 
     window.addEventListener('ERROR_EVENT', ((e: CustomEvent<string>) => {
       this.error(e.detail);
@@ -50,11 +53,11 @@ export default class Login extends BaseComponent {
 
     window.addEventListener('USER_LOGIN_EVENT', ((e: CustomEvent<User>) => {
       saveUser(e.detail.login, this.password.getNode().value, this.port.getNode().value);
+      go('chat');
     }) as EventListener);
 
     window.addEventListener('SOCKET_OPEN', () => {
       window.dispatchEvent(new Event('CHAT_SPINNER_OFF'));
-      go('chat');
     });
 
     window.addEventListener('SOCKET_CLOSE', () => {
