@@ -1,3 +1,5 @@
+import { loadUser } from './storage';
+
 const envhost = import.meta.env.VITE_target;
 const envport = import.meta.env.VITE_port;
 
@@ -26,6 +28,7 @@ export type ServerResponse = {
     users?: User[];
     message?: Message;
     messages?: Message[];
+    error?: string;
   } | null;
 };
 export default class Api {
@@ -44,7 +47,8 @@ export default class Api {
     if (port && parseInt(port, 10) > -1) {
       p = port;
     } else {
-      p = envport;
+      const sessionport = loadUser()?.port ?? envport;
+      p = sessionport;
     }
     Api.port = p;
     if (!Api.ws || Api.ws.readyState === WebSocket.CLOSED) {
@@ -72,6 +76,10 @@ export default class Api {
           window.dispatchEvent(new CustomEvent<Message>('MSG_READ_EVENT', { detail: message.payload!.message }));
         } else if (message.type === 'MSG_DELIVER') {
           window.dispatchEvent(new CustomEvent<Message>('MSG_DELIVER_EVENT', { detail: message.payload!.message }));
+        } else if (message.type === 'ERROR') {
+          window.dispatchEvent(new CustomEvent<string>('ERROR_EVENT', { detail: message.payload!.error }));
+        } else if (message.type === 'USER_LOGIN') {
+          window.dispatchEvent(new CustomEvent<User>('USER_LOGIN_EVENT', { detail: message.payload!.user }));
         }
       });
     }

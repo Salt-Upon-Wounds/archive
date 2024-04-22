@@ -1,26 +1,17 @@
 import { BaseComponent } from '../../components/base-component';
 import { button, div, h1, input, p } from '../../components/tags';
+import type { User } from '../../utils/api';
 import Api from '../../utils/api';
 import { go } from '../../utils/routing';
 import { saveUser } from '../../utils/storage';
 import style from './styles.module.scss';
-/*
-TODO:
-(+10) The authentication form validates the entered data based on at least two different criteria.
-Such as, for example, case sensitivity and the use of special characters. The selection of validation
-criteria and their display options is at the student's discretion and must be evaluated solely based on
-the quantity and functionality.
-(+5) The user is unable to submit an authentication request with data that has not passed validation.
-(+5) In case of an authentication error (based on the server response), a message indicating the
-corresponding error sent by the server must be displayed.
-(+5) User authentication is possible both by clicking the button with the mouse or by pressing the
-"Enter" key without the need to focus on the button.
-*/
+
 export default class Login extends BaseComponent {
   constructor(
     private name = input(style.textInput, { type: 'text', placeholder: 'name' }),
     private password = input(style.textInput, { type: 'password', placeholder: 'password' }),
     private port = input(style.textInput, { type: 'text', placeholder: `${import.meta.env.VITE_port}` }),
+    private errormsg = p(`${style.error} ${style.hide}`, ''),
   ) {
     super({ className: style.login });
 
@@ -46,8 +37,28 @@ export default class Login extends BaseComponent {
     hint.getNode().addEventListener('mouseleave', () => {
       hintbox.addClass(style.hide);
     });
+    name.getNode().addEventListener('keyup', (e: Event) => {
+      if ((e as KeyboardEvent).key === 'Enter') this.submit();
+    });
+    password.getNode().addEventListener('keyup', (e: Event) => {
+      if ((e as KeyboardEvent).key === 'Enter') this.submit();
+    });
 
-    this.appendChildren([title, name, password, portRow, btns, hintbox]);
+    window.addEventListener('ERROR_EVENT', ((e: CustomEvent<string>) => {
+      this.error(e.detail);
+    }) as EventListener);
+
+    window.addEventListener('USER_LOGIN_EVENT', ((e: CustomEvent<User>) => {
+      saveUser(e.detail.login, this.password.getNode().value, this.port.getNode().value);
+      go('chat');
+    }) as EventListener);
+
+    this.appendChildren([title, name, password, portRow, errormsg, btns, hintbox]);
+  }
+
+  private error(txt: string): void {
+    this.errormsg.removeClass(style.hide);
+    this.errormsg.getNode().textContent = txt;
   }
 
   private submit() {
@@ -55,10 +66,26 @@ export default class Login extends BaseComponent {
     const password = this.password.getNode().value;
     const port = this.port.getNode().value;
 
-    saveUser(login, password, port);
+    if (login.length > 12) {
+      this.error('login length must be < 12 characters');
+      return;
+    }
+    if (!/^(?=.*[a-z])(?=.*[A-Z])[A-Za-z\d]{6,}$/.test(login)) {
+      this.error('login must be minimum 6 characters, at least one letter in uppercase and one letter in lowercase');
+      return;
+    }
+    if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/.test(password)) {
+      this.error('password must be minimum 6 characters, at least one letter and one number');
+      return;
+    }
+    if (port) {
+      const val = Number(port);
+      if (!(Number.isInteger(val) && val >= 0 && val <= 65535)) {
+        this.error('port value must be empty or integer from 0 to 65535');
+        return;
+      }
+    }
 
-    Api.getInstance(port)
-      .login(login, password)
-      .then(() => go('chat'));
+    Api.getInstance(port).login(login, password);
   }
 }

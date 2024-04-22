@@ -62,3 +62,14 @@
     text-align: center;
   }
 }
+
+.error {
+  &.hide {
+    display: none;
+  }
+  text-align: center;
+  color: red;
+  font-weight: 500;
+  margin: 0;
+  font-size: 0.75em;
+}
