@@ -29,6 +29,7 @@ export default class ChatPage extends BaseComponent {
   ) {
     super({ className: style.chat });
 
+    window.dispatchEvent(new Event('CHAT_SPINNER_OFF'));
     messageInput.addClass(style.hide);
     sendBtn.addClass(style.hide);
     const userInput = input(style.search, { type: 'text', placeholder: 'Search...', size: 3 });
@@ -110,9 +111,7 @@ export default class ChatPage extends BaseComponent {
       const target = `${message.to === name ? message.from : message.to}`;
       if (this.messages[`${target}`] instanceof Array) (this.messages[`${target}`] as Array<Message>).push(message);
       else this.messages[`${target}`] = [message];
-      if (!(this.dialogTarget === e.detail.from || this.dialogTarget === e.detail.to)) return;
 
-      this.messageList.append(new MessageBox(message.to !== name, message));
       const btn = usersList.children.filter((el) => el.getNode().textContent === message.from)[0];
       if (message.from !== name) {
         const unreadMsgs = (this.messages[`${message.from}`] as Array<Message>).filter(
@@ -128,6 +127,10 @@ export default class ChatPage extends BaseComponent {
           this.scrollTarget = mes;
         }
       }
+
+      if (!(this.dialogTarget === e.detail.from || this.dialogTarget === e.detail.to)) return;
+
+      this.messageList.append(new MessageBox(message.to !== name, message));
       if (this.messageList.children.length === 1) {
         (this.messageList.getNode().firstChild as HTMLElement).style.marginTop = 'auto';
       }
@@ -234,7 +237,7 @@ export default class ChatPage extends BaseComponent {
       }
       this.messageList.children.forEach((el) => {
         if (el instanceof MessageBox && (el as MessageBox).id === e.detail.id) {
-          const margin = (el.getNode().previousSibling as HTMLElement).style.marginTop;
+          const margin = (el.getNode().previousSibling as HTMLElement)?.style.marginTop;
           if (margin && margin === 'auto') {
             const node = el.getNode();
             node.style.marginTop = 'auto';
