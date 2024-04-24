@@ -74,7 +74,6 @@ export default class Login extends BaseComponent {
   }
 
   private submit() {
-    window.dispatchEvent(new Event('CHAT_SPINNER_ON'));
     this.errormsg.addClass(style.hide);
     const login = this.name.getNode().value;
     const password = this.password.getNode().value;
@@ -100,6 +99,7 @@ export default class Login extends BaseComponent {
       }
     }
 
+    window.dispatchEvent(new Event('CHAT_SPINNER_ON'));
     Api.getInstance(port).login(login, password);
   }
 }

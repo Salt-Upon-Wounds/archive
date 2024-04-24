@@ -2,6 +2,7 @@ import { BaseComponent } from '../../components/base-component';
 import Footer from '../../components/footer/footer';
 import Header from '../../components/header/header';
 import MessageBox from '../../components/message/message';
+import messageStyle from '../../components/message/styles.module.scss';
 import { button, div, input, p } from '../../components/tags';
 import type { Message, ServerResponse, User } from '../../utils/api';
 import Api from '../../utils/api';
@@ -113,6 +114,11 @@ export default class ChatPage extends BaseComponent {
       else this.messages[`${target}`] = [message];
 
       const btn = usersList.children.filter((el) => el.getNode().textContent === message.from)[0];
+
+      // if (!(this.dialogTarget === e.detail.from || this.dialogTarget === e.detail.to)) return;
+      const dialogFlag = this.dialogTarget === e.detail.from || this.dialogTarget === e.detail.to;
+      if (dialogFlag) this.messageList.append(new MessageBox(message.to !== name, message));
+
       if (message.from !== name) {
         const unreadMsgs = (this.messages[`${message.from}`] as Array<Message>).filter(
           (mes) => mes.from !== name && !mes.status?.isReaded,
@@ -121,20 +127,17 @@ export default class ChatPage extends BaseComponent {
           btn.addClass(style.unread);
           btn.getNode().dataset.unread = unreadMsgs.toString();
         }
-        if (unreadMsgs === 1) {
+        if (unreadMsgs === 1 && dialogFlag) {
           const mes = this.messageList.children[this.messageList.children.length - 1] as MessageBox;
           mes.lineOn();
           this.scrollTarget = mes;
         }
       }
 
-      if (!(this.dialogTarget === e.detail.from || this.dialogTarget === e.detail.to)) return;
-
-      this.messageList.append(new MessageBox(message.to !== name, message));
-      if (this.messageList.children.length === 1) {
+      if (this.messageList.children.length === 1 && dialogFlag) {
         (this.messageList.getNode().firstChild as HTMLElement).style.marginTop = 'auto';
       }
-      this.scrolldown();
+      if (dialogFlag) this.scrolldown();
     }) as EventListener);
 
     window.addEventListener('DELETE_CLICK_EVENT', ((e: CustomEvent<Message>) => {
@@ -237,8 +240,9 @@ export default class ChatPage extends BaseComponent {
       }
       this.messageList.children.forEach((el) => {
         if (el instanceof MessageBox && (el as MessageBox).id === e.detail.id) {
-          const margin = (el.getNode().previousSibling as HTMLElement)?.style.marginTop;
-          if (margin && margin === 'auto') {
+          const prev = el.getNode().previousSibling as HTMLElement;
+          const margin = prev?.style.marginTop;
+          if (margin && margin === 'auto' && prev.classList.contains(messageStyle.line)) {
             const node = el.getNode();
             node.style.marginTop = 'auto';
           }
