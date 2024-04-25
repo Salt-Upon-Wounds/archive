@@ -117,7 +117,7 @@ export default class ChatPage extends BaseComponent {
 
       // if (!(this.dialogTarget === e.detail.from || this.dialogTarget === e.detail.to)) return;
       const dialogFlag = this.dialogTarget === e.detail.from || this.dialogTarget === e.detail.to;
-      if (dialogFlag) this.messageList.append(new MessageBox(message.to !== name, message));
+      if (dialogFlag) this.messageList.append(new MessageBox(message.to !== name, message, this.getNode()));
 
       if (message.from !== name) {
         const unreadMsgs = (this.messages[`${message.from}`] as Array<Message>).filter(
@@ -335,7 +335,9 @@ export default class ChatPage extends BaseComponent {
     this.messageList.destroyChildren();
     if (this.messages[`${targetUser.login}`] instanceof Array) {
       this.messageList.appendChildren(
-        (this.messages[`${targetUser.login}`] as Array<Message>).map((el) => new MessageBox(el.to !== name, el)),
+        (this.messages[`${targetUser.login}`] as Array<Message>).map(
+          (el) => new MessageBox(el.to !== name, el, this.getNode()),
+        ),
       );
     }
     this.messageList.children.forEach((el) => {

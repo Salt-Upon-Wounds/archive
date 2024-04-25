@@ -40,8 +40,6 @@ export default class Api {
 
   private static isLoggedFlag: boolean = false;
 
-  private static connectionResolvers: { resolve: (value?: unknown) => void; reject: () => void }[] = [];
-
   private constructor(private retries = 4) {}
 
   public static getInstance(port?: string) {
@@ -59,7 +57,6 @@ export default class Api {
         Api.targetNode?.dispatchEvent(new Event('SOCKET_CLOSE'));
       });
       Api.ws.addEventListener('open', () => {
-        Api.connectionResolvers.forEach((r) => r.resolve());
         Api.targetNode?.dispatchEvent(new Event('SOCKET_OPEN'));
       });
       Api.ws.addEventListener('message', (event) => {
@@ -215,22 +212,21 @@ export default class Api {
   }
 
   public async send(data: string | ArrayBufferLike | Blob | ArrayBufferView, retries = 0): Promise<WebSocket> {
+    function timeout(ms: number) {
+      return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+      });
+    }
     try {
       Api.ws.send(data);
       return await Promise.resolve(Api.ws);
     } catch (error) {
       // TODO: спиннер для ожидания
       if (retries < this.retries && (error as Error).name === 'InvalidStateError') {
-        await Api.waitForConnection();
+        await timeout(1000);
         return this.send(data, retries + 1);
       }
       throw error;
     }
-  }
-
-  private static waitForConnection() {
-    return new Promise((resolve, reject) => {
-      Api.connectionResolvers.push({ resolve, reject });
-    });
   }
 }

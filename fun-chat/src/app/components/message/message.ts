@@ -16,7 +16,7 @@ export default class MessageBox extends BaseComponent {
 
   private editDiv;
 
-  constructor(self: boolean, message: Message) {
+  constructor(self: boolean, message: Message, targetNode: HTMLElement) {
     super({ className: style.box });
     if (self) this.addClass(style.self);
 
@@ -32,10 +32,10 @@ export default class MessageBox extends BaseComponent {
     const deleteBtn = img(style.icon, deleteIcon, 'delete');
     const editBtn = img(style.icon, editIcon, 'edit');
     deleteBtn.getNode().addEventListener('click', () => {
-      window.dispatchEvent(new CustomEvent<Message>('DELETE_CLICK_EVENT', { detail: this.message }));
+      targetNode.dispatchEvent(new CustomEvent<Message>('DELETE_CLICK_EVENT', { detail: this.message }));
     });
     editBtn.getNode().addEventListener('click', () => {
-      window.dispatchEvent(new CustomEvent<Message>('EDIT_CLICK_EVENT', { detail: this.message }));
+      targetNode.dispatchEvent(new CustomEvent<Message>('EDIT_CLICK_EVENT', { detail: this.message }));
     });
     const topRow = div({ className: style.row }, name, self ? div({}, deleteBtn, editBtn) : div({}));
 
