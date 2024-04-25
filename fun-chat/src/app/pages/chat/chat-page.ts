@@ -259,8 +259,11 @@ export default class ChatPage extends BaseComponent {
 
     messagesDiv.getNode().addEventListener('click', () => this.readAll());
 
+    let timerId = -1;
     this.getNode().addEventListener('SOCKET_OPEN', () => {
       window.dispatchEvent(new Event('CHAT_SPINNER_OFF'));
+      clearInterval(timerId);
+      timerId = -1;
     });
 
     this.getNode().addEventListener('USER_LOGIN_EVENT', () => {
@@ -274,6 +277,8 @@ export default class ChatPage extends BaseComponent {
 
     this.getNode().addEventListener('SOCKET_CLOSE', () => {
       window.dispatchEvent(new Event('CHAT_SPINNER_ON'));
+      const user = loadUser();
+      timerId = setInterval(() => Api.getInstance(`${user?.port}` ?? '4000'), 1000);
     });
 
     this.updateUsersList();
