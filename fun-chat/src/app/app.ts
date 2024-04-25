@@ -16,12 +16,20 @@ class App {
     [this.pref]: () => redirect('login'),
     [`${this.pref}login`]: () => {
       if (loadUser()) redirect('chat');
-      else return new LoginPage();
+      else {
+        const res = new LoginPage();
+        Api.targetNode = res.getNode();
+        return res;
+      }
       return undefined;
     },
     [`${this.pref}chat`]: () => {
       if (!loadUser()) redirect('login');
-      else return new ChatPage();
+      else {
+        const res = new ChatPage();
+        Api.targetNode = res.getNode();
+        return res;
+      }
       return undefined;
     },
     [`${this.pref}about`]: () =>
@@ -41,6 +49,9 @@ class App {
     this.root = document.querySelector<HTMLDivElement>('#app')!;
     window.addEventListener('CHAT_SPINNER_ON', () => this.spinner.addClass('active'));
     window.addEventListener('CHAT_SPINNER_OFF', () => this.spinner.removeClass('active'));
+    window.addEventListener('USER_LOGOUT_LOGOUT', () => {
+      this.spinner.removeClass('active');
+    });
   }
 
   public start(): void {
@@ -48,16 +59,12 @@ class App {
   }
 
   public route(path: string) {
-    while (this.pageWrapper.getNode().firstChild) {
+    this.pageWrapper.destroyChildren();
+    /* while (this.pageWrapper.getNode().firstChild) {
       this.pageWrapper.getNode().removeChild(this.pageWrapper.getNode().lastChild as Node);
-    }
-    const user = loadUser();
-    if (user) {
-      const { login, password, port } = user;
-      Api.getInstance(port.toString()).login(login, password);
-    }
-    const page = (this.routes[path] ?? this.routes['404'])()?.getNode();
-    if (page) this.pageWrapper.getNode().append(page);
+    } */
+    const page = (this.routes[path] ?? this.routes['404'])();
+    if (page) this.pageWrapper.appendChildren([page]);
   }
 }
 const app = new App();
@@ -101,4 +108,9 @@ window.addEventListener('popstate', () => {
   handleStateChange(window.location.pathname.replace(`${import.meta.env.VITE_urlprefix}`, ''));
 });
 
+const user = loadUser();
+if (user) {
+  const { login, password, port } = user;
+  Api.getInstance(port.toString()).login(login, password);
+}
 app.route(window.location.pathname);

@@ -3,7 +3,7 @@ import { button, div, h1, input, p } from '../../components/tags';
 import type { User } from '../../utils/api';
 import Api from '../../utils/api';
 import { go } from '../../utils/routing';
-import { saveUser } from '../../utils/storage';
+import { loadUser, saveUser } from '../../utils/storage';
 import style from './styles.module.scss';
 
 export default class Login extends BaseComponent {
@@ -47,20 +47,21 @@ export default class Login extends BaseComponent {
       if ((e as KeyboardEvent).key === 'Enter') this.submit();
     });
 
-    window.addEventListener('ERROR_EVENT', ((e: CustomEvent<string>) => {
+    this.getNode().addEventListener('ERROR_EVENT', ((e: CustomEvent<string>) => {
+      window.dispatchEvent(new Event('CHAT_SPINNER_OFF'));
       this.error(e.detail);
     }) as EventListener);
 
-    window.addEventListener('USER_LOGIN_EVENT', ((e: CustomEvent<User>) => {
+    this.getNode().addEventListener('USER_LOGIN_EVENT', ((e: CustomEvent<User>) => {
       saveUser(e.detail.login, this.password.getNode().value, this.port.getNode().value);
-      go('chat');
+      if (loadUser()) go('chat');
     }) as EventListener);
 
-    window.addEventListener('SOCKET_OPEN', () => {
+    this.getNode().addEventListener('SOCKET_OPEN', () => {
       window.dispatchEvent(new Event('CHAT_SPINNER_OFF'));
     });
 
-    window.addEventListener('SOCKET_CLOSE', () => {
+    this.getNode().addEventListener('SOCKET_CLOSE', () => {
       window.dispatchEvent(new Event('CHAT_SPINNER_OFF'));
       this.error('failed to connect. Please check the port');
     });

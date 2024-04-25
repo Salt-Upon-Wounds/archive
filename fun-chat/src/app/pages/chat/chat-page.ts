@@ -52,7 +52,7 @@ export default class ChatPage extends BaseComponent {
       this.filterUsers((e as InputEvent).data ?? '');
     });
 
-    window.addEventListener('USERS_EVENT', ((e: CustomEvent<User[]>) => {
+    this.getNode().addEventListener('USERS_EVENT', ((e: CustomEvent<User[]>) => {
       const name = loadUser()?.login ?? '';
       this.users = this.users.concat(e.detail).filter((el) => el.login !== name);
       this.users.forEach((el) => {
@@ -62,7 +62,7 @@ export default class ChatPage extends BaseComponent {
       });
     }) as EventListener);
 
-    window.addEventListener('USER_EXTERNAL_LOGIN_EVENT', ((e: CustomEvent<User>) => {
+    this.getNode().addEventListener('USER_EXTERNAL_LOGIN_EVENT', ((e: CustomEvent<User>) => {
       if (this.users.map((el) => el.login).includes(e.detail.login)) {
         this.usersList.children.filter((el) => el.getNode().textContent === e.detail.login)[0].addClass(style.active);
         this.users.filter((el) => el.login === e.detail.login)[0].isLogined = true;
@@ -79,7 +79,7 @@ export default class ChatPage extends BaseComponent {
       }
     }) as EventListener);
 
-    window.addEventListener('USER_EXTERNAL_LOGOUT_EVENT', ((e: CustomEvent<User>) => {
+    this.getNode().addEventListener('USER_EXTERNAL_LOGOUT_EVENT', ((e: CustomEvent<User>) => {
       if (this.users.map((el) => el.login).includes(e.detail.login)) {
         this.usersList.children
           ?.filter((el) => el.getNode().textContent === e.detail.login)[0]
@@ -92,7 +92,7 @@ export default class ChatPage extends BaseComponent {
       }
     }) as EventListener);
 
-    window.addEventListener('MSG_FROM_USER_EVENT', ((e: CustomEvent<ServerResponse>) => {
+    this.getNode().addEventListener('MSG_FROM_USER_EVENT', ((e: CustomEvent<ServerResponse>) => {
       const response = e.detail;
       let allDoneFlag = true;
       for (const [key, val] of Object.entries(this.messages)) {
@@ -102,7 +102,7 @@ export default class ChatPage extends BaseComponent {
       if (allDoneFlag) this.filterUsers(userInput.getNode().value);
     }) as EventListener);
 
-    window.addEventListener('MSG_SEND_EVENT', ((e: CustomEvent<Message>) => {
+    this.getNode().addEventListener('MSG_SEND_EVENT', ((e: CustomEvent<Message>) => {
       if (this.messageList.children.length === 1 && !(this.messageList.children[0] instanceof MessageBox)) {
         this.messageList.children[0].destroy();
         this.messageList.children.pop();
@@ -140,19 +140,19 @@ export default class ChatPage extends BaseComponent {
       if (dialogFlag) this.scrolldown();
     }) as EventListener);
 
-    window.addEventListener('DELETE_CLICK_EVENT', ((e: CustomEvent<Message>) => {
+    this.getNode().addEventListener('DELETE_CLICK_EVENT', ((e: CustomEvent<Message>) => {
       if (e.detail.id) {
         Api.getInstance().deleteMessage(e.detail.id);
         if (e.detail.id === this.editId) this.editId = '';
       }
     }) as EventListener);
 
-    window.addEventListener('EDIT_CLICK_EVENT', ((e: CustomEvent<Message>) => {
+    this.getNode().addEventListener('EDIT_CLICK_EVENT', ((e: CustomEvent<Message>) => {
       this.editId = e.detail.id ?? '';
       this.messageInput.getNode().value = e.detail.text!;
     }) as EventListener);
 
-    window.addEventListener('MSG_DELETE_EVENT', ((e: CustomEvent<Message>) => {
+    this.getNode().addEventListener('MSG_DELETE_EVENT', ((e: CustomEvent<Message>) => {
       for (const key of Object.keys(this.messages)) {
         for (let i = 0; i < this.messages[`${key}`].length; i += 1) {
           if (
@@ -190,7 +190,7 @@ export default class ChatPage extends BaseComponent {
       else (this.messageList.getNode().firstChild as HTMLElement).style.marginTop = 'auto';
     }) as EventListener);
 
-    window.addEventListener('MSG_EDIT_EVENT', ((e: CustomEvent<Message>) => {
+    this.getNode().addEventListener('MSG_EDIT_EVENT', ((e: CustomEvent<Message>) => {
       for (const key of Object.keys(this.messages)) {
         for (let i = 0; i < this.messages[`${key}`].length; i += 1) {
           if (
@@ -209,7 +209,7 @@ export default class ChatPage extends BaseComponent {
       });
     }) as EventListener);
 
-    window.addEventListener('MSG_DELIVER_EVENT', ((e: CustomEvent<Message>) => {
+    this.getNode().addEventListener('MSG_DELIVER_EVENT', ((e: CustomEvent<Message>) => {
       for (const key of Object.keys(this.messages)) {
         for (let i = 0; i < this.messages[`${key}`].length; i += 1) {
           if (
@@ -228,7 +228,7 @@ export default class ChatPage extends BaseComponent {
       });
     }) as EventListener);
 
-    window.addEventListener('MSG_READ_EVENT', ((e: CustomEvent<Message>) => {
+    this.getNode().addEventListener('MSG_READ_EVENT', ((e: CustomEvent<Message>) => {
       const { id } = e.detail;
       for (const key of Object.keys(this.messages)) {
         for (let i = 0; i < this.messages[`${key}`].length; i += 1) {
@@ -259,11 +259,20 @@ export default class ChatPage extends BaseComponent {
 
     messagesDiv.getNode().addEventListener('click', () => this.readAll());
 
-    window.addEventListener('SOCKET_OPEN', () => {
+    this.getNode().addEventListener('SOCKET_OPEN', () => {
       window.dispatchEvent(new Event('CHAT_SPINNER_OFF'));
     });
 
-    window.addEventListener('SOCKET_CLOSE', () => {
+    this.getNode().addEventListener('USER_LOGIN_EVENT', () => {
+      window.dispatchEvent(new Event('CHAT_SPINNER_OFF'));
+    });
+
+    this.getNode().addEventListener('USER_LOGOUT_EVENT', () => {
+      sessionStorage.removeItem('user');
+      window.dispatchEvent(new Event('CHAT_SPINNER_OFF'));
+    });
+
+    this.getNode().addEventListener('SOCKET_CLOSE', () => {
       window.dispatchEvent(new Event('CHAT_SPINNER_ON'));
     });
 

@@ -32,6 +32,8 @@ export type ServerResponse = {
   } | null;
 };
 export default class Api {
+  public static targetNode: HTMLElement | null = null;
+
   private static ws: WebSocket;
 
   private static port = envport;
@@ -54,40 +56,60 @@ export default class Api {
     if (!Api.ws || Api.ws.readyState === WebSocket.CLOSED) {
       Api.ws = new WebSocket(`ws://${envhost}:${p}`);
       Api.ws.addEventListener('close', () => {
-        window.dispatchEvent(new Event('SOCKET_CLOSE'));
+        Api.targetNode?.dispatchEvent(new Event('SOCKET_CLOSE'));
       });
       Api.ws.addEventListener('open', () => {
         Api.connectionResolvers.forEach((r) => r.resolve());
-        window.dispatchEvent(new Event('SOCKET_OPEN'));
+        Api.targetNode?.dispatchEvent(new Event('SOCKET_OPEN'));
       });
       Api.ws.addEventListener('message', (event) => {
         const message = JSON.parse(event.data) as ServerResponse;
         if (message.type === 'USER_ACTIVE' || message.type === 'USER_INACTIVE') {
-          window.dispatchEvent(new CustomEvent<User[]>('USERS_EVENT', { detail: message.payload!.users }));
+          Api.targetNode?.dispatchEvent(new CustomEvent<User[]>('USERS_EVENT', { detail: message.payload!.users }));
         } else if (message.type === 'USER_EXTERNAL_LOGIN') {
-          window.dispatchEvent(new CustomEvent<User>('USER_EXTERNAL_LOGIN_EVENT', { detail: message.payload!.user }));
+          Api.targetNode?.dispatchEvent(
+            new CustomEvent<User>('USER_EXTERNAL_LOGIN_EVENT', { detail: message.payload!.user }),
+          );
         } else if (message.type === 'USER_EXTERNAL_LOGOUT') {
-          window.dispatchEvent(new CustomEvent<User>('USER_EXTERNAL_LOGOUT_EVENT', { detail: message.payload!.user }));
+          Api.targetNode?.dispatchEvent(
+            new CustomEvent<User>('USER_EXTERNAL_LOGOUT_EVENT', { detail: message.payload!.user }),
+          );
         } else if (message.type === 'MSG_SEND') {
-          window.dispatchEvent(new CustomEvent<Message>('MSG_SEND_EVENT', { detail: message.payload!.message }));
+          Api.targetNode?.dispatchEvent(
+            new CustomEvent<Message>('MSG_SEND_EVENT', { detail: message.payload!.message }),
+          );
         } else if (message.type === 'MSG_FROM_USER') {
-          window.dispatchEvent(new CustomEvent<ServerResponse>('MSG_FROM_USER_EVENT', { detail: message }));
+          Api.targetNode?.dispatchEvent(new CustomEvent<ServerResponse>('MSG_FROM_USER_EVENT', { detail: message }));
         } else if (message.type === 'MSG_DELETE') {
-          window.dispatchEvent(new CustomEvent<Message>('MSG_DELETE_EVENT', { detail: message.payload!.message }));
+          Api.targetNode?.dispatchEvent(
+            new CustomEvent<Message>('MSG_DELETE_EVENT', { detail: message.payload!.message }),
+          );
         } else if (message.type === 'MSG_EDIT') {
-          window.dispatchEvent(new CustomEvent<Message>('MSG_EDIT_EVENT', { detail: message.payload!.message }));
+          Api.targetNode?.dispatchEvent(
+            new CustomEvent<Message>('MSG_EDIT_EVENT', { detail: message.payload!.message }),
+          );
         } else if (message.type === 'MSG_READ') {
-          window.dispatchEvent(new CustomEvent<Message>('MSG_READ_EVENT', { detail: message.payload!.message }));
+          Api.targetNode?.dispatchEvent(
+            new CustomEvent<Message>('MSG_READ_EVENT', { detail: message.payload!.message }),
+          );
         } else if (message.type === 'MSG_DELIVER') {
-          window.dispatchEvent(new CustomEvent<Message>('MSG_DELIVER_EVENT', { detail: message.payload!.message }));
+          Api.targetNode?.dispatchEvent(
+            new CustomEvent<Message>('MSG_DELIVER_EVENT', { detail: message.payload!.message }),
+          );
         } else if (message.type === 'ERROR') {
-          window.dispatchEvent(new CustomEvent<string>('ERROR_EVENT', { detail: message.payload!.error }));
+          Api.targetNode?.dispatchEvent(new CustomEvent<string>('ERROR_EVENT', { detail: message.payload!.error }));
         } else if (message.type === 'USER_LOGIN') {
-          window.dispatchEvent(new CustomEvent<User>('USER_LOGIN_EVENT', { detail: message.payload!.user }));
+          Api.targetNode?.dispatchEvent(new CustomEvent<User>('USER_LOGIN_EVENT', { detail: message.payload!.user }));
+        } else if (message.type === 'USER_LOGOUT') {
+          Api.targetNode?.dispatchEvent(new CustomEvent<User>('USER_LOGOUT_EVENT', { detail: message.payload!.user }));
         }
       });
     }
     return new Api();
+  }
+
+  public static close() {
+    this.ws.close();
   }
 
   public static getPort() {
