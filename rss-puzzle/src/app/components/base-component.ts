@@ -23,7 +23,7 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> {
     }
   }
 
-  public append(child: BaseComponent | HTMLElement): void {
+  public append(child: BaseComponent | HTMLElement) {
     if (child instanceof BaseComponent) {
       this.children.push(child);
       this.children[this.children.length - 1].parent = this;
@@ -33,7 +33,7 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> {
     }
   }
 
-  public appendChildren(children: (BaseComponent | HTMLElement | null)[]): void {
+  public appendChildren(children: (BaseComponent | HTMLElement | null)[]) {
     children
       .filter((el): el is BaseComponent | HTMLElement => el !== null)
       .forEach((el) => {
@@ -41,7 +41,7 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> {
       });
   }
 
-  public setTextContent(text: string): void {
+  public setTextContent(text: string) {
     this.node.textContent = text;
   }
 
@@ -49,31 +49,30 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> {
     return this.node;
   }
 
-  public addClass(className: string): void {
+  public addClass(className: string) {
     this.node.classList.add(className);
   }
 
-  public toggleClass(className: string): void {
+  public toggleClass(className: string) {
     this.node.classList.toggle(className);
   }
 
-  public removeClass(className: string): void {
+  public removeClass(className: string) {
     this.node.classList.remove(className);
   }
 
-  public containsClass(className: string): boolean {
+  public containsClass(className: string) {
     return this.node.classList.contains(className);
   }
 
-  public destroyChildren(): void {
-    this.children.reduce((_, child) => {
+  public destroyChildren() {
+    this.children.forEach((child) => {
       child.destroy();
-      return null;
-    }, null);
+    });
     this.children = [];
   }
 
-  public destroy(): void {
+  public destroy() {
     this.destroyChildren();
     this.node.remove();
   }

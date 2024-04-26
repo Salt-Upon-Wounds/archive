@@ -1,18 +1,18 @@
-import type { BaseComponent } from './components/base-component';
-import PageWrapper from './page';
+import { BaseComponent } from './components/base-component';
 import GamePage from './pages/game/game-page';
 import LoginPage from './pages/login/login-page';
+import { URLprefix } from './utils';
 
 class App {
   private routes: { [str: string]: () => BaseComponent } = {
     '404': () => new LoginPage(),
-    '/rss-puzzle/': () => new LoginPage(),
-    '/rss-puzzle/game': () => new GamePage(),
+    [`${URLprefix}`]: () => new LoginPage(),
+    [`${URLprefix}game`]: () => new GamePage(),
   };
 
   constructor(
-    private pageWrapper: BaseComponent,
     private root: HTMLElement,
+    private pageWrapper = new BaseComponent({ className: 'main' }, new LoginPage()),
   ) {}
 
   public start(): void {
@@ -23,7 +23,7 @@ class App {
     this.pageWrapper.switchPage((this.routes[path] ?? this.routes['404'])());
   }
 }
-const app = new App(PageWrapper(), document.querySelector<HTMLDivElement>('#app')!);
+const app = new App(document.querySelector<HTMLDivElement>('#app')!);
 
 app.start();
 
@@ -51,7 +51,7 @@ window.history.replaceState = new Proxy(window.history.replaceState, {
 });
 
 function handleStateChange(path: string) {
-  app.route(`/rss-puzzle/${path}`);
+  app.route(`${URLprefix}${path}`);
 }
 
 window.addEventListener('pushState', ((e: CustomEvent) => {
@@ -61,4 +61,4 @@ window.addEventListener('replaceState', ((e: CustomEvent) => {
   handleStateChange(e.detail.path);
 }) as EventListener);
 
-if (window.location.pathname !== '/rss-puzzle/') app.route(window.location.pathname);
+if (window.location.pathname !== `${URLprefix}`) app.route(window.location.pathname);

@@ -1,5 +1,6 @@
 import { BaseComponent } from '../../components/base-component';
 import { button, div, p, select } from '../../components/tags';
+import { sourceLink, URLprefix } from '../../utils';
 import style from './styles.module.scss';
 
 type Data = {
@@ -13,28 +14,6 @@ type Data = {
 };
 
 export default class GamePage extends BaseComponent {
-  private bottomfield: BaseComponent = new BaseComponent({});
-
-  private mainfield: BaseComponent = new BaseComponent({});
-
-  private continueBtn: BaseComponent = new BaseComponent({});
-
-  private checkBtn: BaseComponent = new BaseComponent({});
-
-  private levelSelect: BaseComponent = new BaseComponent({});
-
-  private roundSelect: BaseComponent = new BaseComponent({});
-
-  private translateHint: BaseComponent = new BaseComponent({});
-
-  private translateBtn: BaseComponent = new BaseComponent({});
-
-  private pictureBtn: BaseComponent = new BaseComponent({});
-
-  private soundBtn: BaseComponent = new BaseComponent({});
-
-  private soundHint: BaseComponent = new BaseComponent({});
-
   private field: number = 0;
 
   private data: Data[] = [];
@@ -43,82 +22,95 @@ export default class GamePage extends BaseComponent {
 
   private round: number = 0;
 
-  constructor() {
-    super({ className: style.game });
-    if (!localStorage.getItem('surname') || !localStorage.getItem('name'))
-      window.history.pushState({ path: 'game' }, '', `${window.location.origin}/rss-puzzle/`);
+  private toggler = 1;
 
+  constructor(
+    private continueBtn = new BaseComponent({}),
+    private checkBtn = new BaseComponent({}),
+    private soundHint = new BaseComponent({}),
+    private translateHint = new BaseComponent({}),
+    private translateBtn = new BaseComponent({}),
+    private pictureBtn = new BaseComponent({}),
+    private soundBtn = new BaseComponent({}),
+    private levelSelect = new BaseComponent({}),
+    private roundSelect = new BaseComponent({}),
+    private bottomfield: BaseComponent = div({ className: style.bottomField }),
+    private mainfield: BaseComponent = div(
+      { className: style.fieldWrapper },
+      div({ className: style.rowNumbers }),
+      div(
+        { className: style.field },
+        ...new Array<number>(10)
+          .fill(1)
+          .map<BaseComponent>(() => div({ className: `${style.bottomField} ${style.hide}` })),
+      ),
+    ),
+  ) {
+    super({ className: style.game });
+
+    this.loadGame();
+  }
+
+  private async loadGame() {
     const links: string[] = [];
     for (let i = 1; i < 7; i += 1) {
-      links.push(
-        `https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/data/wordCollectionLevel${i}.json`,
-      );
+      links.push(`${sourceLink}/data/wordCollectionLevel${i}.json`);
     }
-    (async () => {
-      this.data = await Promise.all(links.map((link) => GamePage.api<Data>(link)));
 
-      this.bottomfield = div({ className: style.bottomField });
-      this.mainfield = div(
-        { className: style.fieldWrapper },
-        div({ className: style.rowNumbers }),
-        div(
-          { className: style.field },
-          ...new Array<number>(10)
-            .fill(1)
-            .map<BaseComponent>(() => div({ className: `${style.bottomField} ${style.hide}` })),
-        ),
-      );
+    this.data = await Promise.all(links.map((link) => GamePage.api<Data>(link)));
 
-      this.continueBtn = button(`${style.btn} ${style.completeHide}`, 'Continue', this.continueClick.bind(this));
-      this.checkBtn = button(`${style.btn} ${style.completeHide}`, 'Check', this.checkClick.bind(this));
-      this.levelSelect = select(
-        '',
-        new Array(this.data.length).fill(0).map((_, idx) => String(idx + 1)),
-        this.selectLevel.bind(this),
-      );
-      this.roundSelect = select(
-        '',
-        new Array(this.data[0].roundsCount).fill(0).map((_, idx) => String(idx + 1)),
-        this.selectRound.bind(this),
-      );
-      this.soundHint = button(`${style.btn} ${style.soundHint}`, '', this.playSound.bind(this));
-      this.translateHint = p(style.translation, ' ');
-      this.translateBtn = button(style.btn, 'translate', this.translateClick.bind(this));
-      this.pictureBtn = button(style.btn, 'picture', this.pictureClick.bind(this));
-      this.soundBtn = button(style.btn, 'sound', this.soundClick.bind(this));
+    if (!localStorage.getItem('surname') || !localStorage.getItem('name'))
+      window.history.pushState({ path: 'game' }, '', `${window.location.origin}${URLprefix}`);
 
-      const lastSave = localStorage.getItem('last');
-      if (lastSave) {
-        const arr = JSON.parse(lastSave);
-        this.level = arr.level;
-        this.round = arr.round;
-        (this.levelSelect.getNode() as HTMLSelectElement).value = String(this.level + 1);
-        (this.roundSelect.getNode() as HTMLSelectElement).value = String(this.round + 1);
-      }
-      this.populateBottom();
-      this.populateField();
+    this.continueBtn = button(`${style.btn} ${style.completeHide}`, 'Continue', () => this.continueClick());
+    this.checkBtn = button(`${style.btn} ${style.completeHide}`, 'Check', () => this.checkClick());
+    this.levelSelect = select(
+      '',
+      new Array(this.data.length).fill(0).map((_, idx) => String(idx + 1)),
+      this.selectLevel.bind(this),
+    );
+    this.roundSelect = select(
+      '',
+      new Array(this.data[0].roundsCount).fill(0).map((_, idx) => String(idx + 1)),
+      this.selectRound.bind(this),
+    );
+    this.soundHint = button(`${style.btn} ${style.soundHint}`, '', async () => this.playSound());
+    this.translateHint = p(style.translation, ' ');
+    this.translateBtn = button(style.btn, 'translate', (e: Event) => this.translateClick(e));
+    this.pictureBtn = button(style.btn, 'picture', (e: Event) => this.pictureClick(e));
+    this.soundBtn = button(style.btn, 'sound', (e: Event) => this.soundClick(e));
 
-      this.appendChildren([
-        div(
-          { className: style.buttons },
-          div({ className: style.changeLevel }, p('', 'Level: '), this.levelSelect, p('', 'Round: '), this.roundSelect),
-          div({ className: style.hints }, this.translateBtn, this.pictureBtn, this.soundBtn),
-          button(style.btn, 'Logout', this.logout.bind(this)),
-        ),
-        this.soundHint,
-        this.translateHint,
-        this.mainfield,
-        this.bottomfield,
-        div(
-          { className: style.bottomBtns },
-          button(style.btn, 'Autocomplete', this.autocompleteClick.bind(this)),
-          this.continueBtn,
-          this.checkBtn,
-        ),
-      ]);
-      this.loadSavedHintState();
-      this.loadState();
-    })();
+    const lastSave = localStorage.getItem('last');
+    if (lastSave) {
+      const arr = JSON.parse(lastSave);
+      this.level = arr.level;
+      this.round = arr.round;
+      (this.levelSelect.getNode() as HTMLSelectElement).value = String(this.level + 1);
+      (this.roundSelect.getNode() as HTMLSelectElement).value = String(this.round + 1);
+    }
+    this.populateBottom();
+    this.populateField();
+
+    this.appendChildren([
+      div(
+        { className: style.buttons },
+        div({ className: style.changeLevel }, p('', 'Level: '), this.levelSelect, p('', 'Round: '), this.roundSelect),
+        div({ className: style.hints }, this.translateBtn, this.pictureBtn, this.soundBtn),
+        button(style.btn, 'Logout', this.logout.bind(this)),
+      ),
+      this.soundHint,
+      this.translateHint,
+      this.mainfield,
+      this.bottomfield,
+      div(
+        { className: style.bottomBtns },
+        button(style.btn, 'Autocomplete', this.autocompleteClick.bind(this)),
+        this.continueBtn,
+        this.checkBtn,
+      ),
+    ]);
+    this.loadSavedHintState();
+    this.loadState();
   }
 
   private loadState() {
@@ -130,15 +122,13 @@ export default class GamePage extends BaseComponent {
         if (arr.includes(Number(tmp.getNode().textContent))) tmp.getNode().style.backgroundColor = 'green';
       });
     }
-    for (let i = 0; i < this.data.length; i += 1) {
-      const rounds = localStorage.getItem(`Level${i}`);
-      if (rounds) {
-        const arr = JSON.parse(rounds);
-        this.roundSelect.children.forEach((el) => {
-          const tmp = el;
-          if (arr.includes(Number(tmp.getNode().textContent) - 1)) tmp.getNode().style.backgroundColor = 'green';
-        });
-      }
+    const rounds = localStorage.getItem(`Level${this.level}`);
+    if (rounds) {
+      const arr = JSON.parse(rounds);
+      this.roundSelect.children.forEach((el) => {
+        const tmp = el;
+        if (arr.includes(Number(tmp.getNode().textContent) - 1)) tmp.getNode().style.backgroundColor = 'green';
+      });
     }
   }
 
@@ -174,7 +164,7 @@ export default class GamePage extends BaseComponent {
     this.populateField();
     this.populateBottom();
     const flag = !this.pictureBtn.containsClass(style.toggle);
-    this.backgroundInit(flag);
+    this.backgroundInit();
     this.backgroundBottomInit(flag);
     this.translate();
     this.loadState();
@@ -185,9 +175,8 @@ export default class GamePage extends BaseComponent {
     this.round = Number((e.currentTarget as HTMLSelectElement).value) - 1;
     this.populateField();
     this.populateBottom();
-    const flag = !this.pictureBtn.containsClass(style.toggle);
-    this.backgroundInit(flag);
-    this.backgroundBottomInit(flag);
+    this.backgroundInit();
+    this.backgroundBottomInit();
     this.translate();
     localStorage.setItem('last', JSON.stringify({ level: this.level, round: this.round }));
   }
@@ -211,19 +200,19 @@ export default class GamePage extends BaseComponent {
     for (let i = 0; i < this.data.length; i += 1) {
       localStorage.removeItem(`Level${i}`);
     }
-    window.history.pushState({ path: '' }, '', `${window.location.origin}/rss-puzzle/`);
+    window.history.pushState({ path: '' }, '', `${window.location.origin}${URLprefix}`);
   }
 
-  private backgroundInit(remove: boolean = false) {
-    const str = 'https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/images/';
+  private backgroundInit() {
+    const str = `${sourceLink}/images/`;
     const path = this.data[this.level].rounds[this.round].levelData.imageSrc;
     let x = 0;
     let y = 0;
-    this.mainfield.children[1].children.forEach((row) => {
+    this.mainfield.children[1].children.forEach((row, idx) => {
       row.children.forEach((el) => {
         const tmp = el;
         tmp.getNode().style.backgroundRepeat = 'no-repeat';
-        tmp.getNode().style.backgroundImage = remove ? '' : `url(${str.concat(path)})`;
+        tmp.getNode().style.backgroundImage = this.field - this.toggler < idx ? '' : `url(${str.concat(path)})`;
         tmp.getNode().style.backgroundSize = `${this.mainfield.children[1].getNode().offsetWidth}px ${this.mainfield.getNode().offsetHeight}px`;
         tmp.getNode().style.backgroundPositionX = `${x}px`;
         tmp.getNode().style.backgroundPositionY = `${y}px`;
@@ -235,7 +224,7 @@ export default class GamePage extends BaseComponent {
   }
 
   private backgroundBottomInit(remove: boolean = false): void {
-    const str = 'https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/images/';
+    const str = `${sourceLink}/images/`;
     const path = this.data[this.level].rounds[this.round].levelData.imageSrc;
     let x = 0;
     const y = -(this.field * this.mainfield.getNode().offsetHeight) / 10;
@@ -255,32 +244,33 @@ export default class GamePage extends BaseComponent {
   private pictureClick(e: Event) {
     (e.currentTarget as HTMLElement).classList.toggle(style.toggle);
     const flag = !(e.currentTarget as HTMLElement).classList.contains(style.toggle);
-    this.backgroundInit(flag);
+    if (flag) this.toggler = 1;
+    else this.toggler = 0;
+    this.backgroundInit();
     this.backgroundBottomInit(flag);
     localStorage.setItem('pHint', flag ? '1' : '');
   }
 
   private soundClick(e: Event) {
     (e.currentTarget as HTMLElement).classList.toggle(style.toggle);
-    this.soundHint.toggleClass(style.active);
-    const flag = !(e.currentTarget as HTMLElement).classList.contains(style.toggle);
-    localStorage.setItem('sHint', flag ? '1' : '');
+    const flag = (e.currentTarget as HTMLElement).classList.contains(style.toggle);
+    if (flag) this.soundHint.addClass(style.active);
+    else this.soundHint.removeClass(style.active);
+    localStorage.setItem('sHint', !flag ? '1' : '');
   }
 
-  private playSound() {
+  private async playSound() {
     if (!this.soundHint.containsClass(style.on)) {
-      (async () => {
-        this.soundHint.addClass(style.on);
-        const str = 'https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/';
-        await new Promise((resolve) => {
-          const audio = new Audio(str.concat(this.data[this.level].rounds[this.round].words[this.field].audioExample));
-          audio.addEventListener('loadedmetadata', () => {
-            audio.play();
-            setTimeout(resolve, audio.duration * 1000);
-          });
+      this.soundHint.addClass(style.on);
+      const str = `${sourceLink}/`;
+      await new Promise((resolve) => {
+        const audio = new Audio(str.concat(this.data[this.level].rounds[this.round].words[this.field].audioExample));
+        audio.addEventListener('loadedmetadata', () => {
+          audio.play();
+          setTimeout(resolve, audio.duration * 1000);
         });
-        this.soundHint.removeClass(style.on);
-      })();
+      });
+      this.soundHint.removeClass(style.on);
     }
   }
 
@@ -313,6 +303,10 @@ export default class GamePage extends BaseComponent {
     });
     this.continueBtn.removeClass(style.completeHide);
     this.checkBtn.addClass(style.completeHide);
+    this.soundHint.addClass(style.active);
+    this.toggler = 0;
+    this.backgroundInit();
+    this.translateHint.setTextContent(this.data[this.level].rounds[this.round].words[this.field].textExampleTranslate);
   }
 
   private populateField() {
@@ -341,6 +335,12 @@ export default class GamePage extends BaseComponent {
     const flags = GamePage.checkLine(row.map((el) => el.getNode()));
     if (flags[0]) {
       if (flags[1]) {
+        this.soundHint.addClass(style.active);
+        this.toggler = 0;
+        this.backgroundInit();
+        this.translateHint.setTextContent(
+          this.data[this.level].rounds[this.round].words[this.field].textExampleTranslate,
+        );
         this.continueBtn.removeClass(style.completeHide);
         this.checkBtn.addClass(style.completeHide);
         row.forEach((el) => {
@@ -371,6 +371,7 @@ export default class GamePage extends BaseComponent {
   private continueClick() {
     if (this.field >= 9) {
       this.saveState(this.level, this.round);
+      if (this.soundBtn.containsClass(style.toggle)) this.soundHint.removeClass(style.active);
       this.field = 0;
       this.round += 1;
       if (this.round >= Number(this.data[this.level].roundsCount)) {
@@ -383,8 +384,10 @@ export default class GamePage extends BaseComponent {
       this.populateField();
       this.populateBottom();
       const flag = !this.pictureBtn.containsClass(style.toggle);
-      this.backgroundInit(flag);
+      this.toggler = 1;
+      this.backgroundInit();
       this.backgroundBottomInit(flag);
+      this.loadState();
       localStorage.setItem('last', JSON.stringify({ level: this.level, round: this.round }));
     } else {
       this.mainfield.children[1].children[this.field].children.forEach((el) => {
@@ -397,6 +400,7 @@ export default class GamePage extends BaseComponent {
       this.backgroundBottomInit(flag);
     }
     this.continueBtn.addClass(style.completeHide);
+    if (!this.soundBtn.containsClass(style.toggle)) this.soundHint.removeClass(style.active);
     this.translate();
   }
 
@@ -455,16 +459,12 @@ export default class GamePage extends BaseComponent {
     )[0].style.visibility = 'visible';
     this.checkBtn.addClass(style.completeHide);
     this.continueBtn.addClass(style.completeHide);
+    this.translate();
+    if (this.soundBtn.containsClass(style.toggle)) this.soundHint.addClass(style.active);
+    else this.soundHint.removeClass(style.active);
+    this.toggler = 1;
+    this.backgroundInit();
   }
-
-  /* private static makeCounter() {
-    let num = -1;
-    return (plus: boolean = true) => {
-      if (plus) num += 1;
-      else num -= 1;
-      return num;
-    };
-  } */
 
   private words(str: string, click: (e: Event) => void): BaseComponent[] {
     const tmp = str.split(' ');

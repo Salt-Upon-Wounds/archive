@@ -1,17 +1,18 @@
 import { BaseComponent } from '../../components/base-component';
 import { h1, h2, input, p } from '../../components/tags';
+import { URLprefix } from '../../utils';
 import style from './styles.module.scss';
 
 export default class LoginPage extends BaseComponent {
-  private readonly name: BaseComponent | null;
+  private name: BaseComponent | null;
 
-  private readonly surname: BaseComponent | null;
+  private surname: BaseComponent | null;
 
-  private readonly title: BaseComponent;
+  private title: BaseComponent;
 
-  private readonly desc: BaseComponent;
+  private desc: BaseComponent;
 
-  private readonly btn: BaseComponent;
+  private btn: BaseComponent;
 
   constructor() {
     const name = localStorage.getItem('name');
@@ -30,7 +31,7 @@ export default class LoginPage extends BaseComponent {
           localStorage.setItem('name', formExtractor('name'));
           localStorage.setItem('surname', formExtractor('surname'));
         }
-        window.history.pushState({ path: 'game' }, '', `${window.location.origin}/rss-puzzle/game`);
+        window.history.pushState({ path: 'game' }, '', `${window.location.origin}${URLprefix}game`);
       },
     });
     this.title = h1('', 'ENGLISH PUZZLE');
