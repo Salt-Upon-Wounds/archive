@@ -30,11 +30,7 @@ export default class LoginPage extends BaseComponent {
           localStorage.setItem('name', formExtractor('name'));
           localStorage.setItem('surname', formExtractor('surname'));
         }
-        window.history.pushState(
-          { path: 'game' },
-          '',
-          `${window.location.origin}/salt-upon-wounds-JSFE2023Q4/rss-puzzle/game`,
-        );
+        window.history.pushState({ path: 'game' }, '', `${window.location.origin}/rss-puzzle/game`);
       },
     });
     this.title = h1('', 'ENGLISH PUZZLE');

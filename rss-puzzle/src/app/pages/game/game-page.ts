@@ -46,11 +46,7 @@ export default class GamePage extends BaseComponent {
   constructor() {
     super({ className: style.game });
     if (!localStorage.getItem('surname') || !localStorage.getItem('name'))
-      window.history.pushState(
-        { path: 'game' },
-        '',
-        `${window.location.origin}/salt-upon-wounds-JSFE2023Q4/rss-puzzle/`,
-      );
+      window.history.pushState({ path: 'game' }, '', `${window.location.origin}/rss-puzzle/`);
 
     const links: string[] = [];
     for (let i = 1; i < 7; i += 1) {
@@ -215,7 +211,7 @@ export default class GamePage extends BaseComponent {
     for (let i = 0; i < this.data.length; i += 1) {
       localStorage.removeItem(`Level${i}`);
     }
-    window.history.pushState({ path: '' }, '', `${window.location.origin}/salt-upon-wounds-JSFE2023Q4/rss-puzzle/`);
+    window.history.pushState({ path: '' }, '', `${window.location.origin}/rss-puzzle/`);
   }
 
   private backgroundInit(remove: boolean = false) {
@@ -389,7 +385,6 @@ export default class GamePage extends BaseComponent {
       const flag = !this.pictureBtn.containsClass(style.toggle);
       this.backgroundInit(flag);
       this.backgroundBottomInit(flag);
-      this.loadState();
       localStorage.setItem('last', JSON.stringify({ level: this.level, round: this.round }));
     } else {
       this.mainfield.children[1].children[this.field].children.forEach((el) => {

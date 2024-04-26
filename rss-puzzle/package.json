@@ -5,12 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build --base=./",
+    "build": "tsc && vite build",
     "preview": "vite preview",
     "prepare": "cd .. && husky rss-puzzle/.husky",
     "lint": "eslint ./src",
-    "lint:fix": "eslint --fix ./src",
-    "deploy": "gh-pages -d dist -e \"rss-puzzle\" -m \"rss-puzzle deploy\""
+    "lint:fix": "eslint --fix ./src"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.0.3",
@@ -30,7 +29,6 @@
     "eslint-plugin-simple-import-sort": "^12.0.0",
     "eslint-plugin-unicorn": "^51.0.1",
     "eslint-plugin-unused-imports": "^3.1.0",
-    "gh-pages": "^6.1.1",
     "husky": "^9.0.11",
     "lint-staged": "^13.0.2",
     "prettier": "^3.2.5",
