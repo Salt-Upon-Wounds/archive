@@ -1,0 +1,43 @@
+button.sidebar-item {
+  background-color: inherit;
+  border: 0;
+}
+
+a.sidebar-item,
+.sidebar-item-container button {
+  white-space: nowrap;
+}
+a.sidebar-item:hover,
+.sidebar-item-container button:hover {
+  color: #212529 !important;
+}
+
+.sidebar-container {
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.w-320px {
+  min-width: 320px;
+}
+
+.sidebar-item.active {
+  background-color: #efefef;
+}
+
+.sidebar-item-container button {
+  background-color: inherit !important;
+  border: 0 !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+}
+
+.sidebar-item-container button:active,
+.sidebar-item-container button:focus,
+.sidebar-item-container button:target {
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+}

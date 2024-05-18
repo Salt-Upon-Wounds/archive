@@ -1,0 +1,9 @@
+.mini-exam-record:hover {
+  /* box-shadow: 0 0 10px !important; */
+  background-color: rgb(240, 240, 240);
+  font-weight: bold;
+}
+
+.mini-exam-record {
+  transition: 0.2s;
+}

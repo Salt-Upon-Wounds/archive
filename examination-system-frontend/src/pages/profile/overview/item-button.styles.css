@@ -1,0 +1,19 @@
+.border.item-button {
+  border-right-width: thick !important;
+}
+
+.item-button.border-end-success {
+  border-right-color: #198754 !important;
+}
+
+.item-button.border-end-info {
+  border-right-color: #0dcaf0 !important;
+}
+
+.item-button.border-end-primary {
+  border-right-color: #0d6efd !important;
+}
+
+.item-button:hover {
+  background-color: rgb(242, 242, 242) !important;
+}

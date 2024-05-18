@@ -1,0 +1,19 @@
+.user-popover-link:hover {
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.user-popover-link:active {
+  font-weight: bold !important;
+  background-color: inherit !important;
+}
+
+.user-popover-link.active {
+  font-weight: bold !important;
+  background-color: inherit !important;
+}
+
+.navbar-container {
+  position: sticky;
+  top: 0;
+}

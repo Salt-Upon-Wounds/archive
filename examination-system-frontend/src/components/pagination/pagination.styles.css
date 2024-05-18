@@ -1,0 +1,24 @@
+.pagination-muted > li > a {
+  background-color: white !important;
+  color: #777 !important;
+}
+
+.pagination-muted > li > a:focus,
+.pagination-muted > li > a:hover,
+.pagination-muted > li > span:focus,
+.pagination-muted > li > span:hover {
+  color: #777;
+  background-color: #eee;
+  border-color: #ddd;
+}
+
+.pagination-muted > .active > a {
+  color: white !important;
+  background-color: #777 !important;
+  border: solid 1px #777 !important;
+}
+
+.pagination-muted > .active > a:hover {
+  background-color: #777;
+  border: solid 1px #777;
+}

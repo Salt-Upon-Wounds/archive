@@ -1,0 +1,35 @@
+.twitter:hover {
+  background-color: #2784f8 !important;
+  color: white !important;
+}
+
+.telegram:hover {
+  background-color: #2099ef !important;
+  color: white !important;
+}
+
+.linkedin:hover {
+  background-color: #0077b5 !important;
+  color: white !important;
+}
+
+.instagram:hover {
+  color: white !important;
+  /* background: linear-gradient(
+    45deg,
+    #405de6,
+    #5851db,
+    #833ab4,
+    #c13584,
+    #e1306c,
+    #fd1d1d
+  )!important; */
+  background: radial-gradient(
+    circle at 30% 107%,
+    #fdf497 0%,
+    #fdf497 5%,
+    #fd5949 45%,
+    #d6249f 60%,
+    #285aeb 90%
+  ) !important;
+}
