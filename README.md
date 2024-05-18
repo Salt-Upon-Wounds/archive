@@ -2,6 +2,7 @@
 учебный прогресс  
 
 ветки в хронологическом порядке с описанием и деплоем:
+- diplom (Система для проведения экзаменов) (деплой умер. И в целом за этот написанный второпях проект стыдно)
 - coffee-house [task1](https://github.com/rolling-scopes-school/tasks/blob/master/tasks/coffee-house/coffee-house-week1.md)
 [task2](https://github.com/rolling-scopes-school/tasks/blob/master/tasks/coffee-house/coffee-house-week2.md)
 [task3](https://github.com/rolling-scopes-school/tasks/blob/master/tasks/coffee-house/coffee-house-week3.md)
